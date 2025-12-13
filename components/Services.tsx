@@ -40,30 +40,33 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
           
           {/* 1. DOG WALKING */}
-          <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgba(0,194,203,0.15)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-            <div className="relative h-64 overflow-hidden">
-              <div className="absolute inset-0 bg-brand-teal/10 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img 
-                src="/images/services/walking.jpg" 
-                onError={(e) => {
-                    e.currentTarget.src = "https://images.unsplash.com/photo-1605639148518-e7d6928d1c33?auto=format&fit=crop&w=800&q=80";
-                }}
-                alt="Dog Walking" 
-                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
-              />
-               {/* INTEGRATED PRICE BADGE */}
-               <div className="absolute bottom-4 right-4 z-20">
-                 <div className="bg-white/95 backdrop-blur-xl px-4 py-2 rounded-2xl shadow-[0_8px_16px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                    <span className="text-xs font-bold text-gray-400 mr-1">from</span>
-                    <span className="text-xl font-display font-extrabold text-brand-teal">£15</span>
-                 </div>
-               </div>
-              <div className="absolute top-4 left-4 z-20 bg-brand-orange text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1">
-                <Star size={10} fill="currentColor" /> POPULAR
-              </div>
+          <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
+            {/* FRAMED IMAGE CONTAINER */}
+            <div className="h-72 p-3 bg-brand-teal/5">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+                    <div className="absolute inset-0 bg-brand-teal/10 md:group-hover:bg-transparent transition-colors z-10"></div>
+                    <img 
+                        src="/images/services/walking.jpg" 
+                        onError={(e) => {
+                            e.currentTarget.src = "https://images.unsplash.com/photo-1605639148518-e7d6928d1c33?auto=format&fit=crop&w=800&q=80";
+                        }}
+                        alt="Dog Walking" 
+                        className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+                    />
+                    {/* INTEGRATED PRICE BADGE */}
+                    <div className="absolute bottom-3 right-3 z-20">
+                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-400 mr-1">from</span>
+                            <span className="text-lg font-display font-extrabold text-brand-teal">£15</span>
+                        </div>
+                    </div>
+                    <div className="absolute top-3 left-3 z-20 bg-brand-orange text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1">
+                        <Star size={10} fill="currentColor" /> POPULAR
+                    </div>
+                </div>
             </div>
             
-            <div className="p-6 md:p-8 flex flex-col flex-grow">
+            <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
               <div className="mb-4">
                   <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Dog Walking</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">Energizing group walks in safe, green spaces with furry friends.</p>
@@ -92,25 +95,27 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           </div>
 
           {/* 2. DOG SITTING */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgba(244,93,111,0.15)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-            <div className="relative h-64 overflow-hidden">
-              <div className="absolute inset-0 bg-brand-pink/10 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img 
-                src="/images/services/sitting.jpg" 
-                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80"; }}
-                alt="Dog Sitting" 
-                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
-              />
-               {/* INTEGRATED PRICE BADGE */}
-               <div className="absolute bottom-4 right-4 z-20">
-                 <div className="bg-white/95 backdrop-blur-xl px-4 py-2 rounded-2xl shadow-[0_8px_16px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                    <span className="text-xs font-bold text-gray-400 mr-1">night</span>
-                    <span className="text-xl font-display font-extrabold text-brand-pink">£45</span>
-                 </div>
-               </div>
+           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(244,93,111,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
+            <div className="h-72 p-3 bg-brand-pink/5">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+                    <div className="absolute inset-0 bg-brand-pink/10 md:group-hover:bg-transparent transition-colors z-10"></div>
+                    <img 
+                        src="/images/services/sitting.jpg" 
+                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80"; }}
+                        alt="Dog Sitting" 
+                        className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+                    />
+                    {/* INTEGRATED PRICE BADGE */}
+                    <div className="absolute bottom-3 right-3 z-20">
+                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-400 mr-1">night</span>
+                            <span className="text-lg font-display font-extrabold text-brand-pink">£45</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="p-6 md:p-8 flex flex-col flex-grow">
+            <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
                <div className="mb-4">
                   <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Home Sitting</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">Comfort in your own home. We maintain their routine perfectly.</p>
@@ -139,25 +144,27 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           </div>
 
           {/* 3. VACATION CARE */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgba(255,213,79,0.25)] transition-all duration-300 hover:-translate-y-2 border border-brand-yellow/30 flex flex-col group h-full">
-             <div className="relative h-64 overflow-hidden">
-              <div className="absolute inset-0 bg-brand-yellow/10 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img 
-                src="/images/services/vacation.jpg" 
-                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1575485670541-82a2b0cb0e25?auto=format&fit=crop&w=800&q=80"; }}
-                alt="Vacation Care" 
-                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
-              />
-               {/* INTEGRATED PRICE BADGE */}
-               <div className="absolute bottom-4 right-4 z-20">
-                 <div className="bg-white/95 backdrop-blur-xl px-4 py-2 rounded-2xl shadow-[0_8px_16px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                    <span className="text-xs font-bold text-gray-400 mr-1 uppercase">Quote</span>
-                    <span className="text-lg font-display font-extrabold text-brand-yellow">Custom</span>
-                 </div>
-               </div>
+           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(255,213,79,0.25)] transition-all duration-300 hover:-translate-y-2 border border-brand-yellow/30 flex flex-col group h-full">
+             <div className="h-72 p-3 bg-brand-yellow/5">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+                    <div className="absolute inset-0 bg-brand-yellow/10 md:group-hover:bg-transparent transition-colors z-10"></div>
+                    <img 
+                        src="/images/services/vacation.jpg" 
+                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1575485670541-82a2b0cb0e25?auto=format&fit=crop&w=800&q=80"; }}
+                        alt="Vacation Care" 
+                        className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+                    />
+                    {/* INTEGRATED PRICE BADGE */}
+                    <div className="absolute bottom-3 right-3 z-20">
+                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-400 mr-1 uppercase">Quote</span>
+                            <span className="text-lg font-display font-extrabold text-brand-yellow">Custom</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="p-6 md:p-8 flex flex-col flex-grow">
+            <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
               <div className="mb-4">
                   <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Vacation Care</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">Long-term loving care in our home or yours while you travel.</p>
@@ -181,25 +188,27 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           </div>
 
            {/* 4. DOG GROOMING */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgba(168,85,247,0.15)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             <div className="relative h-64 overflow-hidden">
-              <div className="absolute inset-0 bg-purple-100/30 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img 
-                src="/images/services/grooming.jpg" 
-                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80"; }}
-                alt="Dog Grooming" 
-                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
-              />
-               {/* INTEGRATED PRICE BADGE */}
-               <div className="absolute bottom-4 right-4 z-20">
-                 <div className="bg-white/95 backdrop-blur-xl px-4 py-2 rounded-2xl shadow-[0_8px_16px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                    <span className="text-xs font-bold text-gray-400 mr-1">from</span>
-                    <span className="text-xl font-display font-extrabold text-purple-600">£35</span>
-                 </div>
-               </div>
+           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(168,85,247,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
+             <div className="h-72 p-3 bg-purple-50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+                    <div className="absolute inset-0 bg-purple-100/30 md:group-hover:bg-transparent transition-colors z-10"></div>
+                    <img 
+                        src="/images/services/grooming.jpg" 
+                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80"; }}
+                        alt="Dog Grooming" 
+                        className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+                    />
+                    {/* INTEGRATED PRICE BADGE */}
+                    <div className="absolute bottom-3 right-3 z-20">
+                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-400 mr-1">from</span>
+                            <span className="text-lg font-display font-extrabold text-purple-600">£35</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="p-6 md:p-8 flex flex-col flex-grow">
+            <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
               <div className="mb-4">
                   <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Grooming</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">Full spa treatment. Wash, cut, fluff and nail clipping.</p>
@@ -227,25 +236,27 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           </div>
 
            {/* 5. PUPPY TRAINING */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgba(59,130,246,0.15)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             <div className="relative h-64 overflow-hidden">
-              <div className="absolute inset-0 bg-blue-100/30 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img 
-                src="/images/services/training.jpg" 
-                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80"; }}
-                alt="Puppy Training" 
-                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
-              />
-               {/* INTEGRATED PRICE BADGE */}
-               <div className="absolute bottom-4 right-4 z-20">
-                 <div className="bg-white/95 backdrop-blur-xl px-4 py-2 rounded-2xl shadow-[0_8px_16px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                    <span className="text-xs font-bold text-gray-400 mr-1">/ hr</span>
-                    <span className="text-xl font-display font-extrabold text-blue-600">£40</span>
-                 </div>
-               </div>
+           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(59,130,246,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
+             <div className="h-72 p-3 bg-blue-50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+                    <div className="absolute inset-0 bg-blue-100/30 md:group-hover:bg-transparent transition-colors z-10"></div>
+                    <img 
+                        src="/images/services/training.jpg" 
+                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80"; }}
+                        alt="Puppy Training" 
+                        className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+                    />
+                    {/* INTEGRATED PRICE BADGE */}
+                    <div className="absolute bottom-3 right-3 z-20">
+                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-400 mr-1">/ hr</span>
+                            <span className="text-lg font-display font-extrabold text-blue-600">£40</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="p-6 md:p-8 flex flex-col flex-grow">
+            <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
                <div className="mb-4">
                   <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Training</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">Positive reinforcement techniques to help your puppy learn fast.</p>
@@ -273,25 +284,27 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           </div>
 
            {/* 6. DOG MINDING */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgba(0,194,203,0.15)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             <div className="relative h-64 overflow-hidden">
-              <div className="absolute inset-0 bg-brand-teal/10 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img 
-                src="/images/services/pop-in.jpg" 
-                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80"; }}
-                alt="Pet Minding" 
-                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
-              />
-               {/* INTEGRATED PRICE BADGE */}
-               <div className="absolute bottom-4 right-4 z-20">
-                 <div className="bg-white/95 backdrop-blur-xl px-4 py-2 rounded-2xl shadow-[0_8px_16px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                    <span className="text-xs font-bold text-gray-400 mr-1">visit</span>
-                    <span className="text-xl font-display font-extrabold text-brand-teal">£12</span>
-                 </div>
-               </div>
+           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
+             <div className="h-72 p-3 bg-brand-teal/5">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+                    <div className="absolute inset-0 bg-brand-teal/10 md:group-hover:bg-transparent transition-colors z-10"></div>
+                    <img 
+                        src="/images/services/pop-in.jpg" 
+                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80"; }}
+                        alt="Pet Minding" 
+                        className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+                    />
+                    {/* INTEGRATED PRICE BADGE */}
+                    <div className="absolute bottom-3 right-3 z-20">
+                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-400 mr-1">visit</span>
+                            <span className="text-lg font-display font-extrabold text-brand-teal">£12</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="p-6 md:p-8 flex flex-col flex-grow">
+            <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
                <div className="mb-4">
                   <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Pop-in Visits</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">Short visits for feed, garden breaks, and play. Perfect for puppies.</p>

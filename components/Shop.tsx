@@ -13,57 +13,59 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
   return (
     <div className="group flex flex-col h-full">
       {/* CARD CONTAINER with Soft Shadow */}
-      <div className="relative flex flex-col bg-white rounded-[2rem] overflow-hidden transition-all duration-500 shadow-[0_15px_35px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgba(0,194,203,0.15)] hover:-translate-y-2 border border-gray-50 h-full">
+      <div className="relative flex flex-col bg-white rounded-[2rem] overflow-hidden transition-all duration-500 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] hover:-translate-y-2 border border-gray-100 h-full">
         
-        {/* IMAGE AREA */}
-        <div className="relative aspect-[4/5] overflow-hidden">
-            {/* Top Tags */}
-            <div className="absolute top-4 left-4 z-20 flex flex-col gap-2 items-start">
-                {product.tag && (
-                <span className={`text-white text-[10px] md:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-lg backdrop-blur-md ${
-                    product.tag === 'Best Seller' ? 'bg-brand-orange/90' : product.tag === 'Tech' ? 'bg-purple-500/90' : 'bg-brand-dark/90'
-                }`}>
-                    {product.tag}
-                </span>
+        {/* IMAGE AREA - NOW FRAMED (Padded) */}
+        <div className="p-3 bg-gray-50/50">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-sm group-hover:shadow-md transition-all duration-500 bg-white">
+                {/* Top Tags */}
+                <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 items-start">
+                    {product.tag && (
+                    <span className={`text-white text-[10px] md:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-lg backdrop-blur-md ${
+                        product.tag === 'Best Seller' ? 'bg-brand-orange/90' : product.tag === 'Tech' ? 'bg-purple-500/90' : 'bg-brand-dark/90'
+                    }`}>
+                        {product.tag}
+                    </span>
+                    )}
+                </div>
+                
+                {/* Wishlist Button */}
+                <button className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/60 hover:bg-white backdrop-blur-md flex items-center justify-center text-gray-500 hover:text-brand-pink transition-all shadow-sm">
+                    <Heart size={16} />
+                </button>
+
+                {/* Image */}
+                {!imgError ? (
+                <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    onError={() => setImgError(true)}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+                />
+                ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 text-gray-400">
+                    <Dog size={32} className="mb-2 opacity-20" />
+                    <span className="font-bold text-[10px] uppercase tracking-widest opacity-60">Image Coming Soon</span>
+                </div>
                 )}
-            </div>
-            
-            {/* Wishlist Button */}
-            <button className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/60 hover:bg-white backdrop-blur-md flex items-center justify-center text-gray-500 hover:text-brand-pink transition-all shadow-sm">
-                <Heart size={18} />
-            </button>
+                
+                {/* INTEGRATED PRICE BADGE (Bottom Right of Image) */}
+                <div className="absolute bottom-3 right-3 z-20">
+                    <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] flex items-center gap-1 border border-white/50 transform group-hover:scale-105 transition-transform">
+                        <span className="text-xs font-bold text-gray-400 mr-1">£</span>
+                        <span className="text-lg font-display font-extrabold text-brand-dark">{product.price.toFixed(2)}</span>
+                    </div>
+                </div>
 
-            {/* Image */}
-            {!imgError ? (
-            <img 
-                src={product.image} 
-                alt={product.name} 
-                onError={() => setImgError(true)}
-                className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
-            />
-            ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 text-gray-400">
-                <Dog size={32} className="mb-2 opacity-20" />
-                <span className="font-bold text-[10px] uppercase tracking-widest opacity-60">Image Coming Soon</span>
-            </div>
-            )}
-            
-            {/* INTEGRATED PRICE BADGE (Bottom Right of Image) */}
-            <div className="absolute bottom-4 right-4 z-20">
-                 <div className="bg-white/95 backdrop-blur-xl px-4 py-2 rounded-2xl shadow-[0_8px_16px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50 transform group-hover:scale-105 transition-transform">
-                    <span className="text-xs font-bold text-gray-400 mr-1">£</span>
-                    <span className="text-xl font-display font-extrabold text-brand-dark">{product.price.toFixed(2)}</span>
-                 </div>
-            </div>
-
-             {/* Add to Cart Overlay (Desktop Slide-up) */}
-            <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent translate-y-full md:group-hover:translate-y-0 transition-transform duration-300 flex justify-center pb-20 pointer-events-none">
-                 {/* Decorative gradient for text readability if needed */}
+                {/* Add to Cart Overlay (Desktop Slide-up) */}
+                <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent translate-y-full md:group-hover:translate-y-0 transition-transform duration-300 flex justify-center pb-20 pointer-events-none">
+                    {/* Decorative gradient for text readability if needed */}
+                </div>
             </div>
         </div>
 
         {/* CONTENT AREA */}
-        <div className="p-5 flex flex-col flex-grow relative bg-white">
+        <div className="px-6 pb-6 pt-2 flex flex-col flex-grow relative bg-white">
              {/* Title & Cat */}
              <div className="mb-4">
                  <p className="text-xs font-bold text-brand-teal uppercase tracking-wider mb-1 flex items-center gap-1">
