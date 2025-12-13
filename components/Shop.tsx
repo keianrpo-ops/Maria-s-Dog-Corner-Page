@@ -11,13 +11,13 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
   const [imgError, setImgError] = useState(false);
 
   return (
-    <div className="group flex flex-col">
+    <div className="group flex flex-col active:scale-[0.98] transition-transform duration-200">
       {/* CARD IMAGE CONTAINER */}
-      <div className="relative aspect-[4/5] bg-gray-50 rounded-[2rem] overflow-hidden mb-6 group-hover:shadow-2xl transition-all duration-500 border border-gray-100 group-hover:border-brand-teal/30">
+      <div className="relative aspect-[4/5] bg-gray-50 rounded-2xl md:rounded-[2rem] overflow-hidden mb-3 md:mb-6 group-hover:shadow-2xl transition-all duration-500 border border-gray-100 group-hover:border-brand-teal/30">
         
         {/* Tags */}
         {product.tag && (
-          <span className={`absolute top-4 left-4 z-10 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide shadow-md ${
+          <span className={`absolute top-2 left-2 md:top-4 md:left-4 z-10 text-white text-[10px] md:text-xs font-bold px-2 py-1 md:px-3 md:py-1.5 rounded-full uppercase tracking-wide shadow-md ${
             product.tag === 'Best Seller' ? 'bg-brand-orange' : product.tag === 'Tech' ? 'bg-purple-500' : 'bg-brand-dark'
           }`}>
             {product.tag}
@@ -25,8 +25,8 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
         )}
         
         {/* Wishlist Button */}
-        <button className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-400 hover:text-brand-pink transition-all shadow-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 duration-300">
-          <Heart size={20} />
+        <button className="absolute top-2 right-2 md:top-4 md:right-4 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-400 hover:text-brand-pink transition-all shadow-sm md:opacity-0 md:group-hover:opacity-100 transform translate-y-2 md:translate-y-0 duration-300">
+          <Heart size={16} className="md:w-5 md:h-5" />
         </button>
 
         {/* Image Handling */}
@@ -35,32 +35,33 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
             src={product.image} 
             alt={product.name} 
             onError={() => setImgError(true)}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+            className="w-full h-full object-cover md:group-hover:scale-110 transition-transform duration-700 ease-in-out"
           />
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 text-gray-400">
-             <Dog size={48} className="mb-2 opacity-20" />
-             <span className="font-bold text-xs uppercase tracking-widest opacity-60">Image Coming Soon</span>
+             <Dog size={32} className="mb-2 opacity-20 md:w-12 md:h-12" />
+             <span className="font-bold text-[8px] md:text-xs uppercase tracking-widest opacity-60">Image Coming Soon</span>
           </div>
         )}
         
-        {/* Add to Cart Button (Slides up) */}
-        <div className="absolute inset-x-4 bottom-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+        {/* Add to Cart Button (Slides up on desktop, visible overlay on mobile touch) */}
+        <div className="absolute inset-x-2 bottom-2 md:inset-x-4 md:bottom-4 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-300">
             <button 
             onClick={() => addToCart(product)} 
-            className="w-full bg-brand-dark text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-brand-teal transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-brand-dark text-white font-bold py-2 md:py-3.5 rounded-lg md:rounded-xl shadow-lg hover:bg-brand-teal transition-colors flex items-center justify-center gap-2 text-xs md:text-base"
           >
-            <ShoppingCart size={18} />
-            Add to Cart
+            <ShoppingCart size={14} className="md:w-[18px]" />
+            <span className="hidden md:inline">Add to Cart</span>
+            <span className="md:hidden">Add</span>
           </button>
         </div>
       </div>
 
       {/* Product Info */}
-      <div className="text-center px-2">
-         <h3 className="text-xl font-bold text-gray-900 group-hover:text-brand-teal transition-colors font-display">{product.name}</h3>
-         <p className="text-gray-500 text-sm mt-1">{product.category === 'snack' ? '100% Natural Treats' : 'Durable Dog Toy'}</p>
-         <div className="mt-3 text-xl font-extrabold text-brand-orange">£{product.price.toFixed(2)}</div>
+      <div className="text-center px-1">
+         <h3 className="text-sm md:text-xl font-bold text-gray-900 group-hover:text-brand-teal transition-colors font-display truncate">{product.name}</h3>
+         <p className="text-gray-500 text-[10px] md:text-sm mt-0.5 md:mt-1 truncate">{product.category === 'snack' ? 'Natural Treats' : 'Dog Toy'}</p>
+         <div className="mt-1 md:mt-3 text-sm md:text-xl font-extrabold text-brand-orange">£{product.price.toFixed(2)}</div>
       </div>
     </div>
   );
@@ -198,8 +199,8 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
   return (
     <div className="bg-white min-h-screen">
       
-      {/* DYNAMIC SHOP HEADER */}
-      <div className="relative h-[50vh] bg-brand-teal flex items-center justify-center overflow-hidden transition-all duration-700">
+      {/* DYNAMIC SHOP HEADER - Reduced height on mobile */}
+      <div className="relative h-[35vh] md:h-[50vh] bg-brand-teal flex items-center justify-center overflow-hidden transition-all duration-700">
          <div className="absolute inset-0 mix-blend-multiply opacity-40 transition-opacity duration-500">
             <img 
               key={activeCategory} 
@@ -212,8 +213,8 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
          <div className="absolute inset-0 bg-gradient-to-t from-brand-teal via-transparent to-brand-teal/20"></div>
          
          <div className="relative z-10 text-center max-w-4xl px-4">
-            <p className="text-white font-bold tracking-[0.2em] uppercase mb-4 text-sm md:text-base drop-shadow-md">The Collection</p>
-            <h2 className="text-6xl md:text-8xl font-display font-extrabold text-white drop-shadow-lg mb-2 capitalize leading-tight">
+            <p className="text-white font-bold tracking-[0.2em] uppercase mb-2 md:mb-4 text-xs md:text-base drop-shadow-md">The Collection</p>
+            <h2 className="text-4xl md:text-8xl font-display font-extrabold text-white drop-shadow-lg mb-2 capitalize leading-tight">
                {activeCategory === 'all' ? (
                  <>Maria's <span className="text-brand-yellow">Favorites</span></>
                ) : activeCategory === 'snack' ? (
@@ -222,12 +223,12 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
                  <>Active <span className="text-brand-yellow">Play</span></>
                )}
             </h2>
-            <p className="text-teal-50 text-lg md:text-xl font-medium max-w-2xl mx-auto mt-4 drop-shadow-sm">
+            <p className="text-teal-50 text-sm md:text-xl font-medium max-w-2xl mx-auto mt-2 md:mt-4 drop-shadow-sm px-4">
               {activeCategory === 'all' 
                 ? "Browse our curated selection of veterinary-approved snacks and indestructible toys."
                 : activeCategory === 'snack'
-                ? "100% natural, air-dried ingredients. No fillers, no nasties—just pure nutrition."
-                : "Engineered for durability and mental stimulation. Keep your dog happy and engaged."}
+                ? "100% natural, air-dried ingredients."
+                : "Engineered for durability."}
             </p>
 
             <div className="absolute -right-4 top-1/2 transform -translate-y-1/2 hidden lg:block">
@@ -241,20 +242,20 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
          </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8 py-8 md:py-16">
         
         {/* Filter Tabs */}
-        <div className="flex justify-center mb-16">
-          <div className="inline-flex bg-gray-100 p-1.5 rounded-full shadow-inner">
+        <div className="flex justify-center mb-8 md:mb-16">
+          <div className="inline-flex bg-gray-100 p-1 md:p-1.5 rounded-full shadow-inner scale-90 md:scale-100 origin-center">
             {[
-              { id: 'all', label: 'All Items' },
-              { id: 'snack', label: 'Healthy Snacks' },
-              { id: 'toy', label: 'Durable Toys' }
+              { id: 'all', label: 'All' },
+              { id: 'snack', label: 'Snacks' },
+              { id: 'toy', label: 'Toys' }
             ].map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id as any)}
-                className={`px-8 py-3 rounded-full text-sm md:text-base font-bold transition-all duration-300 ${
+                className={`px-6 py-2 md:px-8 md:py-3 rounded-full text-xs md:text-base font-bold transition-all duration-300 ${
                   activeCategory === cat.id 
                     ? 'bg-brand-dark text-white shadow-lg transform scale-105' 
                     : 'text-gray-500 hover:text-brand-dark hover:bg-gray-200'
@@ -266,8 +267,8 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
           </div>
         </div>
         
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+        {/* Product Grid - 2 COLUMNS ON MOBILE (grid-cols-2) */}
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 gap-y-6 md:gap-x-8 md:gap-y-16">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} addToCart={addToCart} />
           ))}
