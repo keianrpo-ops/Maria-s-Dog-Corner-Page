@@ -67,11 +67,11 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
         <div className="flex items-center gap-4 md:gap-6 border-t border-white/20 pt-6 md:pt-8 mt-2 animate-fade-in">
            {/* The Seal */}
            <div className="relative group cursor-help shrink-0 transform hover:scale-105 transition-transform duration-300">
-              <div className="w-16 h-16 md:w-24 md:h-24 bg-white rounded-full shadow-[0_0_25px_rgba(255,255,255,0.2)] flex items-center justify-center border-4 border-white/80">
+              <div className="w-20 h-20 md:w-28 md:h-28 bg-white rounded-full shadow-[0_0_25px_rgba(255,255,255,0.2)] flex items-center justify-center border-4 border-white/80 overflow-hidden">
                  <img 
                    src="/images/seal.png" 
                    alt="APHA Approved" 
-                   className="w-full h-full object-contain p-1.5 opacity-90"
+                   className="w-full h-full object-cover scale-110" 
                    onError={(e) => {
                      e.currentTarget.style.display = 'none';
                      e.currentTarget.parentElement!.innerHTML = `<span class="text-brand-dark font-bold text-center text-[8px] md:text-[10px] leading-tight">UK<br/>GOVT<br/>APPROVED</span>`;
@@ -79,8 +79,8 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
                  />
               </div>
               {/* Verified Checkmark Badge */}
-              <div className="absolute -top-1 -right-1 bg-[#00C853] text-white rounded-full p-1 border-[2px] md:border-[3px] border-brand-teal shadow-sm">
-                <ShieldCheck size={12} className="md:w-[14px]" strokeWidth={3} />
+              <div className="absolute -top-1 -right-1 bg-[#00C853] text-white rounded-full p-1 border-[2px] md:border-[3px] border-brand-teal shadow-sm z-10">
+                <ShieldCheck size={14} className="md:w-[16px]" strokeWidth={3} />
               </div>
            </div>
            
