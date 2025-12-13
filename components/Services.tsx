@@ -41,9 +41,9 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           
           {/* 1. DOG WALKING */}
           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-            {/* FRAMED IMAGE CONTAINER */}
-            <div className="h-72 p-3 bg-brand-teal/5">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+            {/* FRAMED IMAGE CONTAINER - Reduced Height (h-56) & More Padding (p-5) */}
+            <div className="h-56 p-5 bg-brand-teal/5">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5">
                     <div className="absolute inset-0 bg-brand-teal/10 md:group-hover:bg-transparent transition-colors z-10"></div>
                     <img 
                         src="/images/services/walking.jpg" 
@@ -96,8 +96,9 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
           {/* 2. DOG SITTING */}
            <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(244,93,111,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-            <div className="h-72 p-3 bg-brand-pink/5">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+            {/* FRAMED IMAGE CONTAINER - Reduced Height (h-56) & More Padding (p-5) */}
+            <div className="h-56 p-5 bg-brand-pink/5">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5">
                     <div className="absolute inset-0 bg-brand-pink/10 md:group-hover:bg-transparent transition-colors z-10"></div>
                     <img 
                         src="/images/services/sitting.jpg" 
@@ -145,8 +146,9 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
           {/* 3. VACATION CARE */}
            <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(255,213,79,0.25)] transition-all duration-300 hover:-translate-y-2 border border-brand-yellow/30 flex flex-col group h-full">
-             <div className="h-72 p-3 bg-brand-yellow/5">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+             {/* FRAMED IMAGE CONTAINER - Reduced Height (h-56) & More Padding (p-5) */}
+             <div className="h-56 p-5 bg-brand-yellow/5">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5">
                     <div className="absolute inset-0 bg-brand-yellow/10 md:group-hover:bg-transparent transition-colors z-10"></div>
                     <img 
                         src="/images/services/vacation.jpg" 
@@ -189,8 +191,9 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
            {/* 4. DOG GROOMING */}
            <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(168,85,247,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             <div className="h-72 p-3 bg-purple-50">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+             {/* FRAMED IMAGE CONTAINER - Reduced Height (h-56) & More Padding (p-5) */}
+             <div className="h-56 p-5 bg-purple-50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5">
                     <div className="absolute inset-0 bg-purple-100/30 md:group-hover:bg-transparent transition-colors z-10"></div>
                     <img 
                         src="/images/services/grooming.jpg" 
@@ -237,8 +240,9 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
            {/* 5. PUPPY TRAINING */}
            <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(59,130,246,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             <div className="h-72 p-3 bg-blue-50">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+             {/* FRAMED IMAGE CONTAINER - Reduced Height (h-56) & More Padding (p-5) */}
+             <div className="h-56 p-5 bg-blue-50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5">
                     <div className="absolute inset-0 bg-blue-100/30 md:group-hover:bg-transparent transition-colors z-10"></div>
                     <img 
                         src="/images/services/training.jpg" 
@@ -285,8 +289,9 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
            {/* 6. DOG MINDING */}
            <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             <div className="h-72 p-3 bg-brand-teal/5">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm">
+             {/* FRAMED IMAGE CONTAINER - Reduced Height (h-56) & More Padding (p-5) */}
+             <div className="h-56 p-5 bg-brand-teal/5">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5">
                     <div className="absolute inset-0 bg-brand-teal/10 md:group-hover:bg-transparent transition-colors z-10"></div>
                     <img 
                         src="/images/services/pop-in.jpg" 
