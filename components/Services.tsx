@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dog, Home, Sun, Heart, Star, Check, ArrowRight } from 'lucide-react';
+import { Dog, Home, Sun, Heart, Star, Check, ArrowRight, Scissors, GraduationCap } from 'lucide-react';
 import { Product } from '../types';
 
 interface ServicesProps {
@@ -29,128 +29,92 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
         
         {/* Intro Section */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
-          <span className="text-brand-pink font-bold tracking-widest uppercase text-sm">Professional Care</span>
+          <span className="text-brand-pink font-bold tracking-widest uppercase text-sm">Full Service Care</span>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-brand-dark mb-6 mt-2">
-            Our Premium Services
+            Our 6 Premium Services
           </h2>
           <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
-            Fully insured and APHA approved. From quick visits to long-term vacation care, 
-            choose the perfect plan for your furry friend below.
+            Everything your dog needs under one roof. Fully insured, APHA approved, and delivered with love.
           </p>
           <div className="mt-6 h-1.5 w-24 rounded-full bg-brand-orange mx-auto"></div>
         </div>
         
-        {/* Services Grid - 2x2 Layout for better visibility on desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+        {/* Services Grid - 2 columns on desktop for large cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           
           {/* 1. DOG WALKING */}
-          <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col group">
-            <div className="relative h-64 overflow-hidden">
+          <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col group h-full">
+            <div className="relative h-56 overflow-hidden">
               <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
-              {/* Image */}
               <img src="https://images.unsplash.com/photo-1605639148518-e7d6928d1c33?auto=format&fit=crop&w=800&q=80" alt="Dog Walking" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-              {/* Icon Badge */}
-              <div className="absolute bottom-4 left-4 z-20 w-14 h-14 rounded-2xl bg-brand-teal text-white flex items-center justify-center shadow-lg">
-                <Dog size={28} />
+              <div className="absolute bottom-4 left-4 z-20 w-12 h-12 rounded-2xl bg-brand-teal text-white flex items-center justify-center shadow-lg">
+                <Dog size={24} />
               </div>
-              {/* Popular Tag */}
-              <div className="absolute top-4 right-4 z-20 bg-brand-orange text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
-                <Star size={12} fill="currentColor" /> POPULAR
+              <div className="absolute top-4 right-4 z-20 bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-lg flex items-center gap-1">
+                <Star size={10} fill="currentColor" /> POPULAR
               </div>
             </div>
             
-            <div className="p-8 flex flex-col flex-grow">
-              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Dog Walking</h3>
-              <p className="text-gray-500 mb-6 text-sm">Energizing walks in safe, green spaces.</p>
+            <div className="p-6 flex flex-col flex-grow">
+              <h3 className="text-xl font-bold font-display text-gray-900 mb-2">Dog Walking</h3>
+              <p className="text-gray-500 mb-4 text-sm">Energizing walks in safe, green spaces.</p>
               
-              <ul className="space-y-2 mb-8 flex-grow">
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-teal" /> <span>GPS Tracked Walks</span></li>
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-teal" /> <span>Fresh water & paw cleaning</span></li>
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-teal" /> <span>Photo updates included</span></li>
+              <ul className="space-y-2 mb-6 flex-grow">
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-brand-teal" /> <span>GPS Tracked</span></li>
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-brand-teal" /> <span>Photo updates</span></li>
               </ul>
 
-              <div className="space-y-3 mt-auto">
+              <div className="mt-auto pt-4 border-t border-gray-100">
                 <button 
                   onClick={() => handleBookService({
-                    id: 'svc-walk-solo', name: 'Solo Dog Walk (1hr)', price: 20, category: 'snack', 
-                    image: 'https://images.unsplash.com/photo-1605639148518-e7d6928d1c33?auto=format&fit=crop&w=500&q=80', 
-                    description: 'One hour solo walk'
-                  })}
-                  className="w-full flex justify-between items-center p-4 rounded-xl bg-gray-50 hover:bg-brand-light border border-gray-100 hover:border-brand-teal transition-all group/btn"
-                >
-                  <span className="font-bold text-gray-700">Solo Walk (1hr)</span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-brand-dark">£20</span>
-                    <ArrowRight size={16} className="text-gray-400 group-hover/btn:text-brand-teal" />
-                  </div>
-                </button>
-
-                <button 
-                  onClick={() => handleBookService({
-                    id: 'svc-walk-group', name: 'Group Adventure (1hr)', price: 15, category: 'snack', 
+                    id: 'svc-walk-group', name: 'Group Walk (1hr)', price: 15, category: 'snack', 
                     image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=500&q=80', 
                     description: 'Group adventure walk'
                   })}
-                  className="w-full flex justify-between items-center p-4 rounded-xl bg-gray-50 hover:bg-brand-light border border-gray-100 hover:border-brand-teal transition-all group/btn"
+                  className="w-full flex justify-between items-center p-3 rounded-xl bg-gray-50 hover:bg-brand-light hover:text-brand-teal transition-colors group/btn"
                 >
-                  <span className="font-bold text-gray-700">Group Walk (1hr)</span>
-                  <div className="flex items-center gap-2">
+                  <span className="font-bold text-gray-700 text-sm">Book Walk</span>
+                  <div className="flex items-center gap-1">
                     <span className="font-bold text-brand-dark">£15</span>
-                    <ArrowRight size={16} className="text-gray-400 group-hover/btn:text-brand-teal" />
+                    <ArrowRight size={14} />
                   </div>
                 </button>
               </div>
             </div>
           </div>
 
-          {/* 2. DOG SITTING (Home Boarding) */}
-          <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col group">
-            <div className="relative h-64 overflow-hidden">
+          {/* 2. DOG SITTING */}
+          <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col group h-full">
+            <div className="relative h-56 overflow-hidden">
               <div className="absolute inset-0 bg-brand-pink/20 group-hover:bg-transparent transition-colors z-10"></div>
               <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80" alt="Dog Sitting" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute bottom-4 left-4 z-20 w-14 h-14 rounded-2xl bg-brand-pink text-white flex items-center justify-center shadow-lg">
-                <Home size={28} />
+              <div className="absolute bottom-4 left-4 z-20 w-12 h-12 rounded-2xl bg-brand-pink text-white flex items-center justify-center shadow-lg">
+                <Home size={24} />
               </div>
             </div>
 
-            <div className="p-8 flex flex-col flex-grow">
-              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Home Sitting</h3>
-              <p className="text-gray-500 mb-6 text-sm">Comfort and companionship in your own home.</p>
+            <div className="p-6 flex flex-col flex-grow">
+              <h3 className="text-xl font-bold font-display text-gray-900 mb-2">Home Sitting</h3>
+              <p className="text-gray-500 mb-4 text-sm">Comfort in your own home.</p>
 
-               <ul className="space-y-2 mb-8 flex-grow">
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-pink" /> <span>Maintains their routine</span></li>
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-pink" /> <span>Feeding & medication included</span></li>
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-pink" /> <span>Constant cuddles</span></li>
+               <ul className="space-y-2 mb-6 flex-grow">
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-brand-pink" /> <span>Routine maintained</span></li>
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-brand-pink" /> <span>Overnight stays</span></li>
               </ul>
 
-              <div className="space-y-3 mt-auto">
+              <div className="mt-auto pt-4 border-t border-gray-100">
                  <button 
                      onClick={() => handleBookService({
-                      id: 'svc-sit-12', name: 'Day Sitting (12 Hours)', price: 35, category: 'snack', 
-                      image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=500&q=80', 
-                      description: '12 Hour in-home sitting'
-                    })}
-                  className="w-full flex justify-between items-center p-4 rounded-xl bg-gray-50 hover:bg-brand-light border border-gray-100 hover:border-brand-pink transition-all group/btn"
-                >
-                  <span className="font-bold text-gray-700">Day Care (12 hrs)</span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-brand-dark">£35</span>
-                    <ArrowRight size={16} className="text-gray-400 group-hover/btn:text-brand-pink" />
-                  </div>
-                </button>
-
-                 <button 
-                     onClick={() => handleBookService({
-                      id: 'svc-sit-24', name: 'Overnight Sitting (24 Hours)', price: 45, category: 'snack', 
+                      id: 'svc-sit-24', name: 'Overnight Sitting', price: 45, category: 'snack', 
                       image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=500&q=80', 
                       description: 'Full day and night care'
                     })}
-                  className="w-full flex justify-between items-center p-4 rounded-xl bg-gray-50 hover:bg-brand-light border border-gray-100 hover:border-brand-pink transition-all group/btn"
+                  className="w-full flex justify-between items-center p-3 rounded-xl bg-gray-50 hover:bg-brand-light hover:text-brand-pink transition-colors group/btn"
                 >
-                  <span className="font-bold text-gray-700">Overnight (24 hrs)</span>
-                  <div className="flex items-center gap-2">
+                  <span className="font-bold text-gray-700 text-sm">Book Night</span>
+                  <div className="flex items-center gap-1">
                     <span className="font-bold text-brand-dark">£45</span>
-                    <ArrowRight size={16} className="text-gray-400 group-hover/btn:text-brand-pink" />
+                    <ArrowRight size={14} />
                   </div>
                 </button>
               </div>
@@ -158,90 +122,144 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           </div>
 
           {/* 3. VACATION CARE */}
-          <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-brand-yellow/30 flex flex-col group relative">
-             <div className="absolute top-4 right-4 z-20 bg-brand-yellow text-brand-dark text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                PREMIUM
-             </div>
-             
-             <div className="relative h-64 overflow-hidden">
+          <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-brand-yellow/30 flex flex-col group h-full">
+             <div className="relative h-56 overflow-hidden">
               <div className="absolute inset-0 bg-brand-yellow/20 group-hover:bg-transparent transition-colors z-10"></div>
               <img src="https://images.unsplash.com/photo-1575485670541-82a2b0cb0e25?auto=format&fit=crop&w=800&q=80" alt="Vacation Care" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute bottom-4 left-4 z-20 w-14 h-14 rounded-2xl bg-brand-yellow text-white flex items-center justify-center shadow-lg">
-                <Sun size={28} />
+              <div className="absolute bottom-4 left-4 z-20 w-12 h-12 rounded-2xl bg-brand-yellow text-white flex items-center justify-center shadow-lg">
+                <Sun size={24} />
               </div>
             </div>
 
-            <div className="p-8 flex flex-col flex-grow">
-              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Vacation Care</h3>
-              <p className="text-gray-500 mb-6 text-sm">Long-term loving care while you travel.</p>
+            <div className="p-6 flex flex-col flex-grow">
+              <h3 className="text-xl font-bold font-display text-gray-900 mb-2">Vacation Care</h3>
+              <p className="text-gray-500 mb-4 text-sm">Long-term loving care while you travel.</p>
 
-               <ul className="space-y-2 mb-8 flex-grow">
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-yellow" /> <span>Home-away-from-home</span></li>
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-yellow" /> <span>Daily video calls included</span></li>
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-yellow" /> <span>Beach trips included</span></li>
+               <ul className="space-y-2 mb-6 flex-grow">
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-brand-yellow" /> <span>Home-away-from-home</span></li>
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-brand-yellow" /> <span>Video calls</span></li>
               </ul>
 
-              <div className="space-y-3 mt-auto">
+              <div className="mt-auto pt-4 border-t border-gray-100">
                  <button 
                   onClick={scrollToContact}
-                  className="w-full bg-brand-dark text-white font-bold py-4 rounded-xl shadow-lg hover:bg-brand-orange transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-brand-dark text-white text-sm font-bold py-3 rounded-xl shadow hover:bg-brand-orange transition-all flex items-center justify-center gap-2"
                  >
-                   <span>Get a Custom Quote</span>
-                   <ArrowRight size={18} />
+                   <span>Get Quote</span>
+                   <ArrowRight size={14} />
                  </button>
-                 <p className="text-center text-xs text-gray-400 mt-2">Starting from £40 / night</p>
               </div>
             </div>
           </div>
 
-           {/* 4. DOG MINDING (Drop-ins) */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col group">
-             <div className="relative h-64 overflow-hidden">
-              <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
-              <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80" alt="Pet Minding" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute bottom-4 left-4 z-20 w-14 h-14 rounded-2xl bg-brand-teal text-white flex items-center justify-center shadow-lg">
-                <Heart size={28} />
+           {/* 4. DOG GROOMING (RESTORED) */}
+           <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col group h-full">
+             <div className="relative h-56 overflow-hidden">
+              <div className="absolute inset-0 bg-purple-100/50 group-hover:bg-transparent transition-colors z-10"></div>
+              <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80" alt="Dog Grooming" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute bottom-4 left-4 z-20 w-12 h-12 rounded-2xl bg-purple-500 text-white flex items-center justify-center shadow-lg">
+                <Scissors size={24} />
               </div>
             </div>
 
-            <div className="p-8 flex flex-col flex-grow">
-              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Dog Minding</h3>
-              <p className="text-gray-500 mb-6 text-sm">Short visits for puppies or seniors.</p>
+            <div className="p-6 flex flex-col flex-grow">
+              <h3 className="text-xl font-bold font-display text-gray-900 mb-2">Grooming</h3>
+              <p className="text-gray-500 mb-4 text-sm">Wash, cut, and fluff for a fresh pup.</p>
 
-               <ul className="space-y-2 mb-8 flex-grow">
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-teal" /> <span>Garden breaks & clean up</span></li>
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-teal" /> <span>Feeding & playtime</span></li>
-                 <li className="flex items-center gap-2 text-gray-700 text-sm"><Check size={16} className="text-brand-teal" /> <span>Perfect for working owners</span></li>
+               <ul className="space-y-2 mb-6 flex-grow">
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-purple-500" /> <span>Bath & Blow Dry</span></li>
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-purple-500" /> <span>Nail Clipping</span></li>
               </ul>
 
-              <div className="space-y-3 mt-auto">
+              <div className="mt-auto pt-4 border-t border-gray-100">
                  <button 
                     onClick={() => handleBookService({
-                      id: 'svc-mind-30', name: 'Pop-in Visit (30 mins)', price: 12, category: 'snack', 
+                      id: 'svc-groom-full', name: 'Full Groom', price: 35, category: 'snack', 
+                      image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=500&q=80', 
+                      description: 'Full wash, cut and dry'
+                    })}
+                  className="w-full flex justify-between items-center p-3 rounded-xl bg-gray-50 hover:bg-purple-50 hover:text-purple-600 transition-colors group/btn"
+                >
+                  <span className="font-bold text-gray-700 text-sm">Full Groom</span>
+                  <div className="flex items-center gap-1">
+                    <span className="font-bold text-brand-dark">£35</span>
+                    <ArrowRight size={14} />
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+           {/* 5. PUPPY TRAINING (RESTORED) */}
+           <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col group h-full">
+             <div className="relative h-56 overflow-hidden">
+              <div className="absolute inset-0 bg-blue-100/50 group-hover:bg-transparent transition-colors z-10"></div>
+              <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80" alt="Puppy Training" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute bottom-4 left-4 z-20 w-12 h-12 rounded-2xl bg-blue-500 text-white flex items-center justify-center shadow-lg">
+                <GraduationCap size={24} />
+              </div>
+            </div>
+
+            <div className="p-6 flex flex-col flex-grow">
+              <h3 className="text-xl font-bold font-display text-gray-900 mb-2">Training</h3>
+              <p className="text-gray-500 mb-4 text-sm">Positive reinforcement for puppies.</p>
+
+               <ul className="space-y-2 mb-6 flex-grow">
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-blue-500" /> <span>Basic Commands</span></li>
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-blue-500" /> <span>Socialization</span></li>
+              </ul>
+
+              <div className="mt-auto pt-4 border-t border-gray-100">
+                 <button 
+                    onClick={() => handleBookService({
+                      id: 'svc-train-1hr', name: 'Training Session', price: 40, category: 'snack', 
+                      image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=500&q=80', 
+                      description: '1 Hour Training Session'
+                    })}
+                  className="w-full flex justify-between items-center p-3 rounded-xl bg-gray-50 hover:bg-blue-50 hover:text-blue-600 transition-colors group/btn"
+                >
+                  <span className="font-bold text-gray-700 text-sm">1 Session</span>
+                  <div className="flex items-center gap-1">
+                    <span className="font-bold text-brand-dark">£40</span>
+                    <ArrowRight size={14} />
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+           {/* 6. DOG MINDING (Drop-ins) */}
+           <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col group h-full">
+             <div className="relative h-56 overflow-hidden">
+              <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
+              <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80" alt="Pet Minding" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute bottom-4 left-4 z-20 w-12 h-12 rounded-2xl bg-brand-teal text-white flex items-center justify-center shadow-lg">
+                <Heart size={24} />
+              </div>
+            </div>
+
+            <div className="p-6 flex flex-col flex-grow">
+              <h3 className="text-xl font-bold font-display text-gray-900 mb-2">Pop-in Visits</h3>
+              <p className="text-gray-500 mb-4 text-sm">Short visits for feed & play.</p>
+
+               <ul className="space-y-2 mb-6 flex-grow">
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-brand-teal" /> <span>Garden breaks</span></li>
+                 <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-brand-teal" /> <span>Puppy care</span></li>
+              </ul>
+
+              <div className="mt-auto pt-4 border-t border-gray-100">
+                 <button 
+                    onClick={() => handleBookService({
+                      id: 'svc-mind-30', name: 'Pop-in Visit', price: 12, category: 'snack', 
                       image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=500&q=80', 
                       description: '30 minute home visit'
                     })}
-                  className="w-full flex justify-between items-center p-4 rounded-xl bg-gray-50 hover:bg-brand-light border border-gray-100 hover:border-brand-teal transition-all group/btn"
+                  className="w-full flex justify-between items-center p-3 rounded-xl bg-gray-50 hover:bg-brand-light hover:text-brand-teal transition-colors group/btn"
                 >
-                  <span className="font-bold text-gray-700">Pop-in (30 mins)</span>
-                  <div className="flex items-center gap-2">
+                  <span className="font-bold text-gray-700 text-sm">Pop-in</span>
+                  <div className="flex items-center gap-1">
                     <span className="font-bold text-brand-dark">£12</span>
-                    <ArrowRight size={16} className="text-gray-400 group-hover/btn:text-brand-teal" />
-                  </div>
-                </button>
-
-                 <button 
-                    onClick={() => handleBookService({
-                      id: 'svc-mind-60', name: 'Extended Visit (1 hr)', price: 18, category: 'snack', 
-                      image: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=500&q=80', 
-                      description: '1 hour home visit'
-                    })}
-                  className="w-full flex justify-between items-center p-4 rounded-xl bg-gray-50 hover:bg-brand-light border border-gray-100 hover:border-brand-teal transition-all group/btn"
-                >
-                  <span className="font-bold text-gray-700">Extended (1 hr)</span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-brand-dark">£18</span>
-                    <ArrowRight size={16} className="text-gray-400 group-hover/btn:text-brand-teal" />
+                    <ArrowRight size={14} />
                   </div>
                 </button>
               </div>
