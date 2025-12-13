@@ -53,30 +53,30 @@ function App() {
             {/* Pass addToCart to Services so users can book walks directly */}
             <Services addToCart={addToCart} />
             
-            {/* GIANT PROMO BANNER */}
-            <div className="relative h-[700px] w-full bg-cover bg-center flex items-center" 
+            {/* GIANT PROMO BANNER - OPTIMIZED FOR MOBILE */}
+            <div className="relative h-[500px] md:h-[700px] w-full bg-cover bg-center flex items-center" 
                  style={{ 
                    backgroundImage: 'url("https://images.unsplash.com/photo-1587300003388-59208cc962cb?q=80&w=2070&auto=format&fit=crop")' 
                  }}>
-               <div className="absolute inset-0 bg-gradient-to-r from-brand-teal/40 to-transparent"></div>
+               <div className="absolute inset-0 bg-gradient-to-r from-brand-teal/60 to-brand-teal/10 md:to-transparent"></div>
                
-               <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full h-full flex items-center">
-                  <div className="bg-brand-teal/40 backdrop-blur-md p-10 md:p-14 rounded-[3rem] border border-white/40 shadow-2xl max-w-xl text-left">
-                    <span className="text-brand-yellow font-bold tracking-widest uppercase mb-4 block text-sm shadow-black drop-shadow-sm">
+               <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-12 w-full h-full flex items-center justify-center md:justify-start">
+                  <div className="bg-brand-teal/40 backdrop-blur-md p-6 md:p-14 rounded-3xl md:rounded-[3rem] border border-white/40 shadow-2xl max-w-sm md:max-w-xl text-center md:text-left mx-2">
+                    <span className="text-brand-yellow font-bold tracking-widest uppercase mb-2 md:mb-4 block text-xs md:text-sm shadow-black drop-shadow-sm">
                       New Collection
                     </span>
-                    <h3 className="text-5xl md:text-6xl font-display font-extrabold text-white mb-6 leading-[0.95] drop-shadow-md">
+                    <h3 className="text-3xl md:text-6xl font-display font-extrabold text-white mb-3 md:mb-6 leading-tight drop-shadow-md">
                       Pure Love in<br/>
                       Every Bite.
                     </h3>
-                    <p className="mb-8 text-lg md:text-xl text-white font-medium leading-relaxed drop-shadow-sm">
-                      Our new 100% natural dehydrated treats are here. No preservatives, just real meat and veggies for your best friend.
+                    <p className="mb-6 md:mb-8 text-sm md:text-xl text-white font-medium leading-relaxed drop-shadow-sm">
+                      Our new 100% natural dehydrated treats are here. No preservatives, just real meat.
                     </p>
                     <button 
                       onClick={() => setCurrentView(PageView.SHOP)}
-                      className="bg-white text-brand-dark font-bold text-lg py-4 px-10 rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                      className="w-full md:w-auto bg-white text-brand-dark font-bold text-base md:text-lg py-3 md:py-4 px-6 md:px-10 rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 active:scale-95"
                     >
-                      Shop the Collection
+                      Shop Collection
                     </button>
                   </div>
 
@@ -136,9 +136,9 @@ function App() {
       {totalItems > 0 && !isCartOpen && (
         <button 
           onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-24 right-6 z-40 bg-brand-pink text-white p-4 rounded-full shadow-2xl animate-bounce flex items-center gap-2 border-4 border-white hover:bg-red-500 transition-colors"
+          className="fixed bottom-24 right-4 md:right-6 z-40 bg-brand-pink text-white p-3 md:p-4 rounded-full shadow-2xl animate-bounce flex items-center gap-2 border-4 border-white hover:bg-red-500 transition-colors"
         >
-          <div className="font-bold text-xl">{totalItems}</div>
+          <div className="font-bold text-lg md:text-xl w-6 h-6 md:w-auto flex items-center justify-center">{totalItems}</div>
         </button>
       )}
       

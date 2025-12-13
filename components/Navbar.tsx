@@ -39,8 +39,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
     <nav 
       className={`sticky top-0 z-50 transition-all duration-300 border-b border-gray-100/50 ${
         isScrolled 
-          ? 'bg-white/90 backdrop-blur-md h-20 shadow-md' 
-          : 'bg-white h-24 shadow-sm'
+          ? 'bg-white/90 backdrop-blur-md h-16 md:h-20 shadow-md' 
+          : 'bg-white h-20 md:h-24 shadow-sm'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
@@ -50,10 +50,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
             <img 
               src="/images/logo.png" 
               alt="Maria's Dog Corner" 
-              className={`h-full w-auto object-contain transition-all duration-300 ${isScrolled ? 'max-h-12' : 'max-h-20'} group-hover:scale-105`}
+              className={`h-full w-auto object-contain transition-all duration-300 ${isScrolled ? 'max-h-8 md:max-h-12' : 'max-h-12 md:max-h-20'} group-hover:scale-105`}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
-                e.currentTarget.parentElement!.innerHTML = `<span class="font-display font-bold text-2xl md:text-3xl text-brand-dark">Maria's<span class="text-brand-pink">DogCorner</span></span>`;
+                e.currentTarget.parentElement!.innerHTML = `<span class="font-display font-bold text-xl md:text-3xl text-brand-dark">Maria's<span class="text-brand-pink">DogCorner</span></span>`;
               }}
             />
           </div>
@@ -100,14 +100,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-4">
+          <div className="md:hidden flex items-center gap-3">
              <button 
                 onClick={() => handleNavClick(PageView.SHOP)}
-                className="relative text-gray-600"
+                className="relative text-gray-600 p-2"
               >
-                <ShoppingBag size={26} />
+                <ShoppingBag size={24} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-brand-pink text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                  <span className="absolute top-0 right-0 bg-brand-pink text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
                     {cartCount}
                   </span>
                 )}
@@ -116,7 +116,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-brand-dark focus:outline-none p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+              {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
           </div>
         </div>
@@ -124,13 +124,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
 
       {/* Mobile Menu Panel */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-100 absolute w-full shadow-2xl z-50 animate-fade-in">
-          <div className="px-4 pt-2 pb-6 space-y-2">
+        <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-100 absolute w-full shadow-2xl z-50 animate-fade-in h-screen">
+          <div className="px-4 pt-4 pb-6 space-y-3">
             {navLinks.map((link) => (
               <button
                 key={link.name}
                 onClick={() => handleNavClick(link.view)}
-                className={`block w-full text-left px-4 py-3 rounded-xl text-base font-medium transition-colors ${
+                className={`block w-full text-left px-4 py-4 rounded-xl text-lg font-medium transition-colors ${
                   currentView === link.view
                     ? 'bg-brand-light text-brand-dark font-bold'
                     : 'text-gray-600 hover:bg-gray-50'
@@ -139,10 +139,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
                 {link.name}
               </button>
             ))}
-            <div className="pt-4 mt-4 border-t border-gray-100">
+            <div className="pt-6 mt-4 border-t border-gray-100">
                <button 
                 onClick={() => handleNavClick(PageView.CONTACT)}
-                className="w-full bg-brand-dark text-white py-3 rounded-xl font-bold shadow-md active:scale-95 transition-transform"
+                className="w-full bg-brand-dark text-white py-4 rounded-xl font-bold shadow-md active:scale-95 transition-transform text-lg"
               >
                 Book an Appointment
               </button>
