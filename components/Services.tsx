@@ -21,11 +21,16 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
     }
   };
 
+  // Helper to handle missing images gracefully
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = "https://placehold.co/800x600/E0F7FA/00838F?text=Service+Image";
+  };
+
   return (
     <div className="relative py-12 md:py-20 bg-brand-light" id="services">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         
-        {/* Intro Section - More compact on mobile */}
+        {/* Intro Section */}
         <div className="text-center mb-10 md:mb-16 max-w-4xl mx-auto">
           <span className="text-brand-pink font-bold tracking-widest uppercase text-xs md:text-sm">Full Service Care</span>
           <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-3 md:mb-6 mt-2">
@@ -37,14 +42,22 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           <div className="mt-4 md:mt-6 h-1 w-16 md:w-24 rounded-full bg-brand-orange mx-auto"></div>
         </div>
         
-        {/* Services Grid - 2 columns on mobile (compact) */}
+        {/* Services Grid */}
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
           
           {/* 1. DOG WALKING */}
           <div className="bg-white rounded-2xl md:rounded-[2rem] overflow-hidden shadow-md md:shadow-xl border border-gray-100 flex flex-col group h-full active:scale-[0.98] transition-transform duration-200">
             <div className="relative h-32 md:h-56 overflow-hidden">
               <div className="absolute inset-0 bg-brand-teal/20 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img src="https://images.unsplash.com/photo-1605639148518-e7d6928d1c33?auto=format&fit=crop&w=800&q=80" alt="Dog Walking" className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" />
+              <img 
+                src="/images/services/walking.jpg" 
+                onError={(e) => {
+                    // Fallback to Unsplash if local image is missing
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1605639148518-e7d6928d1c33?auto=format&fit=crop&w=800&q=80";
+                }}
+                alt="Dog Walking" 
+                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+              />
               <div className="absolute bottom-2 left-2 md:bottom-4 md:left-4 z-20 w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-2xl bg-brand-teal text-white flex items-center justify-center shadow-lg">
                 <Dog size={16} className="md:w-6 md:h-6" />
               </div>
@@ -57,7 +70,6 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
               <h3 className="text-sm md:text-xl font-bold font-display text-gray-900 mb-1 md:mb-2 truncate">Dog Walking</h3>
               <p className="text-gray-500 mb-2 md:mb-4 text-[10px] md:text-sm line-clamp-2">Energizing walks in safe, green spaces.</p>
               
-              {/* Features hidden on very small screens or abbreviated */}
               <ul className="space-y-1 mb-3 flex-grow hidden md:block">
                  <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-brand-teal" /> <span>GPS Tracked</span></li>
                  <li className="flex items-center gap-2 text-gray-700 text-xs"><Check size={14} className="text-brand-teal" /> <span>Photo updates</span></li>
@@ -67,7 +79,7 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                 <button 
                   onClick={() => handleBookService({
                     id: 'svc-walk-group', name: 'Group Walk', price: 15, category: 'snack', 
-                    image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=500&q=80', 
+                    image: '/images/services/walking.jpg', // Used for cart thumbnail
                     description: 'Group adventure walk'
                   })}
                   className="w-full flex justify-between items-center p-2 md:p-3 rounded-lg md:rounded-xl bg-gray-50 hover:bg-brand-light hover:text-brand-teal transition-colors"
@@ -86,7 +98,12 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           <div className="bg-white rounded-2xl md:rounded-[2rem] overflow-hidden shadow-md md:shadow-xl border border-gray-100 flex flex-col group h-full active:scale-[0.98] transition-transform duration-200">
             <div className="relative h-32 md:h-56 overflow-hidden">
               <div className="absolute inset-0 bg-brand-pink/20 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80" alt="Dog Sitting" className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" />
+              <img 
+                src="/images/services/sitting.jpg" 
+                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80"; }}
+                alt="Dog Sitting" 
+                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+              />
               <div className="absolute bottom-2 left-2 md:bottom-4 md:left-4 z-20 w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-2xl bg-brand-pink text-white flex items-center justify-center shadow-lg">
                 <Home size={16} className="md:w-6 md:h-6" />
               </div>
@@ -105,7 +122,7 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                  <button 
                      onClick={() => handleBookService({
                       id: 'svc-sit-24', name: 'Overnight Sitting', price: 45, category: 'snack', 
-                      image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=500&q=80', 
+                      image: '/images/services/sitting.jpg', 
                       description: 'Full day and night care'
                     })}
                   className="w-full flex justify-between items-center p-2 md:p-3 rounded-lg md:rounded-xl bg-gray-50 hover:bg-brand-light hover:text-brand-pink transition-colors"
@@ -124,7 +141,12 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           <div className="bg-white rounded-2xl md:rounded-[2rem] overflow-hidden shadow-md md:shadow-xl border-2 border-brand-yellow/30 flex flex-col group h-full active:scale-[0.98] transition-transform duration-200">
              <div className="relative h-32 md:h-56 overflow-hidden">
               <div className="absolute inset-0 bg-brand-yellow/20 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img src="https://images.unsplash.com/photo-1575485670541-82a2b0cb0e25?auto=format&fit=crop&w=800&q=80" alt="Vacation Care" className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" />
+              <img 
+                src="/images/services/vacation.jpg" 
+                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1575485670541-82a2b0cb0e25?auto=format&fit=crop&w=800&q=80"; }}
+                alt="Vacation Care" 
+                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+              />
               <div className="absolute bottom-2 left-2 md:bottom-4 md:left-4 z-20 w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-2xl bg-brand-yellow text-white flex items-center justify-center shadow-lg">
                 <Sun size={16} className="md:w-6 md:h-6" />
               </div>
@@ -155,7 +177,12 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
            <div className="bg-white rounded-2xl md:rounded-[2rem] overflow-hidden shadow-md md:shadow-xl border border-gray-100 flex flex-col group h-full active:scale-[0.98] transition-transform duration-200">
              <div className="relative h-32 md:h-56 overflow-hidden">
               <div className="absolute inset-0 bg-purple-100/50 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80" alt="Dog Grooming" className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" />
+              <img 
+                src="/images/services/grooming.jpg" 
+                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80"; }}
+                alt="Dog Grooming" 
+                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+              />
               <div className="absolute bottom-2 left-2 md:bottom-4 md:left-4 z-20 w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-2xl bg-purple-500 text-white flex items-center justify-center shadow-lg">
                 <Scissors size={16} className="md:w-6 md:h-6" />
               </div>
@@ -174,7 +201,7 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                  <button 
                     onClick={() => handleBookService({
                       id: 'svc-groom-full', name: 'Full Groom', price: 35, category: 'snack', 
-                      image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=500&q=80', 
+                      image: '/images/services/grooming.jpg', 
                       description: 'Full wash, cut and dry'
                     })}
                   className="w-full flex justify-between items-center p-2 md:p-3 rounded-lg md:rounded-xl bg-gray-50 hover:bg-purple-50 hover:text-purple-600 transition-colors"
@@ -193,7 +220,12 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
            <div className="bg-white rounded-2xl md:rounded-[2rem] overflow-hidden shadow-md md:shadow-xl border border-gray-100 flex flex-col group h-full active:scale-[0.98] transition-transform duration-200">
              <div className="relative h-32 md:h-56 overflow-hidden">
               <div className="absolute inset-0 bg-blue-100/50 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80" alt="Puppy Training" className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" />
+              <img 
+                src="/images/services/training.jpg" 
+                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80"; }}
+                alt="Puppy Training" 
+                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+              />
               <div className="absolute bottom-2 left-2 md:bottom-4 md:left-4 z-20 w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-2xl bg-blue-500 text-white flex items-center justify-center shadow-lg">
                 <GraduationCap size={16} className="md:w-6 md:h-6" />
               </div>
@@ -212,7 +244,7 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                  <button 
                     onClick={() => handleBookService({
                       id: 'svc-train-1hr', name: 'Training Session', price: 40, category: 'snack', 
-                      image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=500&q=80', 
+                      image: '/images/services/training.jpg', 
                       description: '1 Hour Training Session'
                     })}
                   className="w-full flex justify-between items-center p-2 md:p-3 rounded-lg md:rounded-xl bg-gray-50 hover:bg-blue-50 hover:text-blue-600 transition-colors"
@@ -231,7 +263,12 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
            <div className="bg-white rounded-2xl md:rounded-[2rem] overflow-hidden shadow-md md:shadow-xl border border-gray-100 flex flex-col group h-full active:scale-[0.98] transition-transform duration-200">
              <div className="relative h-32 md:h-56 overflow-hidden">
               <div className="absolute inset-0 bg-brand-teal/20 md:group-hover:bg-transparent transition-colors z-10"></div>
-              <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80" alt="Pet Minding" className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" />
+              <img 
+                src="/images/services/pop-in.jpg" 
+                onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80"; }}
+                alt="Pet Minding" 
+                className="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-700" 
+              />
               <div className="absolute bottom-2 left-2 md:bottom-4 md:left-4 z-20 w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-2xl bg-brand-teal text-white flex items-center justify-center shadow-lg">
                 <Heart size={16} className="md:w-6 md:h-6" />
               </div>
@@ -250,7 +287,7 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                  <button 
                     onClick={() => handleBookService({
                       id: 'svc-mind-30', name: 'Pop-in Visit', price: 12, category: 'snack', 
-                      image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=500&q=80', 
+                      image: '/images/services/pop-in.jpg', 
                       description: '30 minute home visit'
                     })}
                   className="w-full flex justify-between items-center p-2 md:p-3 rounded-lg md:rounded-xl bg-gray-50 hover:bg-brand-light hover:text-brand-teal transition-colors"
