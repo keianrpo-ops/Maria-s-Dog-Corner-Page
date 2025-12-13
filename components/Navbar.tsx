@@ -45,17 +45,25 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex justify-between items-center h-full"> 
-          {/* Logo Section */}
-          <div className="flex items-center h-full py-2 cursor-pointer group" onClick={() => handleNavClick(PageView.HOME)}>
+          {/* Logo Section - Now includes Text for better mobile visibility */}
+          <div className="flex items-center gap-2 h-full py-2 cursor-pointer group flex-shrink-0" onClick={() => handleNavClick(PageView.HOME)}>
             <img 
               src="/images/logo.png" 
               alt="Maria's Dog Corner" 
-              className={`h-full w-auto object-contain transition-all duration-300 ${isScrolled ? 'max-h-8 md:max-h-12' : 'max-h-12 md:max-h-20'} group-hover:scale-105`}
+              className={`h-full w-auto object-contain transition-all duration-300 ${isScrolled ? 'max-h-10 md:max-h-12' : 'max-h-14 md:max-h-20'} group-hover:scale-105`}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
-                e.currentTarget.parentElement!.innerHTML = `<span class="font-display font-bold text-xl md:text-3xl text-brand-dark">Maria's<span class="text-brand-pink">DogCorner</span></span>`;
               }}
             />
+            {/* Added Text Title so it is always visible on phone */}
+            <div className="flex flex-col justify-center leading-none">
+               <span className={`font-display font-bold text-brand-dark transition-all duration-300 ${isScrolled ? 'text-lg md:text-xl' : 'text-xl md:text-3xl'}`}>
+                 Maria's
+               </span>
+               <span className={`font-display font-bold text-brand-pink transition-all duration-300 ${isScrolled ? 'text-xs md:text-sm' : 'text-sm md:text-lg'} -mt-0.5 md:-mt-1`}>
+                 Dog Corner
+               </span>
+            </div>
           </div>
 
           {/* Desktop Menu */}
@@ -100,7 +108,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-3">
+          <div className="md:hidden flex items-center gap-2">
              <button 
                 onClick={() => handleNavClick(PageView.SHOP)}
                 className="relative text-gray-600 p-2"

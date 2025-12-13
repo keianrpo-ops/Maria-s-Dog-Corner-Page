@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from './Button';
 import { PageView } from '../types';
-import { ShoppingBag, Star, ShieldCheck, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Star, ShieldCheck, ArrowRight, Heart } from 'lucide-react';
 
 interface HeroProps {
   onCtaClick: (view: PageView) => void;
@@ -9,7 +9,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
   return (
-    <div className="relative w-full min-h-[85vh] flex flex-col md:flex-row bg-brand-teal overflow-hidden">
+    <div className="relative w-full min-h-[90vh] flex flex-col md:flex-row bg-brand-teal overflow-hidden">
       
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
@@ -23,21 +23,21 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
         {/* New Badge */}
         <div className="inline-flex items-center self-start gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-brand-pink text-white text-xs md:text-sm font-bold mb-6 md:mb-8 shadow-lg transform -rotate-1 border border-white/20 hover:scale-105 transition-transform cursor-default">
             <Star size={14} className="text-brand-yellow fill-current animate-pulse" />
-            <span>NEW: 100% Natural Treats</span>
+            <span>Premium Pet Sitting & Snacks</span>
         </div>
 
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-extrabold leading-[0.95] tracking-tight mb-4 md:mb-6 drop-shadow-sm">
-          Happy Dog,<br />
+          Expert Care,<br />
           <span className="text-brand-yellow relative">
-            Happy Life.
+            Natural Treats.
             <svg className="absolute w-full h-3 -bottom-1 left-0 text-brand-orange/80" viewBox="0 0 100 10" preserveAspectRatio="none">
                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
             </svg>
           </span>
         </h1>
         
-        <p className="text-base md:text-xl text-teal-50 font-medium mb-8 md:mb-10 max-w-md leading-relaxed">
-          Premium natural snacks approved by UK vets. Give your best friend the nutrition they deserve.
+        <p className="text-base md:text-xl text-teal-50 font-medium mb-8 md:mb-10 max-w-lg leading-relaxed">
+          From professional <strong>St. Bernard sized</strong> sitting to 100% natural dehydrated snacks. We treat your family like our own.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 md:gap-5 mb-8 md:mb-12">
@@ -48,8 +48,8 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
               onClick={() => onCtaClick(PageView.SHOP)} 
               className="relative w-full sm:w-auto bg-brand-orange hover:bg-orange-500 text-white text-lg md:text-xl font-bold px-8 py-4 md:px-10 md:py-5 rounded-full shadow-xl flex items-center justify-center gap-3 transition-all transform group-hover:translate-y-[-2px] active:scale-95"
             >
-              Shop Now
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              Buy Snacks
+              <ShoppingBag size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
@@ -59,7 +59,7 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
             size="lg"
             className="w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white hover:text-brand-teal text-lg md:text-xl px-8 py-4 md:px-10 md:py-5 rounded-full hover:border-white backdrop-blur-sm active:scale-95"
           >
-            Services
+            Book Sitting
           </Button>
         </div>
 
@@ -105,29 +105,33 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
       </div>
 
       {/* Right Side: Giant Image (Full Bleed) */}
-      <div className="w-full md:w-1/2 h-[40vh] md:h-auto relative order-1 md:order-2 overflow-hidden bg-brand-light group perspective-1000">
+      <div className="w-full md:w-1/2 h-[50vh] md:h-auto relative order-1 md:order-2 overflow-hidden bg-brand-light group perspective-1000">
         <div className="absolute inset-0 bg-brand-dark/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
         
         {/* Curved Divider for Mobile */}
         <div className="absolute top-0 left-0 w-full h-12 bg-brand-teal rounded-b-[50%] z-20 md:hidden transform -translate-y-6"></div>
         
+        {/* HERO IMAGE: St Bernard and Friend */}
         <img 
-          src="https://images.unsplash.com/photo-1534361960057-19889db9621e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-          alt="Extremely happy dog" 
-          className="absolute inset-0 w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-[3s] ease-out"
+          src="/images/hero-dogs.jpg"
+          onError={(e) => {
+              // Fallback to high quality St Bernard image from Unsplash if local file doesn't exist yet
+              e.currentTarget.src = "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=2000&auto=format&fit=crop";
+          }}
+          alt="Happy St Bernard and Friend" 
+          className="absolute inset-0 w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-[3s] ease-out object-center"
         />
         
         {/* Floating Element on Image (Desktop Only) */}
-        <div className="absolute bottom-8 right-8 z-20 bg-white/95 backdrop-blur-xl p-4 rounded-2xl shadow-2xl max-w-xs transform rotate-2 animate-float hidden lg:block border border-white/50">
+        <div className="absolute bottom-12 right-12 z-20 bg-white/95 backdrop-blur-xl p-5 rounded-2xl shadow-2xl max-w-xs transform rotate-2 animate-float hidden lg:block border border-white/50">
            <div className="flex items-center gap-4">
               <div className="bg-brand-pink p-3 rounded-full text-white shadow-lg shadow-brand-pink/30">
-                <ShoppingBag size={22} />
+                <Heart size={24} fill="currentColor" />
               </div>
               <div>
-                <p className="font-bold text-brand-dark leading-tight text-lg">Best Seller</p>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Salmon & Beef Mix</p>
+                <p className="font-bold text-brand-dark leading-tight text-lg">Loving Care</p>
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">For Large & Small Breeds</p>
               </div>
-              <span className="font-bold text-xl text-brand-orange ml-auto">£12.50</span>
            </div>
         </div>
       </div>
