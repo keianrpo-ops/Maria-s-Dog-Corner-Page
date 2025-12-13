@@ -7,11 +7,11 @@ export const FloatingSeal: React.FC = () => {
       <div className="relative group cursor-help">
         
         {/* White circle background to make the black stamp pop */}
-        <div className="w-20 h-20 bg-white rounded-full shadow-2xl flex items-center justify-center border-4 border-white transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12 overflow-hidden">
+        <div className="w-20 h-20 bg-white rounded-full shadow-2xl flex items-center justify-center border-2 border-white transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12 overflow-hidden">
            <img 
              src="/images/seal.png" 
              alt="UK Animal & Plant Health Agency Approved" 
-             className="w-full h-full object-cover scale-110"
+             className="w-full h-full object-cover scale-[1.35]"
              onError={(e) => e.currentTarget.style.display = 'none'} 
            />
         </div>

@@ -65,13 +65,13 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
 
         {/* PROMINENT TRUST SEAL SECTION */}
         <div className="flex items-center gap-4 md:gap-6 border-t border-white/20 pt-6 md:pt-8 mt-2 animate-fade-in">
-           {/* The Seal */}
+           {/* The Seal - Updated for max size */}
            <div className="relative group cursor-help shrink-0 transform hover:scale-105 transition-transform duration-300">
-              <div className="w-20 h-20 md:w-28 md:h-28 bg-white rounded-full shadow-[0_0_25px_rgba(255,255,255,0.2)] flex items-center justify-center border-4 border-white/80 overflow-hidden">
+              <div className="w-20 h-20 md:w-28 md:h-28 bg-white rounded-full shadow-[0_0_25px_rgba(255,255,255,0.2)] flex items-center justify-center border-2 border-white/80 overflow-hidden">
                  <img 
                    src="/images/seal.png" 
                    alt="APHA Approved" 
-                   className="w-full h-full object-cover scale-110" 
+                   className="w-full h-full object-cover scale-[1.35]" 
                    onError={(e) => {
                      e.currentTarget.style.display = 'none';
                      e.currentTarget.parentElement!.innerHTML = `<span class="text-brand-dark font-bold text-center text-[8px] md:text-[10px] leading-tight">UK<br/>GOVT<br/>APPROVED</span>`;
