@@ -23,11 +23,13 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             <div className="flex flex-col gap-2 p-4 bg-white/5 rounded-2xl border border-white/10">
                <span className="text-xs font-bold text-brand-pink uppercase tracking-widest">Certified & Approved</span>
                <div className="flex items-center gap-3">
-                 <div className="bg-white p-1.5 rounded-full w-16 h-16 flex items-center justify-center shrink-0">
+                 {/* Updated Circle Container: Removed padding, added overflow-hidden */}
+                 <div className="bg-white rounded-full w-20 h-20 flex items-center justify-center shrink-0 overflow-hidden border-2 border-white/20">
+                   {/* Updated Image: Added scale-[1.35] to zoom in */}
                    <img 
                      src="/images/seal.png" 
                      alt="Official Approval Seal" 
-                     className="w-full h-full object-contain"
+                     className="w-full h-full object-cover scale-[1.35]"
                      onError={(e) => {
                        e.currentTarget.style.display = 'none';
                      }}

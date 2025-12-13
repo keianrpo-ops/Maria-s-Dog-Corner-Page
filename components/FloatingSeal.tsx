@@ -2,12 +2,13 @@ import React from 'react';
 
 export const FloatingSeal: React.FC = () => {
   return (
-    <div className="fixed bottom-6 left-6 z-40 hidden md:flex items-center gap-3 animate-fade-in-up">
+    // Removed 'hidden md:flex' so it displays on all screens. Added distinct mobile/desktop positioning/sizing.
+    <div className="fixed bottom-4 left-4 md:bottom-6 md:left-6 z-40 flex items-center gap-3 animate-fade-in-up">
       {/* The Seal Container */}
       <div className="relative group cursor-help">
         
-        {/* White circle background to make the black stamp pop */}
-        <div className="w-20 h-20 bg-white rounded-full shadow-2xl flex items-center justify-center border-2 border-white transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12 overflow-hidden">
+        {/* White circle background to make the black stamp pop. Slightly smaller on mobile (w-16) vs desktop (w-20) */}
+        <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full shadow-2xl flex items-center justify-center border-2 border-white transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12 overflow-hidden">
            <img 
              src="/images/seal.png" 
              alt="UK Animal & Plant Health Agency Approved" 
@@ -16,8 +17,8 @@ export const FloatingSeal: React.FC = () => {
            />
         </div>
 
-        {/* Tooltip that appears on hover */}
-        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 w-48 bg-white text-brand-dark text-xs p-3 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-gray-100">
+        {/* Tooltip that appears on hover (mostly desktop) */}
+        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 w-48 bg-white text-brand-dark text-xs p-3 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-gray-100 hidden sm:block">
            <p className="font-bold uppercase mb-1">Officially Approved</p>
            <p className="text-gray-500 leading-tight">By the UK Animal & Plant Health Agency.</p>
            <p className="font-mono font-bold mt-1 text-brand-teal">Lic: U1596090</p>
