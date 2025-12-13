@@ -41,21 +41,34 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           
           {/* 1. DOG WALKING */}
           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-            {/* FRAMED IMAGE CONTAINER - Reverted to h-72, object-contain */}
-            <div className="h-72 p-5 bg-brand-teal/5">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5 bg-white flex items-center justify-center">
+            {/* BLURRED BACKDROP CONTAINER */}
+            <div className="h-64 p-4 bg-gray-50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
+                    
+                    {/* 1. Background Layer: Blurred & Zoomed Image to fill gaps */}
+                    <div className="absolute inset-0 z-0">
+                        <img 
+                            src="/images/services/walking.jpg" 
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
+                            alt=""
+                        />
+                    </div>
+
+                    {/* 2. Foreground Layer: Sharp, Contained Image (No cropping) */}
                     <img 
                         src="/images/services/walking.jpg" 
                         onError={(e) => {
                             e.currentTarget.src = "https://images.unsplash.com/photo-1605639148518-e7d6928d1c33?auto=format&fit=crop&w=800&q=80";
                         }}
                         alt="Dog Walking" 
-                        className="w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
                     />
+                    
                     {/* INTEGRATED PRICE BADGE */}
                     <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-400 mr-1">from</span>
+                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-500 mr-1">from</span>
                             <span className="text-lg font-display font-extrabold text-brand-teal">£15</span>
                         </div>
                     </div>
@@ -95,19 +108,28 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
           {/* 2. DOG SITTING */}
            <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(244,93,111,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-            {/* FRAMED IMAGE CONTAINER - Reverted to h-72, object-contain */}
-            <div className="h-72 p-5 bg-brand-pink/5">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5 bg-white flex items-center justify-center">
+            <div className="h-64 p-4 bg-gray-50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
+                    {/* Background Blur */}
+                    <div className="absolute inset-0 z-0">
+                        <img 
+                            src="/images/services/sitting.jpg" 
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
+                            alt=""
+                        />
+                    </div>
+                    {/* Foreground Image */}
                     <img 
                         src="/images/services/sitting.jpg" 
                         onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80"; }}
                         alt="Dog Sitting" 
-                        className="w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
                     />
-                    {/* INTEGRATED PRICE BADGE */}
+                    
                     <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-400 mr-1">night</span>
+                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-500 mr-1">night</span>
                             <span className="text-lg font-display font-extrabold text-brand-pink">£45</span>
                         </div>
                     </div>
@@ -144,19 +166,28 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
           {/* 3. VACATION CARE */}
            <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(255,213,79,0.25)] transition-all duration-300 hover:-translate-y-2 border border-brand-yellow/30 flex flex-col group h-full">
-             {/* FRAMED IMAGE CONTAINER - Reverted to h-72, object-contain */}
-             <div className="h-72 p-5 bg-brand-yellow/5">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5 bg-white flex items-center justify-center">
+             <div className="h-64 p-4 bg-gray-50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
+                    {/* Background Blur */}
+                    <div className="absolute inset-0 z-0">
+                        <img 
+                            src="/images/services/vacation.jpg" 
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
+                            alt=""
+                        />
+                    </div>
+                    {/* Foreground Image */}
                     <img 
                         src="/images/services/vacation.jpg" 
                         onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1575485670541-82a2b0cb0e25?auto=format&fit=crop&w=800&q=80"; }}
                         alt="Vacation Care" 
-                        className="w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
                     />
-                    {/* INTEGRATED PRICE BADGE */}
+                    
                     <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-400 mr-1 uppercase">Quote</span>
+                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-500 mr-1 uppercase">Quote</span>
                             <span className="text-lg font-display font-extrabold text-brand-yellow">Custom</span>
                         </div>
                     </div>
@@ -188,19 +219,28 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
            {/* 4. DOG GROOMING */}
            <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(168,85,247,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             {/* FRAMED IMAGE CONTAINER - Reverted to h-72, object-contain */}
-             <div className="h-72 p-5 bg-purple-50">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5 bg-white flex items-center justify-center">
+             <div className="h-64 p-4 bg-gray-50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
+                    {/* Background Blur */}
+                    <div className="absolute inset-0 z-0">
+                        <img 
+                            src="/images/services/grooming.jpg" 
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
+                            alt=""
+                        />
+                    </div>
+                    {/* Foreground Image */}
                     <img 
                         src="/images/services/grooming.jpg" 
                         onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80"; }}
                         alt="Dog Grooming" 
-                        className="w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
                     />
-                    {/* INTEGRATED PRICE BADGE */}
+                    
                     <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-400 mr-1">from</span>
+                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-500 mr-1">from</span>
                             <span className="text-lg font-display font-extrabold text-purple-600">£35</span>
                         </div>
                     </div>
@@ -236,19 +276,28 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
            {/* 5. PUPPY TRAINING */}
            <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(59,130,246,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             {/* FRAMED IMAGE CONTAINER - Reverted to h-72, object-contain */}
-             <div className="h-72 p-5 bg-blue-50">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5 bg-white flex items-center justify-center">
+             <div className="h-64 p-4 bg-gray-50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
+                    {/* Background Blur */}
+                    <div className="absolute inset-0 z-0">
+                        <img 
+                            src="/images/services/training.jpg" 
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
+                            alt=""
+                        />
+                    </div>
+                    {/* Foreground Image */}
                     <img 
                         src="/images/services/training.jpg" 
                         onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80"; }}
                         alt="Puppy Training" 
-                        className="w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
                     />
-                    {/* INTEGRATED PRICE BADGE */}
+                    
                     <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-400 mr-1">/ hr</span>
+                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-500 mr-1">/ hr</span>
                             <span className="text-lg font-display font-extrabold text-blue-600">£40</span>
                         </div>
                     </div>
@@ -284,19 +333,28 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
            {/* 6. DOG MINDING */}
            <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             {/* FRAMED IMAGE CONTAINER - Reverted to h-72, object-contain */}
-             <div className="h-72 p-5 bg-brand-teal/5">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-sm border border-black/5 bg-white flex items-center justify-center">
+             <div className="h-64 p-4 bg-gray-50">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
+                    {/* Background Blur */}
+                    <div className="absolute inset-0 z-0">
+                        <img 
+                            src="/images/services/pop-in.jpg" 
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
+                            alt=""
+                        />
+                    </div>
+                    {/* Foreground Image */}
                     <img 
                         src="/images/services/pop-in.jpg" 
                         onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80"; }}
                         alt="Pet Minding" 
-                        className="w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
                     />
-                    {/* INTEGRATED PRICE BADGE */}
+                    
                     <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-400 mr-1">visit</span>
+                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
+                            <span className="text-xs font-bold text-gray-500 mr-1">visit</span>
                             <span className="text-lg font-display font-extrabold text-brand-teal">£12</span>
                         </div>
                     </div>

@@ -17,7 +17,14 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
         
         {/* IMAGE AREA - NOW FRAMED (Padded) - p-5 */}
         <div className="p-5 bg-gray-50/50">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-sm group-hover:shadow-md transition-all duration-500 bg-white border border-black/5 flex items-center justify-center">
+            {/* CHANGED TO ASPECT-SQUARE for better fit of mixed orientation images */}
+            <div className="relative aspect-square overflow-hidden rounded-2xl shadow-sm group-hover:shadow-md transition-all duration-500 bg-white border border-black/5 flex items-center justify-center">
+                
+                {/* Optional: Add slight background blur if product image isn't transparent (uncomment if needed) */}
+                {/* <div className="absolute inset-0 z-0">
+                     <img src={product.image} className="w-full h-full object-cover blur-xl opacity-20 scale-125" alt="" />
+                </div> */}
+
                 {/* Top Tags */}
                 <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 items-start">
                     {product.tag && (
@@ -40,7 +47,7 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
                     src={product.image} 
                     alt={product.name} 
                     onError={() => setImgError(true)}
-                    className="w-full h-full object-contain transform transition-transform duration-700 hover:scale-105"
+                    className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105 p-2"
                 />
                 ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 text-gray-400">
