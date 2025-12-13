@@ -3,7 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Maria's Dog Corner - Professional dog walking, home boarding, and natural treats in Bristol (Avonmouth). Fully insured and APHA approved." />
+    <meta name="theme-color" content="#00C2CB" />
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mariasdogcorner.co.uk/" />
+    <meta property="og:title" content="Maria's Dog Corner | Happy Dogs, Happy Life" />
+    <meta property="og:description" content="Premium dog walking services, boutique natural treats, and loving home care. Book your dog's next adventure today!" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1534361960057-19889db9621e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Maria's Dog Corner | Professional Pet Care">
+    <meta name="twitter:description" content="Professional dog walking and natural treats in Bristol. Fully insured and approved.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1534361960057-19889db9621e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80">
+
     <title>Maria's Dog Corner | Professional Pet Services</title>
+    
+    <!-- Dynamic Favicon (Paw Print) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <script>
@@ -32,11 +52,21 @@
             },
             animation: {
               'float': 'float 6s ease-in-out infinite',
+              'fade-in': 'fadeIn 0.5s ease-out',
+              'fade-in-up': 'fadeInUp 0.5s ease-out',
             },
             keyframes: {
               float: {
                 '0%, 100%': { transform: 'translateY(0)' },
                 '50%': { transform: 'translateY(-10px)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
               }
             }
           }
@@ -65,18 +95,17 @@
   <script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react-dom/client": "https://esm.sh/react-dom@^19.2.3/client",
     "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
     "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3"
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-gray-50 text-gray-800 antialiased">
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+  </body>
 </html>

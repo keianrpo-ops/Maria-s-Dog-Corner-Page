@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dog, Home, Sun, Heart } from 'lucide-react';
+import { Dog, Home, Sun, Heart, Star } from 'lucide-react';
 import { Product } from '../types';
 
 interface ServicesProps {
@@ -42,8 +42,13 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           
-          {/* 1. Dog Walking */}
-          <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-xl border-2 border-transparent hover:border-brand-teal transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full group">
+          {/* 1. Dog Walking (POPULAR) */}
+          <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-xl border-2 border-brand-teal/30 hover:border-brand-teal transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full group relative ring-4 ring-transparent hover:ring-brand-teal/10">
+            {/* POPULAR BADGE */}
+            <div className="absolute top-4 right-4 z-30 bg-brand-orange text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1 animate-pulse">
+                <Star size={12} fill="currentColor" /> POPULAR
+            </div>
+
             {/* Header Image */}
             <div className="h-48 overflow-hidden relative">
               <div className="absolute inset-0 bg-brand-teal/20 group-hover:bg-transparent transition-colors z-10"></div>
@@ -67,7 +72,7 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                       image: 'https://images.unsplash.com/photo-1605639148518-e7d6928d1c33?auto=format&fit=crop&w=500&q=80', 
                       description: 'One hour solo walk'
                     })}
-                    className="bg-brand-dark text-white text-xs px-3 py-1.5 rounded-full hover:bg-brand-orange transition-colors font-bold"
+                    className="bg-brand-dark text-white text-xs px-3 py-1.5 rounded-full hover:bg-brand-orange transition-colors font-bold shadow-sm"
                   >
                     Book £20
                   </button>
@@ -80,7 +85,7 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                       image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=500&q=80', 
                       description: 'Group adventure walk'
                     })}
-                    className="bg-brand-dark text-white text-xs px-3 py-1.5 rounded-full hover:bg-brand-orange transition-colors font-bold"
+                    className="bg-brand-dark text-white text-xs px-3 py-1.5 rounded-full hover:bg-brand-orange transition-colors font-bold shadow-sm"
                   >
                     Book £50
                   </button>
@@ -114,7 +119,7 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                       image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=500&q=80', 
                       description: '12 Hour in-home sitting'
                     })}
-                    className="bg-brand-dark text-white text-xs px-3 py-1.5 rounded-full hover:bg-brand-orange transition-colors font-bold"
+                    className="bg-brand-dark text-white text-xs px-3 py-1.5 rounded-full hover:bg-brand-orange transition-colors font-bold shadow-sm"
                   >
                     Book £35
                   </button>
@@ -127,7 +132,7 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                       image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=500&q=80', 
                       description: 'Full day and night care'
                     })}
-                    className="bg-brand-dark text-white text-xs px-3 py-1.5 rounded-full hover:bg-brand-orange transition-colors font-bold"
+                    className="bg-brand-dark text-white text-xs px-3 py-1.5 rounded-full hover:bg-brand-orange transition-colors font-bold shadow-sm"
                   >
                     Book £45
                   </button>

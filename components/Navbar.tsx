@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, X, ShoppingBag } from 'lucide-react';
 import { PageView } from '../types';
 
@@ -10,6 +10,16 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount = 0 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Detect scroll to animate navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { name: 'Home', view: PageView.HOME },
@@ -26,23 +36,24 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
   };
 
   return (
-    <nav className="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-100 h-24">
+    <nav 
+      className={`sticky top-0 z-50 transition-all duration-300 border-b border-gray-100/50 ${
+        isScrolled 
+          ? 'bg-white/90 backdrop-blur-md h-20 shadow-md' 
+          : 'bg-white h-24 shadow-sm'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex justify-between items-center h-full"> 
-          {/* Logo Section - Increased Size */}
-          <div className="flex items-center h-full py-2 cursor-pointer" onClick={() => handleNavClick(PageView.HOME)}>
-            {/* 
-                INSTRUCTION: Ensure your logo file is named 'logo.png' 
-                and placed inside the 'public/images' folder.
-            */}
+          {/* Logo Section */}
+          <div className="flex items-center h-full py-2 cursor-pointer group" onClick={() => handleNavClick(PageView.HOME)}>
             <img 
               src="/images/logo.png" 
               alt="Maria's Dog Corner" 
-              className="h-full max-h-20 w-auto object-contain hover:scale-105 transition-transform duration-300"
+              className={`h-full w-auto object-contain transition-all duration-300 ${isScrolled ? 'max-h-12' : 'max-h-20'} group-hover:scale-105`}
               onError={(e) => {
-                // Fallback style if image is missing
                 e.currentTarget.style.display = 'none';
-                e.currentTarget.parentElement!.innerHTML = `<span class="font-display font-bold text-3xl text-brand-dark">Maria's<span class="text-brand-pink">DogCorner</span></span>`;
+                e.currentTarget.parentElement!.innerHTML = `<span class="font-display font-bold text-2xl md:text-3xl text-brand-dark">Maria's<span class="text-brand-pink">DogCorner</span></span>`;
               }}
             />
           </div>
@@ -53,24 +64,25 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
               <button
                 key={link.name}
                 onClick={() => handleNavClick(link.view)}
-                className={`font-medium text-base tracking-wide transition-colors duration-200 ${
+                className={`font-medium text-sm md:text-base tracking-wide transition-all duration-200 relative group ${
                   currentView === link.view 
                     ? 'text-brand-pink font-bold' 
                     : 'text-gray-500 hover:text-brand-teal'
                 }`}
               >
                 {link.name}
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-pink transition-all duration-300 group-hover:w-full ${currentView === link.view ? 'w-full' : ''}`}></span>
               </button>
             ))}
             
             <div className="flex items-center gap-4 ml-6 pl-6 border-l border-gray-200">
                <button 
                 onClick={() => handleNavClick(PageView.SHOP)}
-                className="relative text-gray-600 hover:text-brand-teal transition-colors p-2"
+                className="relative text-gray-600 hover:text-brand-teal transition-colors p-2 hover:bg-gray-50 rounded-full"
               >
-                <ShoppingBag size={24} />
+                <ShoppingBag size={isScrolled ? 20 : 24} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-brand-pink text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
+                  <span className="absolute -top-1 -right-1 bg-brand-pink text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white animate-pulse">
                     {cartCount}
                   </span>
                 )}
@@ -78,7 +90,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
               
               <button 
                 onClick={() => handleNavClick(PageView.CONTACT)}
-                className="bg-brand-dark text-white px-6 py-2.5 rounded-full font-bold shadow-md hover:bg-brand-teal hover:shadow-lg transition-all transform hover:-translate-y-0.5 text-sm"
+                className={`bg-brand-dark text-white rounded-full font-bold shadow-md hover:bg-brand-teal hover:shadow-lg transition-all transform hover:-translate-y-0.5 text-sm ${
+                  isScrolled ? 'px-5 py-2' : 'px-6 py-2.5'
+                }`}
               >
                 Book Now
               </button>
@@ -100,7 +114,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
               </button>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-brand-dark focus:outline-none"
+              className="text-brand-dark focus:outline-none p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
@@ -110,21 +124,29 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
 
       {/* Mobile Menu Panel */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg z-50">
+        <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-100 absolute w-full shadow-2xl z-50 animate-fade-in">
           <div className="px-4 pt-2 pb-6 space-y-2">
             {navLinks.map((link) => (
               <button
                 key={link.name}
                 onClick={() => handleNavClick(link.view)}
-                className={`block w-full text-left px-3 py-3 rounded-lg text-base font-medium ${
+                className={`block w-full text-left px-4 py-3 rounded-xl text-base font-medium transition-colors ${
                   currentView === link.view
-                    ? 'bg-brand-light text-brand-dark'
+                    ? 'bg-brand-light text-brand-dark font-bold'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
                 {link.name}
               </button>
             ))}
+            <div className="pt-4 mt-4 border-t border-gray-100">
+               <button 
+                onClick={() => handleNavClick(PageView.CONTACT)}
+                className="w-full bg-brand-dark text-white py-3 rounded-xl font-bold shadow-md active:scale-95 transition-transform"
+              >
+                Book an Appointment
+              </button>
+            </div>
           </div>
         </div>
       )}
