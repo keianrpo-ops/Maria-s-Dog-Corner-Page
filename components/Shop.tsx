@@ -15,9 +15,9 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
       {/* CARD CONTAINER with Soft Shadow */}
       <div className="relative flex flex-col bg-white rounded-[2rem] overflow-hidden transition-all duration-500 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] hover:-translate-y-2 border border-gray-100 h-full">
         
-        {/* IMAGE AREA - NOW FRAMED (Padded) - Increased padding to p-5 */}
+        {/* IMAGE AREA - NOW FRAMED (Padded) - p-5 */}
         <div className="p-5 bg-gray-50/50">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-sm group-hover:shadow-md transition-all duration-500 bg-white border border-black/5">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-sm group-hover:shadow-md transition-all duration-500 bg-white border border-black/5 flex items-center justify-center">
                 {/* Top Tags */}
                 <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 items-start">
                     {product.tag && (
@@ -34,13 +34,13 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
                     <Heart size={16} />
                 </button>
 
-                {/* Image */}
+                {/* Image - object-contain ensures full product visibility */}
                 {!imgError ? (
                 <img 
                     src={product.image} 
                     alt={product.name} 
                     onError={() => setImgError(true)}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+                    className="w-full h-full object-contain transform transition-transform duration-700 hover:scale-105"
                 />
                 ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 text-gray-400">
