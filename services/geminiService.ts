@@ -1,11 +1,22 @@
 import { GoogleGenAI } from "@google/genai";
 
-// Initialize the Gemini Client
-// Note: In a production environment, ensure your API key is restricted and handled securely.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// Initialize the Gemini Client safely
+// This handles environments where process might be undefined (browsers)
+const getApiKey = () => {
+  try {
+    return process.env.API_KEY || '';
+  } catch (e) {
+    // Fallback if process is not defined, just return empty to prevent crash
+    return '';
+  }
+};
+
+const ai = new GoogleGenAI({ apiKey: getApiKey() });
 
 export const generateDogAdvice = async (userQuestion: string): Promise<string> => {
-  if (!process.env.API_KEY) {
+  const apiKey = getApiKey();
+  
+  if (!apiKey) {
     // Graceful fallback if no API key is present for demo purposes
     return "I'm currently offline (API Key missing), but I'd love to help! Please check back later or contact Maria directly.";
   }
