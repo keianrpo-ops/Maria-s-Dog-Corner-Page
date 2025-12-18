@@ -6,7 +6,8 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
       server: {
-        port: 3000,
+        port: 5173,      // Puerto deseado
+        strictPort: true, // Si el 5173 está ocupado, no saltará al 3000 (dará error en lugar de mostrar otra app)
         host: '0.0.0.0',
       },
       plugins: [react()],
