@@ -20,11 +20,6 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
             {/* CHANGED TO ASPECT-SQUARE for better fit of mixed orientation images */}
             <div className="relative aspect-square overflow-hidden rounded-2xl shadow-sm group-hover:shadow-md transition-all duration-500 bg-white border border-black/5 flex items-center justify-center">
                 
-                {/* Optional: Add slight background blur if product image isn't transparent (uncomment if needed) */}
-                {/* <div className="absolute inset-0 z-0">
-                     <img src={product.image} className="w-full h-full object-cover blur-xl opacity-20 scale-125" alt="" />
-                </div> */}
-
                 {/* Top Tags */}
                 <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 items-start">
                     {product.tag && (
@@ -64,9 +59,7 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
                     </div>
                 </div>
 
-                {/* Add to Cart Overlay (Desktop Slide-up) */}
                 <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent translate-y-full md:group-hover:translate-y-0 transition-transform duration-300 flex justify-center pb-20 pointer-events-none">
-                    {/* Decorative gradient for text readability if needed */}
                 </div>
             </div>
         </div>
@@ -112,39 +105,39 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
   };
 
   const products: Product[] = [
-    // --- SNACKS ---
+    // --- SNACKS (Precios actualizados) ---
     {
-      id: 's1', name: 'Salmon Delight', category: 'snack', price: 6.50,
+      id: 's1', name: 'Salmon Delight', category: 'snack', price: 6.00,
       image: '/images/shop/s1-salmon.jpg',
       description: '100% Natural Salmon (70%) with veggies.', tag: 'Best Seller'
     },
     {
-      id: 's2', name: 'Liver Luxury', category: 'snack', price: 5.99,
+      id: 's2', name: 'Liver Luxury', category: 'snack', price: 5.00,
       image: '/images/shop/s2-liver.jpg',
       description: 'Rich Beef Liver (70%) combined with wholesome vegetables.',
     },
     {
-      id: 's3', name: 'Beef Bonanza', category: 'snack', price: 6.20,
+      id: 's3', name: 'Beef Bonanza', category: 'snack', price: 5.00,
       image: '/images/shop/s3-beef.jpg',
       description: 'Human-grade Beef (70%) and veggies.',
     },
     {
-      id: 's4', name: 'Chicken & Veggie', category: 'snack', price: 5.99,
+      id: 's4', name: 'Chicken & Veggie', category: 'snack', price: 5.00,
       image: '/images/shop/s4-chicken.jpg',
       description: 'Lean Chicken Breast (70%) with nutrient-rich broccoli.',
     },
     {
-      id: 's5', name: 'Lamb Love', category: 'snack', price: 6.50,
+      id: 's5', name: 'Lamb Love', category: 'snack', price: 5.50,
       image: '/images/shop/s5-lamb.jpg',
       description: 'Hypoallergenic Lamb (70%). Gentle on sensitive stomachs.', tag: 'Sensitive'
     },
     {
-      id: 's6', name: 'Garden Veggies', category: 'snack', price: 5.50,
+      id: 's6', name: 'Garden Veggies', category: 'snack', price: 4.50,
       image: '/images/shop/s6-veggie.jpg',
       description: '100% Plant-based goodness.', tag: 'Vegan'
     },
     
-    // --- TOYS ---
+    /* SECCIÓN DE TOYS COMENTADA TEMPORALMENTE
     {
       id: 't1', name: 'Tire Chew', category: 'toy', price: 12.99,
       image: '/images/shop/t1-tire.jpg', 
@@ -225,6 +218,7 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
       image: '/images/shop/t16-launcher.jpg',
       description: 'Launches tennis balls automatically.', tag: 'Tech'
     }
+    FIN COMENTARIO TOYS */
   ];
 
   const filteredProducts = activeCategory === 'all' 
@@ -263,7 +257,7 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
             </h2>
             <p className="text-teal-50 text-sm md:text-xl font-medium max-w-2xl mx-auto mt-2 md:mt-4 drop-shadow-sm px-4">
               {activeCategory === 'all' 
-                ? "Browse our curated selection of veterinary-approved snacks and indestructible toys."
+                ? "Browse our curated selection of veterinary-approved snacks."
                 : activeCategory === 'snack'
                 ? "100% natural, air-dried ingredients."
                 : "Engineered for durability."}
@@ -288,7 +282,7 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
             {[
               { id: 'all', label: 'All' },
               { id: 'snack', label: 'Snacks' },
-              { id: 'toy', label: 'Toys' }
+              // { id: 'toy', label: 'Toys' } <-- BOTÓN COMENTADO
             ].map((cat) => (
               <button
                 key={cat.id}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from './Button';
 import { PageView } from '../types';
-import { ShoppingBag, Star, ShieldCheck, ArrowRight, Heart } from 'lucide-react';
+import { ShoppingBag, Star, ShieldCheck, Heart } from 'lucide-react';
 
 interface HeroProps {
   onCtaClick: (view: PageView) => void;
@@ -20,7 +20,7 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
       {/* Left Side: Brand Content */}
       <div className="w-full md:w-1/2 flex flex-col justify-center px-6 py-12 md:px-16 lg:px-24 text-white relative z-10 order-2 md:order-1">
         
-        {/* New Badge */}
+        {/* Badge */}
         <div className="inline-flex items-center self-start gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-brand-pink text-white text-xs md:text-sm font-bold mb-6 md:mb-8 shadow-lg transform -rotate-1 border border-white/20 hover:scale-105 transition-transform cursor-default">
             <Star size={14} className="text-brand-yellow fill-current animate-pulse" />
             <span>Premium Pet Sitting & Snacks</span>
@@ -65,7 +65,6 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
 
         {/* PROMINENT TRUST SEAL SECTION */}
         <div className="flex items-center gap-4 md:gap-6 border-t border-white/20 pt-6 md:pt-8 mt-2 animate-fade-in">
-           {/* The Seal - Updated for max size */}
            <div className="relative group cursor-help shrink-0 transform hover:scale-105 transition-transform duration-300">
               <div className="w-20 h-20 md:w-28 md:h-28 bg-white rounded-full shadow-[0_0_25px_rgba(255,255,255,0.2)] flex items-center justify-center border-2 border-white/80 overflow-hidden">
                  <img 
@@ -78,7 +77,6 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
                    }}
                  />
               </div>
-              {/* Verified Checkmark Badge */}
               <div className="absolute -top-1 -right-1 bg-[#00C853] text-white rounded-full p-1 border-[2px] md:border-[3px] border-brand-teal shadow-sm z-10">
                 <ShieldCheck size={14} className="md:w-[16px]" strokeWidth={3} />
               </div>
@@ -93,11 +91,7 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
               <div className="flex items-center gap-3 mt-1">
                  <p className="font-mono text-brand-yellow text-[10px] md:text-xs opacity-80">License No: U1596090</p>
                  <div className="flex text-brand-yellow">
-                    <Star size={10} className="md:w-[12px]" fill="currentColor" />
-                    <Star size={10} className="md:w-[12px]" fill="currentColor" />
-                    <Star size={10} className="md:w-[12px]" fill="currentColor" />
-                    <Star size={10} className="md:w-[12px]" fill="currentColor" />
-                    <Star size={10} className="md:w-[12px]" fill="currentColor" />
+                    {[...Array(5)].map((_, i) => <Star key={i} size={10} className="md:w-[12px]" fill="currentColor" />)}
                  </div>
               </div>
            </div>
@@ -105,32 +99,26 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
       </div>
 
       {/* Right Side: Giant Image (Full Bleed) */}
-      <div className="w-full md:w-1/2 h-[50vh] md:h-auto relative order-1 md:order-2 overflow-hidden bg-brand-light group perspective-1000">
+      <div className="w-full md:w-1/2 h-[50vh] md:h-auto relative order-1 md:order-2 overflow-hidden bg-brand-light group">
         <div className="absolute inset-0 bg-brand-dark/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
         
-        {/* Curved Divider for Mobile */}
-        <div className="absolute top-0 left-0 w-full h-12 bg-brand-teal rounded-b-[50%] z-20 md:hidden transform -translate-y-6"></div>
-        
-        {/* HERO IMAGE: St Bernard and Friend */}
+        {/* HERO IMAGE */}
         <img 
           src="/images/hero-dogs.jpg"
-          onError={(e) => {
-              // Fallback to high quality St Bernard image from Unsplash if local file doesn't exist yet
-              e.currentTarget.src = "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=2000&auto=format&fit=crop";
-          }}
-          alt="Happy St Bernard and Friend" 
-          className="absolute inset-0 w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-[3s] ease-out object-center"
+          alt="Happy Dogs at Maria's Corner" 
+          className="absolute inset-0 w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-[4s] ease-out object-center"
+          loading="eager"
         />
         
         {/* Floating Element on Image (Desktop Only) */}
-        <div className="absolute bottom-12 right-12 z-20 bg-white/95 backdrop-blur-xl p-5 rounded-2xl shadow-2xl max-w-xs transform rotate-2 animate-float hidden lg:block border border-white/50">
+        <div className="absolute bottom-12 right-12 z-20 bg-white/95 backdrop-blur-xl p-5 rounded-3xl shadow-2xl max-w-xs transform rotate-2 group-hover:rotate-0 transition-transform duration-500 hidden lg:block border border-white/50">
            <div className="flex items-center gap-4">
-              <div className="bg-brand-pink p-3 rounded-full text-white shadow-lg shadow-brand-pink/30">
+              <div className="bg-brand-pink p-3 rounded-2xl text-white shadow-lg shadow-brand-pink/30">
                 <Heart size={24} fill="currentColor" />
               </div>
               <div>
                 <p className="font-bold text-brand-dark leading-tight text-lg">Loving Care</p>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">For Large & Small Breeds</p>
+                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">For Large & Small Breeds</p>
               </div>
            </div>
         </div>

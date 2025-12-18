@@ -9,12 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react-dom": "^19.2.3",
-    "lucide-react": "^0.561.0",
     "@google/genai": "^1.33.0",
-    "react": "^19.2.3"
+    "@google/generative-ai": "^0.24.1",
+    "canvas-confetti": "^1.9.4",
+    "lucide-react": "^0.561.0",
+    "openai": "^6.14.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",
