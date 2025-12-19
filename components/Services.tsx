@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dog, Home, Sun, Heart, Star, Check, ArrowRight, Scissors, GraduationCap, Calendar } from 'lucide-react';
+import { Star, Check, ArrowRight, Calendar, Award } from 'lucide-react';
 import { Product } from '../types';
 
 interface ServicesProps {
@@ -25,366 +25,172 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
     <div className="relative py-12 md:py-24 bg-brand-light/30" id="services">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Intro Section */}
+        {/* Intro Section - Limpia y Profesional */}
         <div className="text-center mb-12 md:mb-20 max-w-4xl mx-auto">
-          <span className="text-brand-pink font-bold tracking-widest uppercase text-xs md:text-sm bg-brand-pink/10 px-3 py-1 rounded-full">Full Service Care</span>
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-4 mt-4">
-            Our Services
+          <span className="text-brand-pink font-bold tracking-widest uppercase text-xs md:text-sm bg-brand-pink/10 px-3 py-1 rounded-full border border-brand-pink/20">
+            Full Service Care
+          </span>
+          <h2 className="text-5xl md:text-8xl font-display font-black text-brand-dark mb-8 leading-none tracking-tight">
+            Our <span className="text-brand-pink">Five-Star</span> <br/> Services
           </h2>
           <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
-            Everything your dog needs. Fully insured & approved.
+            Everything your dog needs. Fully insured and approved with 20 years of expertise.
           </p>
         </div>
         
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+        {/* Services Grid - 6 Tarjetas Impecables */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
           
-          {/* 1. DOG WALKING */}
-          <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-            {/* BLURRED BACKDROP CONTAINER */}
-            <div className="h-64 p-4 bg-gray-50">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
-                    
-                    {/* 1. Background Layer: Blurred & Zoomed Image to fill gaps */}
-                    <div className="absolute inset-0 z-0">
-                        <img 
-                            src="/images/services/walking.jpg" 
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
-                            alt=""
-                        />
-                    </div>
-
-                    {/* 2. Foreground Layer: Sharp, Contained Image (No cropping) */}
+          {/* 1. DOG WALKING - £15 */}
+          <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col h-full relative">
+            <div className="absolute top-6 left-6 z-20 bg-brand-orange text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1">
+              <Star size={10} fill="currentColor" /> POPULAR
+            </div>
+            <div className="h-64 p-4">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
                     <img 
-                        src="/images/services/walking.jpg" 
-                        onError={(e) => {
-                            e.currentTarget.src = "https://images.unsplash.com/photo-1605639148518-e7d6928d1c33?auto=format&fit=crop&w=800&q=80";
-                        }}
-                        alt="Dog Walking" 
-                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                      src="/images/services/walking.jpg" 
+                      onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1605639148518-e7d6928d1c33?auto=format&fit=crop&w=800&q=80"; }}
+                      alt="Dog Walking" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    
-                    {/* INTEGRATED PRICE BADGE */}
-                    <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-500 mr-1">from</span>
-                            <span className="text-lg font-display font-extrabold text-brand-teal">£15</span>
-                        </div>
-                    </div>
-                    <div className="absolute top-3 left-3 z-20 bg-brand-orange text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1">
-                        <Star size={10} fill="currentColor" /> POPULAR
+                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-gray-500 mr-1 italic uppercase">from</span>
+                        <span className="text-lg font-extrabold text-brand-teal">£15</span>
                     </div>
                 </div>
             </div>
-            
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-              <div className="mb-4">
-                  <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Dog Walking</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">Energizing group walks in safe, green spaces with furry friends.</p>
-              </div>
-              
-              <ul className="space-y-2 mb-6 flex-grow">
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-brand-teal shrink-0" /> <span>GPS Tracked walks</span></li>
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-brand-teal shrink-0" /> <span>Photo updates</span></li>
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-brand-teal shrink-0" /> <span>Pick-up & Drop-off</span></li>
-              </ul>
-
-              <div className="mt-auto pt-6 border-t border-gray-100">
-                <button 
-                  onClick={() => handleBookService({
-                    id: 'svc-walk-group', name: 'Group Walk', price: 15, category: 'snack', 
-                    image: '/images/services/walking.jpg', // Used for cart thumbnail
-                    description: 'Group adventure walk'
-                  })}
-                  className="w-full py-3.5 rounded-xl bg-gray-900 hover:bg-brand-teal text-white font-bold shadow-lg transition-colors flex items-center justify-center gap-2 group/btn"
-                >
-                  <span>Book Now</span>
-                  <Calendar size={18} className="text-gray-400 group-hover/btn:text-white" />
-                </button>
-              </div>
+              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Dog Walking</h3>
+              <p className="text-gray-500 text-sm mb-4 leading-relaxed">Energizing group walks in safe, green spaces with photo updates.</p>
+              <button onClick={() => handleBookService({ id: 'svc-walk', name: 'Dog Walking', price: 15, category: 'snack', image: '/images/services/walking.jpg', description: 'Dog walk' })} className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-brand-teal text-white font-bold transition-all flex items-center justify-center gap-2">
+                Book Now <Calendar size={18} />
+              </button>
             </div>
           </div>
 
-          {/* 2. DOG SITTING */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(244,93,111,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-            <div className="h-64 p-4 bg-gray-50">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
-                    {/* Background Blur */}
-                    <div className="absolute inset-0 z-0">
-                        <img 
-                            src="/images/services/sitting.jpg" 
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
-                            alt=""
-                        />
-                    </div>
-                    {/* Foreground Image */}
+          {/* 2. HOME SITTING - £45 */}
+          <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(244,93,111,0.25)] transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col h-full">
+            <div className="h-64 p-4">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
                     <img 
-                        src="/images/services/sitting.jpg" 
-                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80"; }}
-                        alt="Dog Sitting" 
-                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                      src="/images/services/sitting.jpg" 
+                      onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80"; }}
+                      alt="Dog Sitting" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    
-                    <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-500 mr-1">night</span>
-                            <span className="text-lg font-display font-extrabold text-brand-pink">£45</span>
-                        </div>
+                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-gray-500 mr-1 italic uppercase">night</span>
+                        <span className="text-lg font-extrabold text-brand-pink">£45</span>
                     </div>
                 </div>
             </div>
-
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-               <div className="mb-4">
-                  <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Home Sitting</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">Comfort in your own home. We maintain their routine perfectly.</p>
-              </div>
-
-               <ul className="space-y-2 mb-6 flex-grow">
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-brand-pink shrink-0" /> <span>Routine maintained</span></li>
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-brand-pink shrink-0" /> <span>Overnight stays</span></li>
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-brand-pink shrink-0" /> <span>Cuddles included</span></li>
-              </ul>
-
-              <div className="mt-auto pt-6 border-t border-gray-100">
-                 <button 
-                     onClick={() => handleBookService({
-                      id: 'svc-sit-24', name: 'Overnight Sitting', price: 45, category: 'snack', 
-                      image: '/images/services/sitting.jpg', 
-                      description: 'Full day and night care'
-                    })}
-                  className="w-full py-3.5 rounded-xl bg-gray-900 hover:bg-brand-pink text-white font-bold shadow-lg transition-colors flex items-center justify-center gap-2 group/btn"
-                >
-                  <span>Book Now</span>
-                  <Calendar size={18} className="text-gray-400 group-hover/btn:text-white" />
-                </button>
-              </div>
+              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Home Sitting</h3>
+              <p className="text-gray-500 text-sm mb-4 leading-relaxed">Your pup's routine maintained with 24/7 love and expert care.</p>
+              <button onClick={() => handleBookService({ id: 'svc-sit', name: 'Home Sitting', price: 45, category: 'snack', image: '/images/services/sitting.jpg', description: 'Overnight care' })} className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-brand-pink text-white font-bold transition-all flex items-center justify-center gap-2">
+                Book Now <Calendar size={18} />
+              </button>
             </div>
           </div>
 
           {/* 3. VACATION CARE */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(255,213,79,0.25)] transition-all duration-300 hover:-translate-y-2 border border-brand-yellow/30 flex flex-col group h-full">
-             <div className="h-64 p-4 bg-gray-50">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
-                    {/* Background Blur */}
-                    <div className="absolute inset-0 z-0">
-                        <img 
-                            src="/images/services/vacation.jpg" 
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
-                            alt=""
-                        />
-                    </div>
-                    {/* Foreground Image */}
+          <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(255,213,79,0.25)] transition-all duration-500 hover:-translate-y-2 border border-brand-yellow/30 flex flex-col h-full">
+            <div className="h-64 p-4">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
                     <img 
-                        src="/images/services/vacation.jpg" 
-                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1575485670541-82a2b0cb0e25?auto=format&fit=crop&w=800&q=80"; }}
-                        alt="Vacation Care" 
-                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                      src="/images/services/vacation.jpg" 
+                      onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1575485670541-82a2b0cb0e25?auto=format&fit=crop&w=800&q=80"; }}
+                      alt="Vacation Care" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    
-                    <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-500 mr-1 uppercase">Quote</span>
-                            <span className="text-lg font-display font-extrabold text-brand-yellow">Custom</span>
-                        </div>
+                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-gray-500 mr-1 uppercase italic tracking-tighter">Quote</span>
+                        <span className="text-lg font-extrabold text-brand-yellow uppercase tracking-tighter">Custom</span>
                     </div>
                 </div>
             </div>
-
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-              <div className="mb-4">
-                  <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Vacation Care</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">Long-term loving care in our home or yours while you travel.</p>
-              </div>
-
-               <ul className="space-y-2 mb-6 flex-grow">
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-brand-yellow shrink-0" /> <span>Home-away-from-home</span></li>
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-brand-yellow shrink-0" /> <span>Daily video calls</span></li>
-              </ul>
-
-              <div className="mt-auto pt-6 border-t border-gray-100">
-                 <button 
-                  onClick={scrollToContact}
-                  className="w-full py-3.5 rounded-xl bg-brand-yellow hover:bg-yellow-400 text-white font-bold shadow-lg transition-colors flex items-center justify-center gap-2 group/btn"
-                 >
-                   <span>Get Quote</span>
-                   <ArrowRight size={18} />
-                 </button>
-              </div>
+              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Vacation Care</h3>
+              <p className="text-gray-500 text-sm mb-4 leading-relaxed">Long-term loving care. A true home-away-from-home experience.</p>
+              <button onClick={scrollToContact} className="mt-auto w-full py-3.5 rounded-xl bg-brand-yellow hover:bg-yellow-400 text-white font-bold transition-all flex items-center justify-center gap-2 uppercase tracking-widest text-xs">
+                Get Quote <ArrowRight size={18} />
+              </button>
             </div>
           </div>
 
-           {/* 4. DOG GROOMING */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(168,85,247,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             <div className="h-64 p-4 bg-gray-50">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
-                    {/* Background Blur */}
-                    <div className="absolute inset-0 z-0">
-                        <img 
-                            src="/images/services/grooming.jpg" 
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
-                            alt=""
-                        />
-                    </div>
-                    {/* Foreground Image */}
+          {/* 4. GROOMING - £35 */}
+          <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(168,85,247,0.25)] transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col h-full">
+            <div className="h-64 p-4">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
                     <img 
-                        src="/images/services/grooming.jpg" 
-                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80"; }}
-                        alt="Dog Grooming" 
-                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                      src="/images/services/grooming.jpg" 
+                      onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80"; }}
+                      alt="Grooming" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    
-                    <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-500 mr-1">from</span>
-                            <span className="text-lg font-display font-extrabold text-purple-600">£35</span>
-                        </div>
+                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-gray-500 mr-1 italic uppercase">from</span>
+                        <span className="text-lg font-extrabold text-purple-600">£35</span>
                     </div>
                 </div>
             </div>
-
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-              <div className="mb-4">
-                  <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Grooming</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">Full spa treatment. Wash, cut, fluff and nail clipping.</p>
-              </div>
-
-               <ul className="space-y-2 mb-6 flex-grow">
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-purple-500 shrink-0" /> <span>Organic shampoos</span></li>
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-purple-500 shrink-0" /> <span>Nail clipping included</span></li>
-              </ul>
-
-              <div className="mt-auto pt-6 border-t border-gray-100">
-                 <button 
-                    onClick={() => handleBookService({
-                      id: 'svc-groom-full', name: 'Full Groom', price: 35, category: 'snack', 
-                      image: '/images/services/grooming.jpg', 
-                      description: 'Full wash, cut and dry'
-                    })}
-                  className="w-full py-3.5 rounded-xl bg-gray-900 hover:bg-purple-600 text-white font-bold shadow-lg transition-colors flex items-center justify-center gap-2 group/btn"
-                >
-                  <span>Book Now</span>
-                  <Calendar size={18} className="text-gray-400 group-hover/btn:text-white" />
-                </button>
-              </div>
+              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Grooming</h3>
+              <p className="text-gray-500 text-sm mb-4 leading-relaxed">Full spa treatments, wash, cut, and nail clipping with organic shampoos.</p>
+              <button onClick={() => handleBookService({ id: 'svc-groom', name: 'Grooming', price: 35, category: 'snack', image: '/images/services/grooming.jpg', description: 'Grooming' })} className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-purple-600 text-white font-bold transition-all flex items-center justify-center gap-2">
+                Book Now <Calendar size={18} />
+              </button>
             </div>
           </div>
 
-           {/* 5. PUPPY TRAINING */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(59,130,246,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             <div className="h-64 p-4 bg-gray-50">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
-                    {/* Background Blur */}
-                    <div className="absolute inset-0 z-0">
-                        <img 
-                            src="/images/services/training.jpg" 
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
-                            alt=""
-                        />
-                    </div>
-                    {/* Foreground Image */}
+          {/* 5. TRAINING - £40 */}
+          <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(59,130,246,0.25)] transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col h-full">
+            <div className="h-64 p-4">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
                     <img 
-                        src="/images/services/training.jpg" 
-                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80"; }}
-                        alt="Puppy Training" 
-                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                      src="/images/services/training.jpg" 
+                      onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80"; }}
+                      alt="Training" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    
-                    <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-500 mr-1">/ hr</span>
-                            <span className="text-lg font-display font-extrabold text-blue-600">£40</span>
-                        </div>
+                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-gray-500 mr-1 italic uppercase">/ hr</span>
+                        <span className="text-lg font-extrabold text-blue-600">£40</span>
                     </div>
                 </div>
             </div>
-
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-               <div className="mb-4">
-                  <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Training</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">Positive reinforcement techniques to help your puppy learn fast.</p>
-              </div>
-
-               <ul className="space-y-2 mb-6 flex-grow">
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-blue-500 shrink-0" /> <span>Basic Commands</span></li>
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-blue-500 shrink-0" /> <span>Socialization skills</span></li>
-              </ul>
-
-              <div className="mt-auto pt-6 border-t border-gray-100">
-                 <button 
-                    onClick={() => handleBookService({
-                      id: 'svc-train-1hr', name: 'Training Session', price: 40, category: 'snack', 
-                      image: '/images/services/training.jpg', 
-                      description: '1 Hour Training Session'
-                    })}
-                  className="w-full py-3.5 rounded-xl bg-gray-900 hover:bg-blue-600 text-white font-bold shadow-lg transition-colors flex items-center justify-center gap-2 group/btn"
-                >
-                  <span>Book Now</span>
-                  <Calendar size={18} className="text-gray-400 group-hover/btn:text-white" />
-                </button>
-              </div>
+              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Training</h3>
+              <p className="text-gray-500 text-sm mb-4 leading-relaxed">Positive reinforcement techniques to help your pup learn fast.</p>
+              <button onClick={() => handleBookService({ id: 'svc-train', name: 'Training', price: 40, category: 'snack', image: '/images/services/training.jpg', description: 'Training' })} className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-blue-600 text-white font-bold transition-all flex items-center justify-center gap-2">
+                Book Now <Calendar size={18} />
+              </button>
             </div>
           </div>
 
-           {/* 6. DOG MINDING */}
-           <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col group h-full">
-             <div className="h-64 p-4 bg-gray-50">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-inner border border-black/5 bg-gray-100 flex items-center justify-center">
-                    {/* Background Blur */}
-                    <div className="absolute inset-0 z-0">
-                        <img 
-                            src="/images/services/pop-in.jpg" 
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                            className="w-full h-full object-cover blur-xl opacity-50 scale-110"
-                            alt=""
-                        />
-                    </div>
-                    {/* Foreground Image */}
+          {/* 6. POP-IN VISITS - £12 */}
+          <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col h-full">
+            <div className="h-64 p-4">
+                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
                     <img 
-                        src="/images/services/pop-in.jpg" 
-                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80"; }}
-                        alt="Pet Minding" 
-                        className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105" 
+                      src="/images/services/pop-in.jpg" 
+                      onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80"; }}
+                      alt="Pop-in" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    
-                    <div className="absolute bottom-3 right-3 z-20">
-                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1 border border-white/50">
-                            <span className="text-xs font-bold text-gray-500 mr-1">visit</span>
-                            <span className="text-lg font-display font-extrabold text-brand-teal">£12</span>
-                        </div>
+                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-gray-500 mr-1 italic uppercase">visit</span>
+                        <span className="text-lg font-extrabold text-brand-teal">£12</span>
                     </div>
                 </div>
             </div>
-
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-               <div className="mb-4">
-                  <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Pop-in Visits</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">Short visits for feed, garden breaks, and play. Perfect for puppies.</p>
-              </div>
-
-               <ul className="space-y-2 mb-6 flex-grow">
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-brand-teal shrink-0" /> <span>Garden breaks</span></li>
-                 <li className="flex items-center gap-3 text-gray-700 text-sm"><Check size={16} className="text-brand-teal shrink-0" /> <span>Feed & Water check</span></li>
-              </ul>
-
-              <div className="mt-auto pt-6 border-t border-gray-100">
-                 <button 
-                    onClick={() => handleBookService({
-                      id: 'svc-mind-30', name: 'Pop-in Visit', price: 12, category: 'snack', 
-                      image: '/images/services/pop-in.jpg', 
-                      description: '30 minute home visit'
-                    })}
-                  className="w-full py-3.5 rounded-xl bg-gray-900 hover:bg-brand-teal text-white font-bold shadow-lg transition-colors flex items-center justify-center gap-2 group/btn"
-                >
-                  <span>Book Now</span>
-                  <Calendar size={18} className="text-gray-400 group-hover/btn:text-white" />
-                </button>
-              </div>
+              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Pop-in Visits</h3>
+              <p className="text-gray-500 text-sm mb-4 leading-relaxed">Short visits for feeding, garden breaks, and puppy play.</p>
+              <button onClick={() => handleBookService({ id: 'svc-popin', name: 'Pop-in', price: 12, category: 'snack', image: '/images/services/pop-in.jpg', description: 'Pop-in visit' })} className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-brand-teal text-white font-bold transition-all flex items-center justify-center gap-2">
+                Book Now <Calendar size={18} />
+              </button>
             </div>
           </div>
 
