@@ -51,14 +51,14 @@ function App() {
   const renderView = () => {
     switch (currentView) {
       case PageView.HOME:
-        return (
-          <>
-            <Hero onCtaClick={setCurrentView} />
-            
-            {/* AQUÍ ES DONDE SUCEDE LA MAGIA DEL LANZAMIENTO */}
-            <SnackLaunch /> 
-            
-            <Services addToCart={addToCart} />
+  return (
+    <>
+      <Hero onCtaClick={setCurrentView} />
+      
+      {/* Le pasamos la función setView para que el botón sepa navegar */}
+      <SnackLaunch setView={setCurrentView} /> 
+      
+      <Services addToCart={addToCart} />
             
             {/* GIANT PROMO BANNER */}
             <div className="relative h-[400px] md:h-[800px] w-full bg-no-repeat bg-center flex items-center overflow-hidden" 

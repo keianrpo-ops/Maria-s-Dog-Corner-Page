@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Maria's Dog Corner - Professional dog walking, home boarding, and natural treats in Bristol (Avonmouth). Fully insured and APHA approved." />
+    <meta name="theme-color" content="#00C2CB" />
+    
+    <!-- Mobile App Capabilities -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mariasdogcorner.co.uk/" />
+    <meta property="og:title" content="Maria's Dog Corner | Happy Dogs, Happy Life" />
+    <meta property="og:description" content="Premium dog walking services, boutique natural treats, and loving home care. Book your dog's next adventure today!" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1534361960057-19889db9621e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Maria's Dog Corner | Professional Pet Care">
+    <meta name="twitter:description" content="Professional dog walking and natural treats in Bristol. Fully insured and approved.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1534361960057-19889db9621e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80">
+
+    <title>Maria's Dog Corner | Professional Pet Services</title>
+    
+    <!-- Dynamic Favicon (Paw Print) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Lato', 'sans-serif'],
+              display: ['Fredoka', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                // EXACT Corporate Teal from Logo Heart
+                teal: '#00C2CB', 
+                // Darker Teal for text
+                dark: '#00838F',
+                // EXACT Corporate Pink/Red from "Dog Corner" text
+                pink: '#F45D6F', 
+                // Yellow accent
+                yellow: '#FFD54F',
+                // Orange accent
+                orange: '#FF9800',
+                // Very light background based on Teal
+                light: '#E0F7FA' 
+              }
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+              'fade-in': 'fadeIn 0.5s ease-out',
+              'fade-in-up': 'fadeInUp 0.5s ease-out',
+              'bounce-slow': 'bounce 3s infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Lato', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Fredoka', sans-serif;
+      }
+      
+      /* Paw Pattern - Using Corporate Teal */
+      .bg-paw-pattern {
+        background-color: #ffffff;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 10c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-5 5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm10 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-5 5c2.2 0 4 1.8 4 4 0 1.5-.8 2.8-2 3.5v.5c0 1.1-.9 2-2 2s-2-.9-2-2v-.5c-1.2-.7-2-2-2-3.5 0-2.2 1.8-4 4-4z' fill='%2300C2CB' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      }
+
+      .bg-paw-pattern-dark {
+        background-color: #00838F;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 10c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-5 5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm10 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-5 5c2.2 0 4 1.8 4 4 0 1.5-.8 2.8-2 3.5v.5c0 1.1-.9 2-2 2s-2-.9-2-2v-.5c-1.2-.7-2-2-2-3.5 0-2.2 1.8-4 4-4z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/client": "https://esm.sh/react-dom@^19.2.3/client",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+</head>
+  <body class="bg-gray-50 text-gray-800 antialiased">
+    <div id="root">
+        <!-- Loading State for initial paint -->
+        <div class="fixed inset-0 bg-brand-light flex flex-col items-center justify-center z-50">
+            <div class="text-6xl animate-bounce-slow">🐾</div>
+            <div class="mt-4 text-brand-teal font-bold text-xl animate-pulse">Loading Maria's Dog Corner...</div>
+        </div>
+    </div>
+    <!-- CRITICAL: Entry point for the React application -->
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, Send, X, Sparkles, Dog, ShoppingBag, Calendar } from 'lucide-react';
+import { MessageCircle, Send, X, ShieldCheck, Heart, Sparkles, Phone } from 'lucide-react';
 import { generateDogAdvice } from '../services/geminiService';
 import { ChatMessage, ChatRole, PageView } from '../types';
 
@@ -13,7 +13,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ setView }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { 
       role: ChatRole.MODEL, 
-      text: "Hi! I'm Maria's Expert AI Assistant. With 20 years of care experience behind me, I can help you with dog tips, choosing the best natural snacks, or booking a premium stay. How can I help your pup today?" 
+      text: "¡Hola! Soy Maria. 🐾 ¿Buscas a alguien en Bristol que cuide a tu perro con el mismo amor que tú? Aquí los trato como familia, sin jaulas y con licencia oficial APHA. ¿Qué servicio necesitas para tu pequeño hoy?" 
     }
   ]);
   const [isTyping, setIsTyping] = useState(false);
@@ -41,11 +41,6 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ setView }) => {
     setIsTyping(false);
   };
 
-  const handleQuickAction = (view: PageView) => {
-    setView(view);
-    setIsOpen(false);
-  };
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -55,50 +50,42 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ setView }) => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      {/* Chat Window */}
       {isOpen && (
-        <div className="mb-4 w-[350px] max-w-[90vw] bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col h-[550px] animate-fade-in-up">
-          {/* Header */}
-          <div className="bg-brand-teal p-5 flex justify-between items-center text-white">
+        <div className="mb-4 w-[360px] max-w-[90vw] bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden flex flex-col h-[580px] animate-fade-in-up">
+          {/* Header con estilo femenino y profesional */}
+          <div className="bg-brand-teal p-6 flex justify-between items-center text-white">
             <div className="flex items-center gap-3">
-              <div className="bg-white/20 p-2 rounded-xl">
-                <Sparkles size={20} />
+              <div className="bg-white/20 p-2 rounded-2xl">
+                <Heart size={24} fill="white" />
               </div>
               <div>
-                <h3 className="font-bold text-sm leading-tight">Maria's Expert AI</h3>
-                <p className="text-[10px] text-teal-100 font-medium">Care & Sales Advisor</p>
+                <h3 className="font-bold text-lg leading-tight">Maria's Corner</h3>
+                <p className="text-[10px] text-teal-100 font-bold uppercase tracking-widest flex items-center gap-1">
+                  <ShieldCheck size={10} /> Licencia APHA U1596090
+                </p>
               </div>
             </div>
-            <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-2 rounded-full transition">
+            <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-2 rounded-full transition-colors">
               <X size={20} />
             </button>
           </div>
 
-          {/* Quick Actions Bar */}
-          <div className="flex gap-2 p-3 bg-teal-50/50 border-b border-gray-100 overflow-x-auto no-scrollbar">
-            <button 
-              onClick={() => handleQuickAction(PageView.SHOP)}
-              className="flex items-center gap-1.5 bg-white text-brand-teal px-3 py-1.5 rounded-full text-[10px] font-bold shadow-sm border border-brand-teal/20 whitespace-nowrap hover:bg-brand-teal hover:text-white transition-colors"
-            >
-              <ShoppingBag size={12} /> Buy Natural Snacks
-            </button>
-            <button 
-              onClick={() => handleQuickAction(PageView.SERVICES)}
-              className="flex items-center gap-1.5 bg-white text-brand-orange px-3 py-1.5 rounded-full text-[10px] font-bold shadow-sm border border-brand-orange/20 whitespace-nowrap hover:bg-brand-orange hover:text-white transition-colors"
-            >
-              <Calendar size={12} /> Book Sitting
-            </button>
+          {/* Barra de precios rápida */}
+          <div className="bg-brand-light/50 px-4 py-2 border-b border-gray-100 overflow-x-auto no-scrollbar flex gap-2">
+            <span className="text-[10px] font-bold text-brand-teal bg-white px-3 py-1 rounded-full shadow-sm whitespace-nowrap">Daycare £35</span>
+            <span className="text-[10px] font-bold text-brand-pink bg-white px-3 py-1 rounded-full shadow-sm whitespace-nowrap">Boarding £45</span>
+            <span className="text-[10px] font-bold text-brand-orange bg-white px-3 py-1 rounded-full shadow-sm whitespace-nowrap">Walks £15</span>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
+          {/* Mensajes */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/30">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === ChatRole.USER ? 'justify-end' : 'justify-start'}`}>
                 <div 
-                  className={`max-w-[85%] rounded-2xl p-3.5 text-sm leading-relaxed ${
+                  className={`max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed ${
                     msg.role === ChatRole.USER 
-                      ? 'bg-brand-teal text-white rounded-tr-none shadow-md shadow-brand-teal/20' 
-                      : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-tl-none'
+                      ? 'bg-brand-teal text-white rounded-tr-none shadow-lg shadow-brand-teal/10' 
+                      : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-tl-none font-medium'
                   }`}
                 >
                   {msg.text}
@@ -107,49 +94,55 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ setView }) => {
             ))}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-white text-gray-400 p-3 rounded-2xl rounded-tl-none text-xs shadow-sm border border-gray-100 flex items-center gap-2">
+                <div className="bg-white text-brand-teal p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 flex items-center gap-2">
                   <div className="flex gap-1">
                     <span className="w-1.5 h-1.5 bg-brand-teal rounded-full animate-bounce [animation-delay:-0.3s]"></span>
                     <span className="w-1.5 h-1.5 bg-brand-teal rounded-full animate-bounce [animation-delay:-0.15s]"></span>
                     <span className="w-1.5 h-1.5 bg-brand-teal rounded-full animate-bounce"></span>
                   </div>
-                  <span className="font-medium italic">Maria's AI is typing...</span>
+                  <span className="text-xs font-bold italic">Maria está respondiendo...</span>
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area */}
+          {/* Input Footer */}
           <div className="p-4 bg-white border-t border-gray-100">
-            <div className="flex gap-2">
+            <div className="flex gap-2 mb-2">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Ask for advice or products..."
-                className="flex-1 border border-gray-200 rounded-full px-5 py-2.5 text-sm focus:outline-none focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20 transition-all"
+                placeholder="Pregúntame sobre el cuidado..."
+                className="flex-1 border border-gray-200 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-brand-teal focus:ring-4 focus:ring-brand-teal/10 transition-all font-medium"
               />
               <button 
                 onClick={handleSend}
                 disabled={isTyping || !input.trim()}
-                className="bg-brand-orange text-white p-3 rounded-full hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand-orange/20 active:scale-95"
+                className="bg-brand-orange text-white p-3.5 rounded-full hover:bg-orange-600 disabled:opacity-50 transition-all shadow-lg active:scale-90"
               >
-                <Send size={18} />
+                <Send size={20} />
               </button>
+            </div>
+            <div className="flex justify-center items-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
+              <Phone size={10} className="text-brand-teal" />
+              WhatsApp directo: 07594 562 006
             </div>
           </div>
         </div>
       )}
 
-      {/* Toggle Button */}
+      {/* Botón flotante principal */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`${isOpen ? 'scale-0' : 'scale-100'} transition-all duration-300 bg-brand-teal hover:bg-teal-700 text-white p-5 rounded-full shadow-2xl flex items-center justify-center group relative`}
+        className={`${isOpen ? 'scale-0' : 'scale-100'} transition-all duration-500 bg-brand-teal hover:bg-teal-700 text-white p-5 rounded-full shadow-[0_15px_35px_rgba(0,194,203,0.4)] flex items-center justify-center group relative border-4 border-white`}
       >
-        <div className="absolute -top-1 -right-1 bg-brand-orange w-4 h-4 rounded-full border-2 border-white animate-ping"></div>
-        <MessageCircle size={32} className="group-hover:rotate-12 transition-transform" />
+        <div className="absolute -top-1 -right-1 bg-brand-pink w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
+            <Sparkles size={10} className="text-white animate-pulse" />
+        </div>
+        <MessageCircle size={32} className="group-hover:scale-110 transition-transform" />
       </button>
     </div>
   );
