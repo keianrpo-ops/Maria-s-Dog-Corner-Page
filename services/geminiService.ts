@@ -1,46 +1,73 @@
-// services/geminiService.ts
-// Frontend helper: calls the Vercel function at /api/geminiService
-// IMPORTANT: No API keys here.
-
-export type ChatHistoryItem = {
-  role: "user" | "model" | "assistant";
+export type HistoryTurn = {
+  role: "user" | "model";
   parts: { text: string }[];
 };
 
-const fallback =
-  "Sorry — there was a technical issue. Please share your dog’s name & age, the service (daycare/boarding/walks) and the dates you need.";
+export type Lead = {
+  language?: "es" | "en";
 
-function normalizeHistory(history: any[]): ChatHistoryItem[] {
-  if (!Array.isArray(history)) return [];
-  return history
-    .map((h) => {
-      const role = (h?.role || "user") as "user" | "model" | "assistant";
-      const text =
-        (h?.parts?.[0]?.text ?? h?.text ?? h?.content ?? "").toString().trim();
-      return { role, parts: [{ text }] };
-    })
-    .filter((h) => h.parts[0].text.length > 0);
-}
+  dogName?: string;
+  dogAge?: string;
+  breed?: string;
 
-export const generateDogAdvice = async (
-  history: ChatHistoryItem[]
-): Promise<string> => {
+  serviceInterest?:
+    | "Dog Walking"
+    | "Pet Sitting"
+    | "Pet Minding"
+    | "Grooming"
+    | "Pet Training"
+    | "Snacks"
+    | "Unknown";
+
+  dates?: string;
+  location?: string;
+  temperament?: string;
+  notes?: string;
+
+  ownerName?: string;
+  phoneOrEmail?: string;
+
+  stage?:
+    | "DISCOVERY"
+    | "SERVICE_PICK"
+    | "DATES"
+    | "DETAILS"
+    | "QUOTE_CONFIRM"
+    | "CONTACT"
+    | "DONE";
+};
+
+export type AssistantResult = {
+  ok: boolean;
+  reply: string;
+  stage?: Lead["stage"];
+  lead?: Lead;
+};
+
+export async function generateDogAdvice(history: HistoryTurn[], lead?: Lead): Promise<AssistantResult> {
   try {
-    const safeHistory = normalizeHistory(history);
-
-    const r = await fetch("/api/geminiService", {
+    const res = await fetch("/api/geminiService", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ history: safeHistory }),
+      body: JSON.stringify({ messages: history, lead }),
     });
 
-    const data = await r.json().catch(() => null);
+    const data = (await res.json()) as any;
 
-    // Always return text to keep your UI unchanged
-    const text = (data?.text || "").toString().trim();
-    return text || fallback;
+    // Backward compatibility if server returns {text: "..."}
+    const reply = data.reply ?? data.text ?? "";
+
+    return {
+      ok: Boolean(data.ok),
+      reply,
+      stage: data.stage,
+      lead: data.lead,
+    };
   } catch (e) {
-    console.error("generateDogAdvice error:", e);
-    return fallback;
+    return {
+      ok: false,
+      reply:
+        "Sorry — there was a technical issue. Please try again in a moment.",
+    };
   }
-};
+}
