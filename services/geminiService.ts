@@ -44,7 +44,10 @@ export type AssistantResult = {
   lead?: Lead;
 };
 
-export async function generateDogAdvice(history: HistoryTurn[], lead?: Lead): Promise<AssistantResult> {
+export async function generateDogAdvice(
+  history: HistoryTurn[],
+  lead?: Lead
+): Promise<AssistantResult> {
   try {
     const res = await fetch("/api/geminiService", {
       method: "POST",
@@ -58,7 +61,7 @@ export async function generateDogAdvice(history: HistoryTurn[], lead?: Lead): Pr
     const reply = data.reply ?? data.text ?? "";
 
     return {
-      ok: Boolean(data.ok),
+      ok: Boolean(data.ok ?? true),
       reply,
       stage: data.stage,
       lead: data.lead,
@@ -67,7 +70,8 @@ export async function generateDogAdvice(history: HistoryTurn[], lead?: Lead): Pr
     return {
       ok: false,
       reply:
-        "Sorry — there was a technical issue. Please try again in a moment.",
+        "Sorry — there was a technical issue. Please try again in a moment.\n\n" +
+        "Lo siento — hubo un problema técnico. Intenta de nuevo en un momento.",
     };
   }
 }
