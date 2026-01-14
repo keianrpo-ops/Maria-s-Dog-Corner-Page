@@ -1,134 +1,96 @@
-import { google } from "googleapis";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import crypto from "crypto";
+import { getCalendarClient, getCalendarId } from "./_client.js";
 
-type AvailabilityPayload = {
-  startISO: string;
-  endISO: string;
-  timeZone?: string;
-  service?: "Daycare" | "Boarding" | "Dog Walk" | "Pet Sitting";
-  dogCount?: number; // default 1
-};
+const VERSION = "calendar/check-availability@v4";
+const DEFAULT_CAPACITY = Number(process.env.MDC_MAX_DOGS_CAPACITY || 10);
 
-let cached: { calendar: any; calendarId: string } | null = null;
-
-function getCalendarClient() {
-  if (cached) return cached;
-
-  const b64 = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64;
-  const calendarId = process.env.GOOGLE_CALENDAR_ID;
-
-  if (!b64) throw new Error("Missing env: GOOGLE_SERVICE_ACCOUNT_KEY_BASE64");
-  if (!calendarId) throw new Error("Missing env: GOOGLE_CALENDAR_ID");
-
-  const json = Buffer.from(b64, "base64").toString("utf8");
-  const creds = JSON.parse(json);
-
-  const auth = new google.auth.JWT({
-    email: creds.client_email,
-    key: String(creds.private_key || "").replace(/\\n/g, "\n"),
-    scopes: ["https://www.googleapis.com/auth/calendar"],
-  });
-
-  const calendar = google.calendar({ version: "v3", auth });
-  cached = { calendar, calendarId };
-  return cached;
+function makeTraceId() {
+  try {
+    return crypto.randomUUID();
+  } catch {
+    return crypto.randomBytes(16).toString("hex");
+  }
 }
 
-function readBody(req: any) {
-  if (!req?.body) return {};
-  if (typeof req.body === "string") {
+function parseBody(req: VercelRequest) {
+  const b: any = (req as any).body;
+  if (!b) return {};
+  if (typeof b === "string") {
     try {
-      return JSON.parse(req.body);
+      return JSON.parse(b);
     } catch {
       return {};
     }
   }
-  return req.body;
+  return b;
 }
 
-function overlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
-  return aStart < bEnd && bStart < aEnd;
-}
-
-function getEventRange(ev: any): { start: Date; end: Date } | null {
-  const s = ev?.start?.dateTime || ev?.start?.date;
-  const e = ev?.end?.dateTime || ev?.end?.date;
-  if (!s || !e) return null;
-  const start = new Date(s);
-  const end = new Date(e);
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
-  return { start, end };
-}
-
-function getCapacity() {
-  const base = Number(process.env.MDC_MAX_DOGS_CAPACITY ?? "10");
-  return Number.isFinite(base) && base > 0 ? base : 10;
-}
-
-async function countOverlappingDogs(calendar: any, calendarId: string, startISO: string, endISO: string) {
+function ensureRange(startISO: string, endISO?: string) {
   const start = new Date(startISO);
-  const end = new Date(endISO);
+  if (Number.isNaN(start.getTime())) throw new Error("Invalid startISO");
 
-  // ventana amplia para capturar eventos que se cruzan
-  const qMin = new Date(start);
-  qMin.setDate(qMin.getDate() - 2);
-  const qMax = new Date(end);
-  qMax.setDate(qMax.getDate() + 2);
+  let end = endISO ? new Date(endISO) : new Date(start.getTime() + 24 * 60 * 60 * 1000);
+  if (Number.isNaN(end.getTime())) end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+  if (end <= start) end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
 
-  const list = await calendar.events.list({
-    calendarId,
-    timeMin: qMin.toISOString(),
-    timeMax: qMax.toISOString(),
-    singleEvents: true,
-    orderBy: "startTime",
-    privateExtendedProperty: "mdcBooking=1",
-    maxResults: 2500,
-  });
+  return { timeMin: start.toISOString(), timeMax: end.toISOString() };
+}
 
-  const items = list.data.items || [];
-  let dogs = 0;
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const traceId = makeTraceId();
 
-  for (const ev of items) {
-    const r = getEventRange(ev);
-    if (!r) continue;
-    if (!overlaps(r.start, r.end, start, end)) continue;
-
-    const dc = Number(ev?.extendedProperties?.private?.mdcDogCount ?? "1");
-    dogs += Number.isFinite(dc) && dc > 0 ? dc : 1;
+  if (req.method !== "POST") {
+    return res.status(405).json({ ok: false, traceId, version: VERSION, error: "Method not allowed" });
   }
 
-  return { dogs };
-}
-
-export default async function handler(req: any, res: any) {
   try {
-    if ((req.method || "").toUpperCase() !== "POST") {
-      return res.status(405).json({ ok: false, error: "Method not allowed" });
+    const body = parseBody(req);
+    const { startISO, endISO } = body || {};
+
+    if (!startISO) {
+      return res.status(200).json({
+        ok: true,
+        traceId,
+        version: VERSION,
+        count: 0,
+        capacity: DEFAULT_CAPACITY,
+      });
     }
 
-    const body = readBody(req) as Partial<AvailabilityPayload>;
-    if (!body.startISO || !body.endISO) {
-      return res.status(400).json({ ok: false, error: "startISO and endISO are required" });
-    }
+    const calendar = getCalendarClient();
+    const calendarId = getCalendarId();
+    const { timeMin, timeMax } = ensureRange(startISO, endISO);
 
-    const dogCount = Number(body.dogCount ?? 1);
-    const requested = Number.isFinite(dogCount) && dogCount > 0 ? dogCount : 1;
+    const response = await calendar.events.list({
+      calendarId,
+      timeMin,
+      timeMax,
+      singleEvents: true,
+      orderBy: "startTime",
+    });
 
-    const { calendar, calendarId } = getCalendarClient();
-    const capacity = getCapacity();
+    const items = response.data.items || [];
 
-    const { dogs: bookedDogs } = await countOverlappingDogs(calendar, calendarId, String(body.startISO), String(body.endISO));
-    const remaining = Math.max(0, capacity - bookedDogs);
+    // Solo contamos eventos creados por el bot (mdcBooking=1)
+    const bookings = items.filter((ev) => ev?.extendedProperties?.private?.mdcBooking === "1");
 
     return res.status(200).json({
       ok: true,
-      available: remaining >= requested,
-      capacity,
-      bookedDogs,
-      requestedDogs: requested,
-      remaining,
-      calendarId,
+      traceId,
+      version: VERSION,
+      count: bookings.length,
+      capacity: DEFAULT_CAPACITY,
     });
   } catch (err: any) {
-    return res.status(500).json({ ok: false, error: err?.message || "Unknown error" });
+    console.error(`[${VERSION}]`, { traceId, error: err?.message || err });
+    return res.status(500).json({
+      ok: false,
+      traceId,
+      version: VERSION,
+      count: 0,
+      capacity: DEFAULT_CAPACITY,
+      error: err?.message || "Calendar error",
+    });
   }
 }

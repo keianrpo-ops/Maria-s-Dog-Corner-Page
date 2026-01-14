@@ -1,202 +1,232 @@
-"use client";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { chatWithMaria, type ChatMessage, type Lead } from "../services/aiAssistant";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { generateDogAdvice, Lead } from "@/services/geminiService";
+const WHATSAPP_NUMBER_E164 = "447594562006";
 
-type Message = { role: "user" | "assistant"; text: string };
-
-function toHistory(messages: Message[]) {
-  return messages.map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: m.text }],
-  }));
+function waLink(text: string) {
+  return `https://wa.me/${WHATSAPP_NUMBER_E164}?text=${encodeURIComponent(text)}`;
 }
 
-export default function AIAssistant() {
-  const [open, setOpen] = useState(true);
-  const [busy, setBusy] = useState(false);
-  const [lead, setLead] = useState<Lead>({ stage: "DISCOVERY" });
+type ServiceCard = {
+  key: string;
+  title: string;
+  color: string;
+  payload: string;
+};
 
-  const [messages, setMessages] = useState<Message[]>([
+export default function AIAssistant() {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [lead, setLead] = useState<Lead>({});
+  const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
-      text:
-        "Hi! I’m Maria 🐾 Welcome to Maria’s Dog Corner in Bristol. I can help with dog walking, pet sitting/minding, grooming and training — plus our 100g natural snacks (6 flavours). What’s your dog’s name and age?\n\n" +
-        "¡Hola! Soy Maria 🐾 Bienvenida a Maria’s Dog Corner en Bristol. Te ayudo con paseos, pet sitting/pet minding, grooming y training — y nuestros snacks naturales de 100g (6 sabores). ¿Cómo se llama tu perrito y qué edad tiene?",
+      content:
+        "Welcome! 🐾 Please choose a service below to connect with us. Note: Our services are based in the UK (English), but we're happy to assist you in Spanish if you prefer!\n\n¡Bienvenidos! Elija un servicio para contactarnos. Estamos en Reino Unido, pero podemos atenderle en español si lo desea.",
     },
   ]);
 
-  const [input, setInput] = useState("");
-  const listRef = useRef<HTMLDivElement | null>(null);
+  // refs para evitar estados stale (y reducir bugs cuando envías rápido)
+  const messagesRef = useRef<ChatMessage[]>(messages);
+  const leadRef = useRef<Lead>(lead);
 
-  const stage = lead.stage ?? "DISCOVERY";
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
-  const quickActions = useMemo(
+  useEffect(() => {
+    leadRef.current = lead;
+  }, [lead]);
+
+  const listRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Colores corporativos para identificar servicios (NO se tocan)
+  const services: ServiceCard[] = useMemo(
     () => [
-      {
-        label: "Services & Prices",
-        message:
-          "Please show me your services and prices. Include Dog Walking, Pet Sitting, and Grooming.",
-        patch: { stage: "SERVICE_PICK" as const },
-      },
-      {
-        label: "Book a service",
-        message:
-          "I’d like to book a service. Please guide me step by step.",
-        patch: { stage: "DISCOVERY" as const },
-      },
-      {
-        label: "Grooming",
-        message:
-          "I’m interested in Grooming. Can you tell me what you need from me to book?",
-        patch: { serviceInterest: "Grooming" as const, stage: "SERVICE_PICK" as const },
-      },
-      {
-        label: "Snack flavours",
-        message:
-          "Can you show me the 6 snack flavours (100g packs) and help me choose one?",
-        patch: { serviceInterest: "Snacks" as const, stage: "SERVICE_PICK" as const },
-      },
+      { key: "daycare", title: "Daycare", color: "bg-blue-100 text-blue-700 border-blue-200", payload: "I’d like to book Daycare." },
+      { key: "boarding", title: "Boarding", color: "bg-purple-100 text-purple-700 border-purple-200", payload: "I’d like to book Boarding." },
+      { key: "petsitting", title: "Pet Sitting", color: "bg-green-100 text-green-700 border-green-200", payload: "I’d like to book Pet Sitting." },
+      { key: "dogwalk", title: "Dog Walk", color: "bg-yellow-100 text-yellow-700 border-yellow-200", payload: "I’d like to book a Dog Walk." },
+      { key: "grooming", title: "Grooming", color: "bg-pink-100 text-pink-700 border-pink-200", payload: "I’d like to book Grooming." },
     ],
     []
   );
 
+  // ✅ Scroll robusto (solución real)
   useEffect(() => {
-    if (!listRef.current) return;
-    listRef.current.scrollTop = listRef.current.scrollHeight;
-  }, [messages, open]);
+    if (!open) return;
 
-  async function send(customText?: string, patch?: Partial<Lead>) {
-    const text = (customText ?? input).trim();
-    if (!text || busy) return;
+    requestAnimationFrame(() => {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    });
+  }, [open, messages.length, busy]);
 
-    setInput("");
+  // ✅ Enfocar input al abrir
+  useEffect(() => {
+    if (!open) return;
+    setTimeout(() => inputRef.current?.focus(), 120);
+  }, [open]);
+
+  async function send(text: string, leadOverride?: Lead) {
+    const trimmed = text.trim();
+    if (!trimmed || busy) return;
+
+    const leadToUse = leadOverride ?? leadRef.current;
+
+    const nextMessages: ChatMessage[] = [...messagesRef.current, { role: "user", content: trimmed }];
+
+    setMessages(nextMessages);
+    setDraft("");
     setBusy(true);
 
-    setMessages((prev) => [...prev, { role: "user", text }]);
-
-    const nextLead = { ...lead, ...(patch ?? {}) };
-    setLead(nextLead);
-
     try {
-      const history = toHistory([...messages, { role: "user", text }]);
-      const result = await generateDogAdvice(history, nextLead);
+      const ai = await chatWithMaria(nextMessages, leadToUse);
 
-      setMessages((prev) => [...prev, { role: "assistant", text: result.reply }]);
-      if (result.lead) setLead(result.lead);
-      else if (result.stage) setLead((l) => ({ ...l, stage: result.stage }));
+      // merge seguro del lead (no pierde service)
+      setLead((prev) => ({ ...prev, ...(leadOverride ?? {}), ...(ai.lead ?? {}) }));
+
+      setMessages((prev) => [...prev, { role: "assistant", content: ai.reply }]);
+      setTimeout(() => inputRef.current?.focus(), 50);
+    } catch {
+      const fallback = "Sorry — I had a connection hiccup. Tap WhatsApp for direct help!";
+      setMessages((prev) => [...prev, { role: "assistant", content: fallback }]);
     } finally {
       setBusy(false);
     }
   }
 
-  const placeholder =
-    "Dog’s name & age (e.g., Luna, 2 years)… / Nombre y edad (ej., Luna, 2 años)…";
+  function selectService(s: ServiceCard) {
+    // ✅ Guardamos el servicio de inmediato (para que el chat se “active”)
+    const nextLead = { ...leadRef.current, service: s.title };
+    setLead(nextLead);
+
+    // enviamos payload con el lead actualizado
+    send(s.payload, nextLead);
+
+    // enfoque inmediato para que escriba después de escoger
+    setTimeout(() => inputRef.current?.focus(), 80);
+  }
+
+  const inputPlaceholder = lead.service ? "Type your message here..." : "Choose a service above to start…";
 
   return (
-    <div className="fixed bottom-5 right-5 z-50">
-      {!open && (
-        <Button
-          onClick={() => setOpen(true)}
-          className="rounded-full shadow-lg px-4 py-2"
-        >
-          Chat with Maria 🐾
-        </Button>
-      )}
+    <>
+      {/* Botón Flotante Principal */}
+      <button
+        onClick={() => setOpen(true)}
+        className="fixed bottom-6 right-6 z-50 h-16 w-16 rounded-full shadow-2xl bg-teal-700 text-white flex items-center justify-center hover:scale-110 transition-transform text-2xl"
+      >
+        🐾
+      </button>
 
       {open && (
-        <Card className="w-[340px] sm:w-[380px] h-[520px] shadow-xl rounded-2xl flex flex-col overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b bg-white">
-            <div className="flex flex-col">
-              <div className="font-semibold leading-tight">Maria’s Dog Corner</div>
-              <div className="text-xs text-muted-foreground">
-                Bristol • Bookings & Care • +44 7594 562 006
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
+
+          {/* ✅ min-h-0 es clave para que overflow-y funcione dentro de flex */}
+          <div className="relative w-full max-w-[450px] h-full sm:h-[85vh] flex flex-col sm:rounded-3xl overflow-hidden shadow-2xl bg-white min-h-0">
+            {/* Cabecera */}
+            <div className="bg-teal-800 text-white px-5 py-4 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-xl">🐶</div>
+                <div>
+                  <div className="text-base font-bold leading-tight">Maria’s Dog Corner</div>
+                  <div className="text-xs opacity-80">Bristol, UK • English & Español</div>
+                </div>
+              </div>
+              <button onClick={() => setOpen(false)} className="text-xl p-2 hover:bg-white/10 rounded-full transition-colors">
+                ✕
+              </button>
+            </div>
+
+            {/* Barra de acciones rápidas con WhatsApp Corporativo */}
+            <div className="px-4 py-3 border-b bg-gray-50 shrink-0">
+              <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                <button
+                  onClick={() => window.open(waLink("Hi Maria! I'm interested in your services."), "_blank")}
+                  className="flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-full bg-[#25D366] text-white text-sm font-bold shadow-sm hover:bg-[#20ba5a] transition-colors"
+                >
+                  <span className="text-lg">WhatsApp</span>
+                </button>
+                <button
+                  onClick={() => send("I'd like to see the snacks menu.")}
+                  className="whitespace-nowrap px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50"
+                >
+                  🛍️ Shop Snacks
+                </button>
+              </div>
+
+              {/* Botones de Servicios Mini-Color */}
+              <div className="flex gap-2 overflow-x-auto mt-3 pb-2 no-scrollbar">
+                {services.map((s) => (
+                  <button
+                    key={s.key}
+                    onClick={() => selectService(s)}
+                    className={`min-w-[100px] text-center rounded-lg py-2 px-1 border ${s.color} transition-all active:scale-95 shadow-sm`}
+                  >
+                    <div className="font-bold text-[11px] uppercase tracking-wider">{s.title}</div>
+                  </button>
+                ))}
               </div>
             </div>
-            <Button
-              variant="ghost"
-              onClick={() => setOpen(false)}
-              className="text-sm"
-            >
-              ✕
-            </Button>
-          </div>
 
-          {/* Quick actions */}
-          <div className="px-3 py-2 border-b bg-white">
-            <div className="flex gap-2 overflow-x-auto no-scrollbar">
-              {quickActions.map((a) => (
-                <Button
-                  key={a.label}
-                  variant="secondary"
-                  className="rounded-full whitespace-nowrap"
-                  onClick={() => send(a.message, a.patch)}
-                  disabled={busy}
-                >
-                  {a.label}
-                </Button>
-              ))}
-            </div>
-            <div className="text-[11px] text-muted-foreground mt-2">
-              Focus: bookings for walking/sitting/minding/grooming • Snacks: 100g packs
-            </div>
-          </div>
-
-          {/* Messages */}
-          <div ref={listRef} className="flex-1 overflow-y-auto p-3 bg-white">
-            <div className="space-y-3">
+            {/* Área de Chat */}
+            <div ref={listRef} className="flex-1 min-h-0 overflow-y-auto px-4 py-6 space-y-4 bg-[#f8f9fa]">
               {messages.map((m, idx) => (
-                <div
-                  key={idx}
-                  className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-                >
+                <div key={idx} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div
-                    className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
+                    className={`max-w-[85%] rounded-2xl px-4 py-3 text-[14px] leading-relaxed shadow-sm ${
                       m.role === "user"
-                        ? "bg-teal-500 text-white"
-                        : "bg-gray-100 text-gray-900"
+                        ? "bg-brand-orange text-white rounded-tr-none"
+                        : "bg-white text-gray-800 border border-gray-100 rounded-tl-none"
                     }`}
-                    style={{ whiteSpace: "pre-wrap" }}
                   >
-                    {m.text}
+                    {m.content}
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
 
-          {/* Input */}
-          <div className="p-3 border-t bg-white">
-            <div className="flex gap-2 items-center">
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={placeholder}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") send();
-                }}
+              {busy && (
+                <div className="flex gap-2 items-center text-gray-400 text-xs animate-pulse">
+                  <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                  Maria is typing...
+                </div>
+              )}
+
+              {/* ✅ Ancla para scroll */}
+              <div ref={bottomRef} />
+            </div>
+
+            {/* Formulario de Entrada */}
+            <form
+              className="px-4 py-4 border-t bg-white flex items-center gap-2 shrink-0"
+              onSubmit={(e) => {
+                e.preventDefault();
+                send(draft);
+              }}
+            >
+              <input
+                ref={inputRef}
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                className="flex-1 h-12 rounded-xl border border-gray-200 px-4 text-sm focus:outline-none focus:border-teal-500 bg-gray-50"
+                placeholder={inputPlaceholder}
                 disabled={busy}
-                className="rounded-full"
               />
-              <Button
-                onClick={() => send()}
-                disabled={busy}
-                className="rounded-full px-4"
-                aria-label="Send"
+              <button
+                type="submit"
+                disabled={busy || !draft.trim()}
+                className="h-12 w-12 rounded-xl bg-teal-700 text-white flex items-center justify-center shadow-lg disabled:bg-gray-300 transition-all hover:bg-teal-800"
               >
-                ➤
-              </Button>
-            </div>
-            <div className="text-[10px] text-muted-foreground mt-2 text-center">
-              Maria’s Dog Corner • Bristol
-            </div>
+                ➔
+              </button>
+            </form>
           </div>
-        </Card>
+        </div>
       )}
-    </div>
+    </>
   );
 }

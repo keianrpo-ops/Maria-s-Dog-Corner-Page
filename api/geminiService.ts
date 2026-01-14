@@ -1,268 +1,324 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import OpenAI from "openai";
+import crypto from "crypto";
 
-type HistoryTurn = {
-  role: "user" | "model" | "assistant";
-  parts: { text: string }[];
-};
+type AnyMsg = { role?: any; content?: any };
+const VERSION = "geminiService@v7";
+type Lang = "es" | "en";
 
-type Lead = {
-  language?: "es" | "en";
-
-  dogName?: string;
-  dogAge?: string;
-  breed?: string;
-
-  serviceInterest?:
-    | "Dog Walking"
-    | "Pet Sitting"
-    | "Pet Minding"
-    | "Grooming"
-    | "Pet Training"
-    | "Snacks"
-    | "Unknown";
-
-  dates?: string;
-  location?: string;
-  temperament?: string;
-  notes?: string;
-
-  ownerName?: string;
-  phoneOrEmail?: string;
-
-  stage?:
-    | "DISCOVERY"
-    | "SERVICE_PICK"
-    | "DATES"
-    | "DETAILS"
-    | "QUOTE_CONFIRM"
-    | "CONTACT"
-    | "DONE";
-};
-
-type AssistantResult = {
-  ok: boolean;
-  reply: string;
-  stage?: Lead["stage"];
-  lead?: Lead;
-};
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-const MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
-
-/**
- * IMPORTANT:
- * - Keep facts consistent with your website.
- * - Snacks: ONLY 100g packs, 6 flavours. Prices ONLY if user asks.
- * - Always steer toward booking/services without being aggressive.
- */
-const BUSINESS_CONTEXT = `
-Brand: Maria’s Dog Corner (Bristol, UK)
-Websites: https://mariasdogcorner.co.uk/ | https://maria-s-dog-corner-page.vercel.app/
-Contact: info@mariasdogcorner.co.uk | +44 7594 562 006
-
-Core services:
-- Dog Walking:
-  • Solo Walk (1 dog, 1 hour): £20
-  • Group Walk (max 3 dogs, 1 hour): £50
-- Pet Sitting:
-  • Dog Sitting 12 hours: £35
-  • Dog Sitting 24 hours: £45
-- Pet Minding (daycare/overnight): quote after details
-- Grooming: full grooming care (bath, haircut, nail + ear cleaning). From £35 (final quote depends on size/coat/condition)
-- Pet Training: quote after details
-
-Snacks (STRICT RULES):
-- Only talk about OUR snacks. Only 100g packs. 6 flavours:
-  1) Salmon Delight
-  2) Liver
-  3) Beef
-  4) Chicken & Veggie
-  5) Lamb
-  6) Garden Veggies
-- DO NOT mention snack prices unless the user explicitly asks for prices.
-- If asked for snack prices, give them clearly and offer help choosing a flavour based on dog size/allergies/preferences.
-
-Service area:
-- Bristol + nearby areas. Always confirm the customer’s location/postcode.
-
-Style:
-- Warm, respectful, professional.
-- Caring with dogs (friendly and gentle), but avoid romantic/flirty language.
-- Do not call the customer “love/amor”.
-- Never say you are an AI. You are “Maria”.
-`;
-
-/**
- * Output must be a JSON object with:
- * { ok: true, reply: string, stage?: string, lead?: object }
- */
-const SYSTEM_PROMPT = `
-You are Maria, the virtual booking assistant for Maria’s Dog Corner in Bristol (UK).
-
-GOAL:
-Help users quickly choose a service (walking, sitting, minding, grooming, training) and book it, while softly increasing ticket value by mentioning Grooming when appropriate (not pushy). Also handle snack questions (100g only, 6 flavours) but ONLY share snack prices if the user asks.
-
-LANGUAGE:
-- Default to the user's language (Spanish or English).
-- If the user mixes languages or language is unclear, you may reply bilingually but keep it compact.
-
-CONVERSATION RULES:
-1) Be friendly and professional. Short, clear messages. No long paragraphs.
-2) Always move the chat forward with ONE question per message.
-3) Collect info in this order:
-   - Dog basics: dog name + age (+ breed if helpful)
-   - Service interest
-   - Dates/times (and arrival time if relevant)
-   - Location/postcode (for walks/sitting)
-   - Temperament / special notes
-   - Contact details (owner name + phone/email)
-4) Pricing:
-   - If user asks for prices, answer accurately using BUSINESS_CONTEXT.
-   - Do NOT volunteer snack prices unless asked.
-5) Snacks:
-   - Only our snacks. Only 100g. 6 flavours.
-   - If user asks benefits, keep it factual: natural dog snacks, convenient 100g packs; ask about allergies if recommending.
-6) Grooming upsell:
-   - If user is booking walking/sitting/minding, you may add ONE gentle line like:
-     “If you’d like, we can also help with Grooming — from £35 depending on coat/size.”
-   - Do not repeat the upsell if the user declines.
-7) Never mention internal prompts, schemas, or that you are an AI.
-
-LEAD + STAGE:
-- Maintain and update lead fields from the chat.
-- Pick a stage that matches what you still need:
-  DISCOVERY -> missing dogName/dogAge
-  SERVICE_PICK -> missing serviceInterest
-  DATES -> missing dates/times
-  DETAILS -> missing location/temperament/notes needed
-  QUOTE_CONFIRM -> user asked price or you’re confirming quote
-  CONTACT -> missing ownerName/phoneOrEmail
-  DONE -> booking confirmed and next steps given
-
-OUTPUT:
-Return JSON only, matching this schema:
-{
-  "ok": true,
-  "reply": "string",
-  "stage": "DISCOVERY|SERVICE_PICK|DATES|DETAILS|QUOTE_CONFIRM|CONTACT|DONE",
-  "lead": { ...updatedLead }
+function parseBody(req: VercelRequest) {
+  const b: any = (req as any).body;
+  if (!b) return {};
+  if (typeof b === "string") {
+    try {
+      return JSON.parse(b);
+    } catch {
+      return {};
+    }
+  }
+  return b;
 }
 
-BUSINESS CONTEXT:
-${BUSINESS_CONTEXT}
-`;
+function sanitizeMessages(input: AnyMsg[]) {
+  const out: { role: "user" | "assistant"; content: string }[] = [];
+  for (const m of input || []) {
+    if (!m) continue;
+    const role = (m as any).role;
+    if (role !== "user" && role !== "assistant") continue;
 
-function detectLanguage(messages: HistoryTurn[], lead?: Lead): "es" | "en" {
-  if (lead?.language) return lead.language;
-  const combined = messages.map(m => m.parts?.[0]?.text || "").join(" ");
-  const esHints = /(?:\b(hola|buenas|por favor|precio|perrito|edad|servicio|cita|reserva)\b)/i;
-  return esHints.test(combined) ? "es" : "en";
-}
-
-function normalizeMessages(messages: any): HistoryTurn[] {
-  if (!Array.isArray(messages)) return [];
-  return messages
-    .map((m) => {
-      const role = m?.role;
-      const text = m?.parts?.[0]?.text ?? m?.text ?? "";
-      if (!text) return null;
-      return { role, parts: [{ text: String(text) }] } as HistoryTurn;
-    })
-    .filter(Boolean) as HistoryTurn[];
-}
-
-function toOpenAIRole(role: HistoryTurn["role"]): "user" | "assistant" {
-  return role === "user" ? "user" : "assistant";
-}
-
-const responseSchema = {
-  type: "object",
-  additionalProperties: false,
-  properties: {
-    ok: { type: "boolean" },
-    reply: { type: "string" },
-    stage: {
-      type: "string",
-      enum: ["DISCOVERY", "SERVICE_PICK", "DATES", "DETAILS", "QUOTE_CONFIRM", "CONTACT", "DONE"],
-    },
-    lead: {
-      type: "object",
-      additionalProperties: true,
-    },
-  },
-  required: ["ok", "reply"],
-};
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  try {
-    if ((req.method || "").toUpperCase() !== "POST") {
-      return res.status(405).json({ ok: false, reply: "Method not allowed" });
+    const c = (m as any).content;
+    if (typeof c === "string") {
+      const s = c.trim();
+      if (s) out.push({ role, content: s });
+      continue;
     }
 
-    const body = req.body || {};
-    const messages = normalizeMessages(body.messages);
-    const leadIn = (body.lead || {}) as Lead;
-
-    const lang = detectLanguage(messages, leadIn);
-    const lead: Lead = { ...leadIn, language: lang };
-
-    const openaiMessages = [
-      { role: "system" as const, content: SYSTEM_PROMPT },
-      ...messages.map((m) => ({
-        role: toOpenAIRole(m.role),
-        content: m.parts?.[0]?.text || "",
-      })),
-    ];
-
-    const completion = await openai.chat.completions.create({
-      model: MODEL,
-      messages: openaiMessages,
-      response_format: {
-        type: "json_schema",
-        json_schema: {
-          name: "mdc_assistant_result",
-          schema: responseSchema,
-        },
-      },
-      temperature: 0.4,
-    });
-
-    const raw = completion.choices?.[0]?.message?.content || "";
-    let parsed: any = null;
+    if (c === null || c === undefined) continue;
 
     try {
-      parsed = JSON.parse(raw);
+      const s = String(c).trim();
+      if (s) out.push({ role, content: s });
     } catch {
-      parsed = null;
+      continue;
     }
+  }
+  return out;
+}
 
-    if (!parsed || typeof parsed.reply !== "string") {
-      const fallback =
-        lang === "es"
-          ? "Gracias por tu mensaje. ¿Cómo se llama tu perrito y qué edad tiene?"
-          : "Thanks for your message. What’s your dog’s name and age?";
-      return res.status(200).json({ ok: true, reply: fallback, stage: "DISCOVERY", lead });
-    }
+function detectLangFromAllMessages(messages: { role: "user" | "assistant"; content: string }[]): Lang {
+  // Si en cualquier parte hay señales claras de español, nos quedamos con ES
+  const full = messages.map((m) => m.content).join(" \n ").toLowerCase();
 
-    // Merge lead updates safely
-    const outLead = { ...lead, ...(parsed.lead || {}) };
+  if (full.includes("español") || full.includes("espanol") || full.includes("en español")) return "es";
+  if (full.includes("in english") || full.includes("english")) return "en";
 
-    return res.status(200).json({
-      ok: true,
-      reply: String(parsed.reply || ""),
-      stage: parsed.stage || outLead.stage,
-      lead: outLead,
-    } as AssistantResult);
-  } catch (e: any) {
-    return res.status(200).json({
-      ok: true,
-      reply:
-        "Sorry — there was a technical issue. Please try again in a moment.\n\n" +
-        "Lo siento — hubo un problema técnico. Intenta de nuevo en un momento.",
-      stage: "DISCOVERY",
-      lead: { stage: "DISCOVERY" },
+  const spanishHits = [
+    "hola",
+    "gracias",
+    "quiero",
+    "reserva",
+    "mañana",
+    "perro",
+    "dueño",
+    "teléfono",
+    "telefono",
+    "vacunas",
+    "alergias",
+    "esterilizado",
+    "castrado",
+    "guardería",
+    "paseo",
+    "hospedaje",
+  ];
+  const score = spanishHits.reduce((acc, w) => acc + (full.includes(w) ? 1 : 0), 0);
+  return score >= 2 ? "es" : "en";
+}
+
+function inferServiceFromText(text: string): string | null {
+  const t = (text || "").toLowerCase();
+  if (t.includes("daycare")) return "Daycare";
+  if (t.includes("boarding")) return "Boarding";
+  if (t.includes("pet sitting") || t.includes("petsitting")) return "Pet Sitting";
+  if (t.includes("dog walk") || t.includes("dogwalk") || t.includes("walk")) return "Dog Walk";
+  return null;
+}
+
+function tryParseSnackMenu() {
+  const raw = process.env.MDC_SNACKS_MENU_JSON || "";
+  if (!raw.trim()) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function labelForMissingField(field: string, lang: Lang): string {
+  const es: Record<string, string> = {
+    dogName: "Nombre del perro",
+    ownerName: "Tu nombre",
+    ownerPhone: "Tu teléfono (con prefijo, ej: +44...)",
+    dateTime: "Fecha y hora (hora Reino Unido)",
+    dogAge: "Edad del perro",
+    dogBreed: "Raza del perro",
+    vaccinationsUpToDate: "¿Vacunas al día? (Sí/No)",
+    neutered: "¿Esterilizado/Castrado? (Sí/No/No estoy seguro)",
+    allergies: "¿Alergias? (Ninguna / Detalles)",
+    behaviour: "Comportamiento (amigable/nervioso/reactivo/etc.)",
+    medicalNotes: "Notas médicas (Ninguna / Detalles)",
+  };
+
+  const en: Record<string, string> = {
+    dogName: "Dog’s name",
+    ownerName: "Your name",
+    ownerPhone: "Your phone (with country code, e.g. +44...)",
+    dateTime: "Date & time (UK time)",
+    dogAge: "Dog’s age",
+    dogBreed: "Dog’s breed",
+    vaccinationsUpToDate: "Vaccinations up to date? (Yes/No)",
+    neutered: "Neutered/Spayed? (Yes/No/Unknown)",
+    allergies: "Any allergies? (None / Details)",
+    behaviour: "Behaviour (friendly/nervous/reactive/etc.)",
+    medicalNotes: "Medical notes (None / Details)",
+  };
+
+  return (lang === "es" ? es : en)[field] || field;
+}
+
+function looksIncomplete(reply: string) {
+  const r = (reply || "").trim();
+  if (!r) return true;
+  // Si termina en ":" o dice "Please provide..." sin bullets, lo tratamos como incompleto
+  if (r.endsWith(":")) return true;
+  if (r.toLowerCase().includes("please provide") && !r.includes("•") && !r.includes("- ")) return true;
+  return false;
+}
+
+function buildProfessionalAsk(service: string, lang: Lang, missing: string[]) {
+  const title =
+    lang === "es"
+      ? `Hola, soy María de Maria’s Dog Corner (Bristol). Para agendar tu **${service}**, por favor confírmame:`
+      : `Hi! I’m Maria from Maria’s Dog Corner (Bristol). To book **${service}**, please confirm:`;
+
+  // Manténlo corto: máximo 6 items por mensaje
+  const bullets = missing.slice(0, 6).map((f) => `• ${labelForMissingField(f, lang)}`).join("\n");
+
+  return `${title}\n\n${bullets}`;
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const traceId = crypto.randomUUID();
+
+  if (req.method !== "POST") {
+    return res.status(405).json({ ok: false, traceId, version: VERSION, error: "Method not allowed" });
+  }
+
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
+  const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+  if (!OPENAI_API_KEY) {
+    return res.status(500).json({ ok: false, traceId, version: VERSION, error: "Missing OPENAI_API_KEY" });
+  }
+
+  const body = parseBody(req);
+  const rawMessages: AnyMsg[] = Array.isArray(body.messages) ? body.messages : [];
+  const leadIn = body.lead || {};
+
+  const messages = sanitizeMessages(rawMessages);
+  if (!messages.length) {
+    return res.status(400).json({ ok: false, traceId, version: VERSION, error: "No valid messages after sanitize." });
+  }
+
+  try {
+    const snackMenu = tryParseSnackMenu();
+
+    // Language lock: si lead.language ya viene, úsalo; si no, detecta por TODA la conversación
+    const lang: Lang =
+      leadIn?.language === "es" || leadIn?.language === "en" ? leadIn.language : detectLangFromAllMessages(messages);
+
+    const now = new Date();
+    const todayStr = now.toISOString().split("T")[0];
+
+    const system = `
+You are Maria, the owner of Maria's Dog Corner in Bristol, UK.
+
+LANGUAGE LOCK (CRITICAL):
+- Reply ONLY in ${lang === "es" ? "Spanish" : "English"}.
+- Ignore UI/button language; use conversation language.
+- If user explicitly asks to switch language, update lead.language and then use ONLY that language.
+
+BUSINESS:
+- Services you can book: Daycare, Boarding, Pet Sitting, Dog Walk.
+- Do NOT offer Training.
+
+SNACKS:
+- Snacks are ONLY 100g packs.
+- Flavours: Salmon Delight, Liver Luxury, Beef Bonanza, Chicken & Veggie, Lamb Love, Garden Veggies.
+- NEVER say you don't have access to snacks menu or prices.
+${snackMenu ? `- Prices from config: ${JSON.stringify(snackMenu)}` : `- If exact prices missing, say flavours + that prices are in "Shop Snacks" on the website.`}
+
+BOOKING FLOW:
+- Do NOT set action="create_booking" until all required booking + safety fields are collected.
+
+Required booking fields:
+- service (Daycare|Boarding|Pet Sitting|Dog Walk)
+- dogName, dogAge, dogBreed
+- ownerName, ownerPhone
+- date & time (UK time)
+
+Safety fields:
+- vaccinationsUpToDate (yes/no)
+- neutered (yes/no/unknown)
+- allergies (none/details)
+- behaviour (friendly/nervous/reactive/etc.)
+- medicalNotes (none/details)
+
+TIME:
+- User gives time in UK time (Europe/London)
+- Convert internally to UTC startISO/endISO
+- NEVER mention UTC in the reply.
+
+CONFIRMATION FORMAT:
+If action="create_booking", reply must be a clean structured template (no extra paragraphs).
+
+OUTPUT JSON ONLY:
+{ "reply":"...", "action":"none|create_booking", "lead":{...}, "booking":{...} or null }
+
+KNOWN CONTEXT:
+${JSON.stringify(leadIn || {})}
+
+Today is ${todayStr}.
+`.trim();
+
+    const outgoing = [{ role: "system", content: system }, ...messages.slice(-20)];
+
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        messages: outgoing,
+        response_format: { type: "json_object" },
+        temperature: 0.35,
+      }),
     });
+
+    const data = await r.json().catch(() => ({} as any));
+    if (!r.ok) {
+      const msg = data?.error?.message || `OpenAI HTTP ${r.status}`;
+      return res.status(500).json({ ok: false, traceId, version: VERSION, error: msg });
+    }
+
+    const content = data?.choices?.[0]?.message?.content;
+    if (typeof content !== "string" || !content.trim()) {
+      return res.status(500).json({ ok: false, traceId, version: VERSION, error: "OpenAI returned empty content" });
+    }
+
+    let ai: any;
+    try {
+      ai = JSON.parse(content);
+    } catch {
+      return res.status(500).json({ ok: false, traceId, version: VERSION, error: "AI returned invalid JSON" });
+    }
+
+    const mergedLead = { ...leadIn, ...(ai.lead || {}), language: ai?.lead?.language || leadIn?.language || lang };
+
+    // Infer service if missing (very common when user just clicked a button)
+    if (!mergedLead.service) {
+      const lastUser = [...messages].reverse().find((m) => m.role === "user")?.content || "";
+      const inferred = inferServiceFromText(lastUser);
+      if (inferred) mergedLead.service = inferred;
+    }
+
+    // ✅ SAFETY NET: si el reply viene incompleto, construimos checklist nosotros
+    const service = String(mergedLead.service || "").trim();
+    if (service && (typeof ai?.reply !== "string" || looksIncomplete(ai.reply))) {
+      // primera tanda (corta) para que no sea eterno
+      const missingBasics = [
+        !mergedLead.dogName ? "dogName" : null,
+        !mergedLead.ownerName ? "ownerName" : null,
+        !mergedLead.ownerPhone ? "ownerPhone" : null,
+        !mergedLead.dateTime ? "dateTime" : null, // si tú no usas dateTime en lead, puedes quitarlo
+      ].filter(Boolean) as string[];
+
+      // si ya tiene lo básico, pide seguridad
+      const missingSafety = [
+        !mergedLead.dogAge ? "dogAge" : null,
+        !mergedLead.dogBreed ? "dogBreed" : null,
+        !mergedLead.vaccinationsUpToDate ? "vaccinationsUpToDate" : null,
+        !mergedLead.neutered ? "neutered" : null,
+        !mergedLead.allergies ? "allergies" : null,
+        !mergedLead.behaviour ? "behaviour" : null,
+        !mergedLead.medicalNotes ? "medicalNotes" : null,
+      ].filter(Boolean) as string[];
+
+      const missing = missingBasics.length ? missingBasics : missingSafety;
+      ai.reply = buildProfessionalAsk(service, lang, missing.length ? missing : ["dogName", "ownerName", "ownerPhone", "dateTime"]);
+      ai.action = "none";
+      ai.booking = null;
+    }
+
+    // Si falta reply válido
+    if (typeof ai?.reply !== "string" || !ai.reply.trim()) {
+      ai.reply =
+        lang === "es"
+          ? "Hola, soy María de Maria’s Dog Corner (Bristol). ¿Qué servicio te interesa: Daycare, Boarding, Pet Sitting o Dog Walk?"
+          : "Hi! I’m Maria from Maria’s Dog Corner (Bristol). Which service are you interested in: Daycare, Boarding, Pet Sitting or Dog Walk?";
+      ai.action = "none";
+      ai.booking = null;
+    }
+
+    return res.status(200).json({
+      ok: true,
+      traceId,
+      version: VERSION,
+      reply: ai.reply,
+      action: ai.action || "none",
+      lead: mergedLead,
+      booking: ai.booking || null,
+    });
+  } catch (e: any) {
+    return res.status(500).json({ ok: false, traceId, version: VERSION, error: e?.message || "Server error" });
   }
 }
