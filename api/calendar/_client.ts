@@ -1,126 +1,101 @@
 import { google } from "googleapis";
-import fs from "fs";
-import path from "path";
+import type { calendar_v3 } from "googleapis";
 
-type ServiceAccountKey = {
+const VERSION = "api/calendar/_client@v4";
+const SCOPES = ["https://www.googleapis.com/auth/calendar"];
+
+let cachedAuth: any | null = null;
+let cachedCalendar: calendar_v3.Calendar | null = null;
+
+type SAJson = {
   client_email: string;
   private_key: string;
-  [k: string]: any;
+  project_id?: string;
 };
 
-function normalizePrivateKey(keyObj: any) {
-  if (keyObj?.private_key) keyObj.private_key = String(keyObj.private_key).replace(/\\n/g, "\n");
-  return keyObj;
-}
-
-function validateKey(keyObj: any) {
-  if (!keyObj || typeof keyObj !== "object") throw new Error("Invalid service account JSON (not an object).");
-  if (!keyObj.client_email) throw new Error("Invalid service account JSON: missing client_email.");
-  if (!keyObj.private_key) throw new Error("Invalid service account JSON: missing private_key.");
-  return keyObj as ServiceAccountKey;
-}
-
-/**
- * ✅ Importante:
- * - En Vercel: usa GOOGLE_SERVICE_ACCOUNT_KEY_BASE64
- * - En local: puedes usar GOOGLE_SERVICE_ACCOUNT_KEY_PATH
- * Si BASE64 existe pero está malo, NO reventamos: intentamos PATH.
- */
-function readServiceAccountKey() {
-  const errors: string[] = [];
-
-  // 1) BASE64 (Vercel recomendado)
-  const base64Key = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64;
-  if (base64Key && base64Key.trim()) {
+function readServiceAccount(): SAJson {
+  // 1. Intentar leer desde un JSON completo
+  const rawJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON?.trim();
+  if (rawJson) {
     try {
-      const cleaned = base64Key.trim().replace(/\s/g, "");
-      const decodedText = Buffer.from(cleaned, "base64").toString("utf-8");
-      const keyObj = validateKey(normalizePrivateKey(JSON.parse(decodedText)));
-      return keyObj;
+      const parsed = JSON.parse(rawJson) as SAJson;
+      if (!parsed?.client_email || !parsed?.private_key) {
+        throw new Error("GOOGLE_SERVICE_ACCOUNT_JSON missing fields");
+      }
+      return {
+        client_email: parsed.client_email.trim(),
+        private_key: parsed.private_key.replace(/\\n/g, "\n"),
+      };
     } catch (e: any) {
-      errors.push("BASE64: " + (e?.message || String(e)));
-      // seguimos a la siguiente opción
+      throw new Error(`Invalid JSON format: ${e?.message}`);
     }
   }
 
-  // 2) JSON directo en env (opcional)
-  const jsonKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON;
-  if (jsonKey && jsonKey.trim()) {
-    try {
-      const keyObj = validateKey(normalizePrivateKey(JSON.parse(jsonKey)));
-      return keyObj;
-    } catch (e: any) {
-      errors.push("JSON: " + (e?.message || String(e)));
-    }
+  // 2. Leer desde variables separadas (Lo que tú estás usando)
+  const email = (
+    process.env.GOOGLE_CLIENT_EMAIL ||
+    process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ||
+    ""
+  ).trim().replace(/^"(.*)"$/, '$1'); // Limpia comillas accidentales de PowerShell
+
+  const keyRaw = (
+    process.env.GOOGLE_PRIVATE_KEY ||
+    process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY ||
+    ""
+  ).trim().replace(/^"(.*)"$/, '$1'); // Limpia comillas accidentales de PowerShell
+
+  if (!email) {
+    throw new Error("Missing GOOGLE_CLIENT_EMAIL or GOOGLE_SERVICE_ACCOUNT_EMAIL");
+  }
+  if (!keyRaw) {
+    throw new Error("Missing GOOGLE_PRIVATE_KEY");
   }
 
-  // 3) PATH local
-  const keyPath = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH;
-  if (keyPath && keyPath.trim()) {
-    try {
-      const absPath = path.isAbsolute(keyPath) ? keyPath : path.join(process.cwd(), keyPath);
-      if (!fs.existsSync(absPath)) throw new Error(`File not found: ${absPath}`);
-      const raw = fs.readFileSync(absPath, "utf-8");
-      const keyObj = validateKey(normalizePrivateKey(JSON.parse(raw)));
-      return keyObj;
-    } catch (e: any) {
-      errors.push("PATH: " + (e?.message || String(e)));
-    }
-  }
-
-  throw new Error(
-    "Missing/invalid Google credentials. Provide GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 (recommended) or GOOGLE_SERVICE_ACCOUNT_KEY_PATH. " +
-      (errors.length ? `Details: ${errors.join(" | ")}` : "")
-  );
+  return {
+    client_email: email,
+    // El fix para el error DECODER routines::unsupported
+    private_key: keyRaw.replace(/\\n/g, "\n"),
+  };
 }
 
-export function getCalendarId() {
-  const id = process.env.GOOGLE_CALENDAR_ID || "";
-  if (!id) throw new Error("Missing GOOGLE_CALENDAR_ID.");
+export function getCalendarId(): string {
+  const id = (
+    process.env.GOOGLE_CALENDAR_ID ||
+    process.env.MDC_GOOGLE_CALENDAR_ID ||
+    ""
+  ).trim().replace(/^"(.*)"$/, '$1');
+  
+  if (!id) throw new Error("Missing GOOGLE_CALENDAR_ID");
   return id;
 }
 
-let _cachedCalendar: ReturnType<typeof google.calendar> | null = null;
-let _cachedAuth: any | null = null;
-let _authorizedOnce = false;
-
-export function getAuthClient() {
-  if (_cachedAuth) return _cachedAuth;
-
-  const key = readServiceAccountKey();
-
-  // ✅ forma robusta (menos errores que la firma posicional)
-  const auth = new google.auth.JWT({
-    email: key.client_email,
-    key: key.private_key,
-    scopes: ["https://www.googleapis.com/auth/calendar"],
-  });
-
-  _cachedAuth = auth;
-  return _cachedAuth;
+export function getCalendarTimeZone(): string {
+  return process.env.MDC_CALENDAR_TZ || "Europe/London";
 }
 
-/**
- * ✅ CLAVE:
- * Forzamos authorize() al menos una vez para garantizar que exista access_token.
- * Esto evita el error “missing required authentication credential”.
- */
 export async function getAuthorizedAuthClient() {
-  const auth = getAuthClient();
+  if (cachedAuth) return cachedAuth;
 
-  if (!_authorizedOnce) {
-    await auth.authorize();
-    _authorizedOnce = true;
-  }
+  const sa = readServiceAccount();
 
+  const auth = new google.auth.JWT({
+    email: sa.client_email,
+    key: sa.private_key,
+    scopes: SCOPES,
+  });
+
+  // Forzar autorización para validar la llave antes de usarla
+  await auth.authorize();
+
+  cachedAuth = auth;
   return auth;
 }
 
-export function getCalendarClient() {
-  if (_cachedCalendar) return _cachedCalendar;
-
-  const auth = getAuthClient();
-  _cachedCalendar = google.calendar({ version: "v3", auth });
-
-  return _cachedCalendar;
+export async function getAuthorizedCalendarClient(): Promise<calendar_v3.Calendar> {
+  if (cachedCalendar) return cachedCalendar;
+  const auth = await getAuthorizedAuthClient();
+  cachedCalendar = google.calendar({ version: "v3", auth });
+  return cachedCalendar;
 }
+
+export { VERSION };

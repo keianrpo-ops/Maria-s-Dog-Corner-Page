@@ -1,17 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import crypto from "crypto";
-import { getCalendarClient, getCalendarId } from "./_client.js";
+import { getAuthorizedCalendarClient, getCalendarId, getCalendarTimeZone } from "./_client.js";
 
-const VERSION = "calendar/check-availability@v4";
-const DEFAULT_CAPACITY = Number(process.env.MDC_MAX_DOGS_CAPACITY || 10);
-
-function makeTraceId() {
-  try {
-    return crypto.randomUUID();
-  } catch {
-    return crypto.randomBytes(16).toString("hex");
-  }
-}
+const VERSION = "api/calendar/check-availability@v4";
 
 function parseBody(req: VercelRequest) {
   const b: any = (req as any).body;
@@ -26,19 +17,28 @@ function parseBody(req: VercelRequest) {
   return b;
 }
 
-function ensureRange(startISO: string, endISO?: string) {
-  const start = new Date(startISO);
-  if (Number.isNaN(start.getTime())) throw new Error("Invalid startISO");
+function toISO(d: Date) {
+  return d.toISOString();
+}
 
-  let end = endISO ? new Date(endISO) : new Date(start.getTime() + 24 * 60 * 60 * 1000);
-  if (Number.isNaN(end.getTime())) end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
-  if (end <= start) end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+function isValidDate(d: any) {
+  return d instanceof Date && !isNaN(d.getTime());
+}
 
-  return { timeMin: start.toISOString(), timeMax: end.toISOString() };
+function getCapacity(service?: string) {
+  const s = (service || "").toLowerCase();
+  const fallback = Number(process.env.MDC_CAPACITY_DEFAULT || 10);
+
+  if (s.includes("daycare")) return Number(process.env.MDC_CAPACITY_DAYCARE || fallback);
+  if (s.includes("boarding")) return Number(process.env.MDC_CAPACITY_BOARDING || fallback);
+  if (s.includes("pet sitting") || s.includes("petsitting")) return Number(process.env.MDC_CAPACITY_PETSITTING || fallback);
+  if (s.includes("dog walk") || s.includes("dogwalk") || s.includes("walk")) return Number(process.env.MDC_CAPACITY_DOGWALK || fallback);
+
+  return fallback;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const traceId = makeTraceId();
+  const traceId = crypto.randomUUID?.() || String(Date.now());
 
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, traceId, version: VERSION, error: "Method not allowed" });
@@ -46,51 +46,72 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const body = parseBody(req);
-    const { startISO, endISO } = body || {};
+    const startISO = body.startISO;
+    const endISO = body.endISO;
+    const service = body.service || "";
 
     if (!startISO) {
-      return res.status(200).json({
-        ok: true,
-        traceId,
-        version: VERSION,
-        count: 0,
-        capacity: DEFAULT_CAPACITY,
-      });
+      return res.status(400).json({ ok: false, traceId, version: VERSION, error: "Missing startISO" });
     }
 
-    const calendar = getCalendarClient();
-    const calendarId = getCalendarId();
-    const { timeMin, timeMax } = ensureRange(startISO, endISO);
+    const start = new Date(startISO);
+    const end = new Date(endISO || startISO);
 
-    const response = await calendar.events.list({
+    if (!isValidDate(start)) {
+      return res.status(400).json({ ok: false, traceId, version: VERSION, error: "Invalid startISO" });
+    }
+    if (!isValidDate(end)) {
+      return res.status(400).json({ ok: false, traceId, version: VERSION, error: "Invalid endISO" });
+    }
+    if (end <= start) {
+      return res.status(400).json({ ok: false, traceId, version: VERSION, error: "endISO must be after startISO" });
+    }
+
+    const calendar = await getAuthorizedCalendarClient();
+    const calendarId = getCalendarId();
+    const timeZone = getCalendarTimeZone();
+
+    const timeMin = toISO(start);
+    const timeMax = toISO(end);
+
+    // Método principal: events.list
+    const list = await calendar.events.list({
       calendarId,
       timeMin,
       timeMax,
       singleEvents: true,
       orderBy: "startTime",
+      maxResults: 2500,
     });
 
-    const items = response.data.items || [];
+    const items = (list.data.items || []).filter((e) => e.status !== "cancelled");
+    const capacity = getCapacity(service);
 
-    // Solo contamos eventos creados por el bot (mdcBooking=1)
-    const bookings = items.filter((ev) => ev?.extendedProperties?.private?.mdcBooking === "1");
+    // Si es un calendario SOLO de reservas, esto es suficiente:
+    const overlapCount = items.length;
+
+    const available = overlapCount < capacity;
 
     return res.status(200).json({
       ok: true,
       traceId,
       version: VERSION,
-      count: bookings.length,
-      capacity: DEFAULT_CAPACITY,
+      mode: "events.list",
+      service,
+      startISO: timeMin,
+      endISO: timeMax,
+      timeZone,
+      capacity,
+      overlapCount,
+      available,
     });
-  } catch (err: any) {
-    console.error(`[${VERSION}]`, { traceId, error: err?.message || err });
+  } catch (e: any) {
+    // ✅ Siempre JSON (evita “Unexpected token … not valid JSON”)
     return res.status(500).json({
       ok: false,
       traceId,
       version: VERSION,
-      count: 0,
-      capacity: DEFAULT_CAPACITY,
-      error: err?.message || "Calendar error",
+      error: e?.message || "Internal Server Error",
     });
   }
 }
