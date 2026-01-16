@@ -54,14 +54,16 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                       alt="Dog Walking" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
-                        <span className="text-[10px] font-bold text-gray-500 mr-1 italic uppercase">from</span>
-                        <span className="text-lg font-extrabold text-brand-teal">£15</span>
-                    </div>
                 </div>
             </div>
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Dog Walking</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-2xl font-bold font-display text-gray-900">Dog Walking</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xs font-bold text-gray-400 uppercase">from</span>
+                  <span className="text-2xl font-extrabold text-brand-teal">£15</span>
+                </div>
+              </div>
               <p className="text-gray-500 text-sm mb-4 leading-relaxed">Energizing group walks in safe, green spaces with photo updates.</p>
               <button onClick={() => handleBookService({ id: 'svc-walk', name: 'Dog Walking', price: 15, category: 'snack', image: '/images/services/walking.jpg', description: 'Dog walk' })} className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-brand-teal text-white font-bold transition-all flex items-center justify-center gap-2">
                 Book Now <Calendar size={18} />
@@ -79,14 +81,16 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                       alt="Dog Sitting" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
-                        <span className="text-[10px] font-bold text-gray-500 mr-1 italic uppercase">night</span>
-                        <span className="text-lg font-extrabold text-brand-pink">£45</span>
-                    </div>
                 </div>
             </div>
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Home Sitting</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-2xl font-bold font-display text-gray-900">Home Sitting</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xs font-bold text-gray-400 uppercase">night</span>
+                  <span className="text-2xl font-extrabold text-brand-pink">£45</span>
+                </div>
+              </div>
               <p className="text-gray-500 text-sm mb-4 leading-relaxed">Your pup's routine maintained with 24/7 love and expert care.</p>
               <button onClick={() => handleBookService({ id: 'svc-sit', name: 'Home Sitting', price: 45, category: 'snack', image: '/images/services/sitting.jpg', description: 'Overnight care' })} className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-brand-pink text-white font-bold transition-all flex items-center justify-center gap-2">
                 Book Now <Calendar size={18} />
@@ -104,14 +108,15 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                       alt="Vacation Care" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
-                        <span className="text-[10px] font-bold text-gray-500 mr-1 uppercase italic tracking-tighter">Quote</span>
-                        <span className="text-lg font-extrabold text-brand-yellow uppercase tracking-tighter">Custom</span>
-                    </div>
                 </div>
             </div>
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Vacation Care</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-2xl font-bold font-display text-gray-900">Vacation Care</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xl font-extrabold text-brand-yellow uppercase tracking-tight">Custom</span>
+                </div>
+              </div>
               <p className="text-gray-500 text-sm mb-4 leading-relaxed">Long-term loving care. A true home-away-from-home experience.</p>
               <button onClick={scrollToContact} className="mt-auto w-full py-3.5 rounded-xl bg-brand-yellow hover:bg-yellow-400 text-white font-bold transition-all flex items-center justify-center gap-2 uppercase tracking-widest text-xs">
                 Get Quote <ArrowRight size={18} />
@@ -129,14 +134,16 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                       alt="Grooming" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
-                        <span className="text-[10px] font-bold text-gray-500 mr-1 italic uppercase">from</span>
-                        <span className="text-lg font-extrabold text-purple-600">£35</span>
-                    </div>
                 </div>
             </div>
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Grooming</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-2xl font-bold font-display text-gray-900">Grooming</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xs font-bold text-gray-400 uppercase">from</span>
+                  <span className="text-2xl font-extrabold text-purple-600">£35</span>
+                </div>
+              </div>
               <p className="text-gray-500 text-sm mb-4 leading-relaxed">Full spa treatments, wash, cut, and nail clipping with organic shampoos.</p>
               <button onClick={() => handleBookService({ id: 'svc-groom', name: 'Grooming', price: 35, category: 'snack', image: '/images/services/grooming.jpg', description: 'Grooming' })} className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-purple-600 text-white font-bold transition-all flex items-center justify-center gap-2">
                 Book Now <Calendar size={18} />
@@ -144,30 +151,52 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
             </div>
           </div>
 
-          {/* 5. TRAINING - £40 */}
-          <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(59,130,246,0.25)] transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col h-full">
-            <div className="h-64 p-4">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
-                    <img 
-                      src="/images/services/training.jpg" 
-                      onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80"; }}
-                      alt="Training" 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                    />
-                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
-                        <span className="text-[10px] font-bold text-gray-500 mr-1 italic uppercase">/ hr</span>
-                        <span className="text-lg font-extrabold text-blue-600">£40</span>
-                    </div>
-                </div>
-            </div>
-            <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Training</h3>
-              <p className="text-gray-500 text-sm mb-4 leading-relaxed">Positive reinforcement techniques to help your pup learn fast.</p>
-              <button onClick={() => handleBookService({ id: 'svc-train', name: 'Training', price: 40, category: 'snack', image: '/images/services/training.jpg', description: 'Training' })} className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-blue-600 text-white font-bold transition-all flex items-center justify-center gap-2">
-                Book Now <Calendar size={18} />
-              </button>
-            </div>
-          </div>
+{false && (
+  /* 5. TRAINING - £40 */
+  <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(59,130,246,0.25)] transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col h-full">
+    <div className="h-64 p-4">
+      <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
+        <img
+          src="/images/services/training.jpg"
+          onError={(e) => {
+            e.currentTarget.src =
+              "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80";
+          }}
+          alt="Training"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+      </div>
+    </div>
+
+    <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-2xl font-bold font-display text-gray-900">Training</h3>
+        <div className="flex items-baseline gap-1">
+          <span className="text-xs font-bold text-gray-400 uppercase">/ hr</span>
+          <span className="text-2xl font-extrabold text-blue-600">£40</span>
+        </div>
+      </div>
+      <p className="text-gray-500 text-sm mb-4 leading-relaxed">
+        Positive reinforcement techniques to help your pup learn fast.
+      </p>
+      <button
+        onClick={() =>
+          handleBookService({
+            id: "svc-train",
+            name: "Training",
+            price: 40,
+            category: "snack",
+            image: "/images/services/training.jpg",
+            description: "Training",
+          })
+        }
+        className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-blue-600 text-white font-bold transition-all flex items-center justify-center gap-2"
+      >
+        Book Now <Calendar size={18} />
+      </button>
+    </div>
+  </div>
+)}
 
           {/* 6. POP-IN VISITS - £12 */}
           <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col h-full">
@@ -179,14 +208,16 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
                       alt="Pop-in" 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
-                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50 flex items-center gap-1">
-                        <span className="text-[10px] font-bold text-gray-500 mr-1 italic uppercase">visit</span>
-                        <span className="text-lg font-extrabold text-brand-teal">£12</span>
-                    </div>
                 </div>
             </div>
             <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-              <h3 className="text-2xl font-bold font-display text-gray-900 mb-2">Pop-in Visits</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-2xl font-bold font-display text-gray-900">Pop-in Visits</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xs font-bold text-gray-400 uppercase">visit</span>
+                  <span className="text-2xl font-extrabold text-brand-teal">£12</span>
+                </div>
+              </div>
               <p className="text-gray-500 text-sm mb-4 leading-relaxed">Short visits for feeding, garden breaks, and puppy play.</p>
               <button onClick={() => handleBookService({ id: 'svc-popin', name: 'Pop-in', price: 12, category: 'snack', image: '/images/services/pop-in.jpg', description: 'Pop-in visit' })} className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-brand-teal text-white font-bold transition-all flex items-center justify-center gap-2">
                 Book Now <Calendar size={18} />

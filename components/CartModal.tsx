@@ -22,20 +22,29 @@ export const CartModal: React.FC<CartModalProps> = ({
 
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-  const handleMercadoPagoCheckout = async () => {
-    // 1. Call your Vercel API backend here
-    try {
-      // READY FOR MERCADO PAGO INTEGRATION
-      // This is where you would make the POST request to your backend to generate the 'preferenceId'
-      console.log("Initiating Mercado Pago Checkout for items:", cart);
-      
-      alert("Ready for Mercado Pago connection! \n\nProducts & Services in cart: " + cart.length + "\nTotal Value: £" + total.toFixed(2) + "\n\n(In production, this redirects to the Mercado Pago payment gateway)");
-      
-    } catch (error) {
-      console.error(error);
-      alert("Error starting checkout");
+  const handleStripeCheckout = async () => {
+  try {
+    console.log("Initiating Stripe Checkout for items:", cart);
+
+    const response = await fetch("/api/payment/create-snacks-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: cart }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.checkoutUrl) {
+      throw new Error(data?.error || "Failed to create Stripe checkout session");
     }
-  };
+
+    window.open(data.checkoutUrl, "_blank"); // o window.location.href = data.checkoutUrl;
+  } catch (error: any) {
+    console.error(error);
+    alert(`Error starting Stripe checkout: ${error.message || "Unknown error"}`);
+  }
+};
+
 
   const handleWhatsAppCheckout = () => {
     const message = cart.map(item => `${item.quantity}x ${item.name} (£${item.price})`).join('%0A');
@@ -125,13 +134,14 @@ export const CartModal: React.FC<CartModalProps> = ({
                 <span>£{total.toFixed(2)}</span>
               </div>
               
-              <button 
-                onClick={handleMercadoPagoCheckout}
-                className="w-full py-4 rounded-xl bg-[#009EE3] hover:bg-[#008ED0] text-white font-bold flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-blue-200"
+              <button
+             onClick={handleStripeCheckout}
+              className="w-full py-4 rounded-xl bg-[#635BFF] hover:opacity-90 text-white font-bold flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg"
               >
                 <CreditCard size={20} />
-                Checkout (Mercado Pago)
-              </button>
+              Checkout (Stripe)
+                </button>
+
               
               <div className="relative flex py-2 items-center">
                   <div className="flex-grow border-t border-gray-300"></div>
@@ -147,9 +157,10 @@ export const CartModal: React.FC<CartModalProps> = ({
                 Order via WhatsApp
               </button>
               
-              <p className="text-xs text-center text-gray-400 mt-2">
-                Secure checkout powered by Mercado Pago.
-              </p>
+            <p className="text-xs text-center text-gray-400 mt-2">
+            Secure checkout powered by Stripe.
+          </p>
+
             </div>
           )}
         </div>

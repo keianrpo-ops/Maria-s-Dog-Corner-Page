@@ -66,6 +66,31 @@ function App() {
     [cart]
   );
 
+  // ✅ Fan collage (interactive)
+  const [activeIndex, setActiveIndex] = useState(1);
+
+  const fanImages = [
+    {
+      src: "/images/about-4.jpg",
+      alt: "Happy dog at Maria's Dog Corner",
+      label: "Expert Care",
+      fallback: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80",
+    },
+    {
+      src: "/images/about-6.jpg",
+      alt: "Play time in the garden",
+      label: "Safe Play",
+      fallback: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80",
+    },
+    {
+      src: "/images/about-5.jpg",
+      alt: "Cozy rest time",
+      label: "Cozy Stay",
+      fallback: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80",
+    },
+  ];
+
+
   const renderView = () => {
     switch (currentView) {
       case PageView.HOME:
@@ -75,26 +100,46 @@ function App() {
             <SnackLaunch />
             <Services addToCart={addToCart} />
 
-            {/* Premium Banner */}
-            <div className="bg-gradient-to-r from-brand-coral to-brand-orange py-16 px-4">
-              <div className="max-w-6xl mx-auto text-center">
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                  Premium Pet Sitting & Snacks
+            {/* Premium Banner (Brand Colors) */}
+            <div className="relative overflow-hidden bg-brand-teal py-16 px-4">
+              {/* Soft brand overlays */}
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-teal via-brand-dark/30 to-brand-pink/25" />
+              <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-brand-yellow/20 blur-3xl" />
+              <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-brand-pink/20 blur-3xl" />
+
+              <div className="relative max-w-6xl mx-auto text-center">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 bg-white/15 text-white px-4 py-2 rounded-full border border-white/20 backdrop-blur-md">
+                  <span className="text-brand-yellow">★</span>
+                  <span className="text-sm font-semibold tracking-wide">
+                    Premium Pet Sitting &amp; Snacks
+                  </span>
+                </div>
+
+                <h2 className="mt-6 text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight">
+                  Premium Pet Sitting &amp; Snacks
                 </h2>
-                <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
-                  Professional care and natural treats for your beloved pets in Bristol. 
+
+                <p className="mt-4 text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+                  Professional care and natural treats for your beloved pets in Bristol.
                   We provide trusted sitting services and homemade snacks.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+
+                <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  {/* Primary CTA - Coral/Pink */}
                   <button
+                    type="button"
                     onClick={() => setCurrentView(PageView.SERVICES)}
-                    className="bg-white text-brand-coral font-bold py-4 px-8 rounded-full hover:bg-white/90 transition-all duration-300 shadow-lg"
+                    className="w-full sm:w-auto bg-brand-pink text-white font-bold py-4 px-10 rounded-full hover:brightness-110 transition-all duration-300 shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/35"
                   >
                     Book a Service
                   </button>
+
+                  {/* Secondary CTA - Teal outline (brand) */}
                   <button
+                    type="button"
                     onClick={() => setCurrentView(PageView.SHOP)}
-                    className="border-2 border-white text-white font-bold py-4 px-8 rounded-full hover:bg-white hover:text-brand-coral transition-all duration-300"
+                    className="w-full sm:w-auto border-2 border-white/70 text-white font-bold py-4 px-10 rounded-full hover:bg-white hover:text-brand-dark transition-all duration-300 shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/35"
                   >
                     Shop Snacks
                   </button>
@@ -102,44 +147,96 @@ function App() {
               </div>
             </div>
 
-            {/* Image Section */}
+            {/* Image Section (Collage Card Style) */}
             <div className="py-16 px-4 bg-gray-50">
               <div className="max-w-6xl mx-auto">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
+
+                  {/* Text */}
                   <div>
                     <h3 className="text-3xl font-bold text-brand-dark mb-4">
-                      Why Choose Maria's Dog Corner?
+                      Why Choose Maria&apos;s Dog Corner?
                     </h3>
+
                     <ul className="space-y-4 text-lg text-gray-700">
                       <li className="flex items-start gap-3">
-                        <span className="text-brand-teal text-2xl">✓</span>
+                        <span className="text-brand-teal text-2xl leading-none">✓</span>
                         Licensed and experienced pet care
                       </li>
                       <li className="flex items-start gap-3">
-                        <span className="text-brand-teal text-2xl">✓</span>
+                        <span className="text-brand-teal text-2xl leading-none">✓</span>
                         Daily updates and photos
                       </li>
                       <li className="flex items-start gap-3">
-                        <span className="text-brand-teal text-2xl">✓</span>
+                        <span className="text-brand-teal text-2xl leading-none">✓</span>
                         Homemade natural snacks
                       </li>
                       <li className="flex items-start gap-3">
-                        <span className="text-brand-teal text-2xl">✓</span>
+                        <span className="text-brand-teal text-2xl leading-none">✓</span>
                         Trusted by Bristol pet owners
                       </li>
                     </ul>
                   </div>
-                  <div className="relative">
-                    <img
-                      src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80"
-                      alt="Happy dog"
-                      className="rounded-3xl shadow-2xl w-full h-[400px] object-cover"
-                    />
-                    <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl">
-                      <p className="text-2xl font-bold text-brand-coral">5★ Rated</p>
-                      <p className="text-gray-600">by our clients</p>
+
+                  {/* Collage Card (fixed overlap + hover + click) */}
+                  <div className="relative flex items-center justify-center">
+                    <div className="relative w-full max-w-[560px] h-[420px] group isolate">
+
+                      {/* Left tilted card */}
+                      <div
+                        className={`absolute left-0 top-1/2 -translate-y-1/2 w-[42%] h-[78%] -rotate-6 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white/80 z-10 cursor-pointer transition-all duration-500 group-hover:-rotate-3 group-hover:scale-[1.03] hover:z-[60] hover:scale-[1.06]`}
+                        onClick={() => window.open("/images/about-5.jpg", "_blank")}
+                        title="Open image"
+                      >
+                        <img
+                          src="/images/about-5.jpg"
+                          alt="Dog photo 1"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                        />
+                      </div>
+
+                      {/* Right tilted card */}
+                      <div
+                        className={`absolute right-0 top-1/2 -translate-y-1/2 w-[42%] h-[78%] rotate-6 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white/80 z-10 cursor-pointer transition-all duration-500 group-hover:rotate-3 group-hover:scale-[1.03] hover:z-[60] hover:scale-[1.06]`}
+                        onClick={() => window.open("/images/about-4.jpg", "_blank")}
+                        title="Open image"
+                      >
+                        <img
+                          src="/images/about-4.jpg"
+                          alt="Dog photo 2"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                        />
+                      </div>
+
+                      {/* Center main card */}
+                      <div
+                        className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[52%] h-[92%] rounded-[2.5rem] overflow-hidden border-4 border-white shadow-[0_25px_60px_-20px_rgba(0,0,0,0.35)] z-30 cursor-pointer transition-all duration-500 group-hover:scale-[1.04] hover:z-[70] hover:scale-[1.06]`}
+                        onClick={() => window.open("/images/about-6.jpg", "_blank")}
+                        title="Open image"
+                      >
+                        <img
+                          src="/images/about-6.jpg"
+                          alt="Dog photo 3"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+
+                        {/* Gradient + label */}
+                        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/60 to-transparent" />
+                        <div className="absolute bottom-4 left-5">
+                          <p className="text-white font-extrabold text-xl drop-shadow">Expert Care</p>
+                          <p className="text-white/85 text-sm drop-shadow">Daily love, play & updates</p>
+                        </div>
+                      </div>
+
+                      {/* Rating badge (kept visible) */}
+                      <div className="absolute -bottom-6 left-6 bg-white px-6 py-4 rounded-2xl shadow-xl border border-gray-100 z-40">
+                        <p className="text-2xl font-extrabold text-brand-coral">5★ Rated</p>
+                        <p className="text-gray-600">by our clients</p>
+                      </div>
+
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -192,10 +289,10 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col font-sans">
       <div className="sticky top-0 z-40">
-        <Navbar 
-          currentView={currentView} 
-          setView={setCurrentView} 
-          cartCount={totalItems} 
+        <Navbar
+          currentView={currentView}
+          setView={setCurrentView}
+          cartCount={totalItems}
         />
       </div>
 
@@ -206,9 +303,9 @@ function App() {
       <Footer setView={setCurrentView} />
       <AIAssistant setView={setCurrentView} />
       <FloatingSeal />
-      
-      <CartModal 
-        isOpen={isCartOpen} 
+
+      <CartModal
+        isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         cart={cart}
         updateQuantity={updateQuantity}
