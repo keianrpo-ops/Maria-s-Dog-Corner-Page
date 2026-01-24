@@ -4,7 +4,7 @@ import crypto from "crypto";
 type AnyMsg = { role?: any; content?: any };
 type Lang = "es" | "en";
 
-const VERSION = "mariasDogCorner@v17-simplified-flow";
+const VERSION = "mariasDogCorner@v18-fixed-pricing";
 
 const OPENAI_TIMEOUT_MS = 60000;
 
@@ -93,16 +93,15 @@ function inferServiceFromText(text: string): string | null {
   
   const t = text.toLowerCase();
 
-  if (t.includes("daycare")) return "Daycare";
-  if (t.includes("boarding")) return "Boarding";
-  if (t.includes("pet sitting") || t.includes("petsitting")) return "Pet Sitting";
   if (t.includes("dog walk") || t.includes("dogwalk") || t.includes("walk")) return "Dog Walk";
+  if (t.includes("home sitting") || t.includes("sitting")) return "Home Sitting";
+  if (t.includes("boarding") || t.includes("vacation care")) return "Boarding";
   if (t.includes("grooming")) return "Grooming";
+  if (t.includes("pop-in") || t.includes("pop in") || t.includes("visit")) return "Pop-in Visits";
 
-  if (t.includes("guarderia") || t.includes("guardería")) return "Daycare";
-  if (t.includes("hospedaje") || t.includes("alojamiento")) return "Boarding";
-  if (t.includes("cuidado") && t.includes("casa")) return "Pet Sitting";
   if (t.includes("paseo")) return "Dog Walk";
+  if (t.includes("cuidado") && t.includes("casa")) return "Home Sitting";
+  if (t.includes("hospedaje") || t.includes("alojamiento")) return "Boarding";
 
   return null;
 }
@@ -121,10 +120,10 @@ function isUserConfirming(text: string, lang: Lang) {
 
 function buildInitialGreeting(service: string, lang: Lang): string {
   if (lang === "es") {
-    return `¡Hola! Soy Maria 😊\n\nVeo que estás interesado en **${service}**. ¡Perfecto!\n\nPara reservar solo necesito:\n1. Nombre del perro\n2. Edad del perro\n3. Tu nombre\n4. Tu teléfono (ej: +44...)\n5. Fecha y hora de entrega\n6. Fecha y hora de recogida\n\nPuedes darme toda la información junta si lo prefieres 😊`;
+    return `¡Hola! Soy Maria 😊\n\nVeo que estás interesado en **${service}**. ¡Perfecto!\n\nPara reservar solo necesito:\n1. Nombre del perro\n2. Edad del perro\n3. Tu nombre\n4. Tu teléfono (ej: +44...)\n5. Fecha y hora de inicio\n6. Fecha y hora de fin\n\nPuedes darme toda la información junta si lo prefieres 😊`;
   }
 
-  return `Hello! I'm Maria 😊\n\nI see you're interested in **${service}**. Perfect!\n\nTo book, I just need:\n1. Dog's name\n2. Dog's age\n3. Your name\n4. Your phone (e.g. +44...)\n5. Drop-off date & time\n6. Pick-up date & time\n\nYou can give me all the information at once if you prefer 😊`;
+  return `Hello! I'm Maria 😊\n\nI see you're interested in **${service}**. Perfect!\n\nTo book, I just need:\n1. Dog's name\n2. Dog's age\n3. Your name\n4. Your phone (e.g. +44...)\n5. Start date & time\n6. End date & time\n\nYou can give me all the information at once if you prefer 😊`;
 }
 
 function fmtUKRange(startISO: string, endISO?: string) {
@@ -145,74 +144,15 @@ function fmtUKRange(startISO: string, endISO?: string) {
   return sD === eD ? `${sD} ${sT}–${eT}` : `${sD} ${sT} → ${eD} ${eT}`;
 }
 
-function getUKDatePartsFromISO(iso: string) {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/London",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(new Date(iso));
-
-  const pick = (t: string) => parts.find((p) => p.type === t)?.value || "";
-  return { y: Number(pick("year")), m: Number(pick("month")), d: Number(pick("day")) };
-}
-
-function daysDiffInclusiveUK(startISO: string, endISO: string) {
-  const s = getUKDatePartsFromISO(startISO);
-  const e = getUKDatePartsFromISO(endISO);
-  const sMs = Date.UTC(s.y, s.m - 1, s.d);
-  const eMs = Date.UTC(e.y, e.m - 1, e.d);
-  const diff = Math.round((eMs - sMs) / 86400000);
-  return diff + 1;
-}
-
-function nightsDiffUK(startISO: string, endISO: string) {
-  const s = getUKDatePartsFromISO(startISO);
-  const e = getUKDatePartsFromISO(endISO);
-  const sMs = Date.UTC(s.y, s.m - 1, s.d);
-  const eMs = Date.UTC(e.y, e.m - 1, e.d);
-  const diff = Math.round((eMs - sMs) / 86400000);
-  return Math.max(1, diff);
-}
-
-function hoursDiff(startISO: string, endISO: string) {
-  const ms = new Date(endISO).getTime() - new Date(startISO).getTime();
-  const h = ms / 3600000;
-  return Math.max(1, Math.ceil(h * 2) / 2);
-}
-
-function computePriceGBP(service: string, startISO: string, endISO: string) {
-  if (!service || typeof service !== "string") {
-    return { total: 0, detail: "Price TBD" };
-  }
-  
-  const s = service.toLowerCase();
-  
-  if (s === "daycare") {
-    const days = daysDiffInclusiveUK(startISO, endISO);
-    if (days === 5) return { total: 130, detail: "Full Week Special (5 days)" };
-    return { total: 30 * days, detail: `${days} day(s) × £30` };
-  }
-  if (s === "boarding") {
-    const nights = nightsDiffUK(startISO, endISO);
-    return { total: 40 * nights, detail: `${nights} night(s) × £40` };
-  }
-  if (s === "pet sitting" || s === "dog walk" || s === "grooming") {
-    const hrs = hoursDiff(startISO, endISO);
-    return { total: 15 * hrs, detail: `${hrs} hour(s) × £15` };
-  }
-  return { total: 0, detail: "Price TBD" };
-}
-
 function buildConfirmation(lang: Lang, payload: {
   service: string;
   dogName?: string;
   dogAge?: string;
+  dogBreed?: string;
   ownerName?: string;
   ownerPhone?: string;
   startISO: string;
   endISO: string;
-  priceLine: string;
 }) {
   const range = fmtUKRange(payload.startISO, payload.endISO);
 
@@ -220,24 +160,22 @@ function buildConfirmation(lang: Lang, payload: {
     return (
       `Perfecto. Confírmame si todo está correcto:\n\n` +
       `Servicio: ${payload.service}\n` +
-      `Perro: ${payload.dogName || "-"}${payload.dogAge ? ` (${payload.dogAge})` : ""}\n` +
+      `Perro: ${payload.dogName || "-"}${payload.dogAge ? ` (${payload.dogAge})` : ""}${payload.dogBreed ? ` - ${payload.dogBreed}` : ""}\n` +
       `Dueño: ${payload.ownerName || "-"}\n` +
       `Teléfono: ${payload.ownerPhone || "-"}\n` +
-      `Horario: ${range}\n` +
-      `Total: ${payload.priceLine}\n\n` +
-      `Responde "sí" para confirmar o dime qué quieres cambiar.`
+      `Horario: ${range}\n\n` +
+      `Responde "sí" para confirmar y ver el precio, o dime qué quieres cambiar.`
     );
   }
 
   return (
     `Perfect. Please confirm everything is correct:\n\n` +
     `Service: ${payload.service}\n` +
-    `Dog: ${payload.dogName || "-"}${payload.dogAge ? ` (${payload.dogAge})` : ""}\n` +
+    `Dog: ${payload.dogName || "-"}${payload.dogAge ? ` (${payload.dogAge})` : ""}${payload.dogBreed ? ` - ${payload.dogBreed}` : ""}\n` +
     `Owner: ${payload.ownerName || "-"}\n` +
     `Phone: ${payload.ownerPhone || "-"}\n` +
-    `Schedule: ${range}\n` +
-    `Total: ${payload.priceLine}\n\n` +
-    `Reply "yes" to confirm, or tell me what to change.`
+    `Schedule: ${range}\n\n` +
+    `Reply "yes" to confirm and see the price, or tell me what to change.`
   );
 }
 
@@ -372,31 +310,57 @@ YOUR ROLE:
 - Keep responses concise (2-4 sentences typically)
 - Use natural language, avoid being overly formal
 
-SERVICES & PRICING:
-- Daycare: £30/day (default 09:00-17:00, but flexible)
-- Boarding: £40/night
-- Pet Sitting: £15/hour
-- Dog Walk: £15/hour
-- Grooming: £15/hour
-- Full Week: £130 for 5 days (Mon-Fri)
+AVAILABLE SERVICES (Official from https://www.mariasdogcorner.co.uk/):
 
-SIMPLIFIED BOOKING PROCESS (ONLY 6 THINGS NEEDED):
+1. **Dog Walk** - FROM £15/hour
+   - Collect: duration in hours
+   - Example: "1 hour walk" = 1 hour
+
+2. **Home Sitting** - £45 per night
+   - Collect: number of nights
+   - Example: "3 nights" = 3 nights
+
+3. **Boarding (Vacation Care)** - CUSTOM pricing
+   - This requires a personalized quote
+   - Tell user: "This service requires a custom quote based on your dog's needs. Please contact us via WhatsApp for a personalized price."
+   - DO NOT proceed with booking for this service
+   - Redirect to WhatsApp
+
+4. **Grooming** - FROM £35 (depends on dog size)
+   - IMPORTANT: Ask for dog's breed or weight to determine size
+   - Small dogs (up to 10kg): £35
+   - Medium dogs (10-25kg): £45
+   - Large dogs (25-40kg): £55
+   - XLarge dogs (over 40kg): £70
+   - Collect: dog breed or weight
+
+5. **Pop-in Visits** - £12 per visit
+   - Collect: number of visits
+   - Example: "1 visit" = 1 visit
+
+IMPORTANT PRICING RULES:
+⚠️ YOU DO NOT CALCULATE PRICES - The system will calculate them automatically
+⚠️ Just collect the necessary information
+⚠️ Do NOT mention specific prices in your responses
+⚠️ For Grooming, always ask about dog breed or size
+⚠️ For Boarding, always redirect to WhatsApp
+
+SIMPLIFIED BOOKING PROCESS (6 THINGS NEEDED):
 1. Dog's name
 2. Dog's age
-3. Owner's name
-4. Owner's phone (with +44 prefix)
-5. Drop-off date & time
-6. Pick-up date & time
+3. Dog's breed (especially for Grooming)
+4. Owner's name
+5. Owner's phone (with +44 prefix)
+6. Service dates & times (start and end)
 
-IMPORTANT: DO NOT ask about allergies, behavior, breed, special needs, etc. Those will be collected via WhatsApp form AFTER payment.
+IMPORTANT: DO NOT ask about allergies, behavior, special needs, etc. Those will be collected via WhatsApp form AFTER payment.
 
 BOOKING FLOW:
-1. Collect the 6 required items naturally
-2. If missing items, ask for them (one or two at a time)
-3. Calculate price based on dates
-4. Show confirmation summary with price
-5. Wait for user to confirm (says "yes", "sí", "confirm", etc.)
-6. After confirmation, user will be directed to pay
+1. Identify the service
+2. Collect the 6 required items naturally (one or two at a time)
+3. When you have all info, show confirmation summary (WITHOUT price)
+4. Wait for user to confirm (says "yes", "sí", "confirm", etc.)
+5. After confirmation, system will calculate price and show payment button
 
 DATE/TIME HANDLING:
 - Today is ${todayStr}
@@ -404,6 +368,20 @@ DATE/TIME HANDLING:
 - Accept any time format (8am, 8:00, 20:00, etc.) and convert to 24-hour format
 - Format times as "YYYY-MM-DD HH:mm" in startLocal/endLocal
 - ALWAYS verify end time is after start time
+
+CONVERSATION EXAMPLES:
+
+Example 1 - Dog Walk:
+User: "I need a dog walk for 2 hours"
+You: "Perfect! A 2-hour walk sounds great. Could you tell me your dog's name and age?"
+
+Example 2 - Grooming:
+User: "I want grooming for my dog"
+You: "Excellent! To give you an accurate price, what breed is your dog?"
+
+Example 3 - Boarding:
+User: "I need boarding for a week"
+You: "Boarding is a wonderful service! This requires a personalized quote based on your dog's specific needs. Could you contact us via WhatsApp so we can discuss the details and give you an exact price?"
 
 CONVERSATION STYLE:
 - Thank users for information they provide
@@ -414,33 +392,38 @@ CONVERSATION STYLE:
 
 IMPORTANT RULES:
 - NEVER create a booking (action: "create_booking") until user explicitly confirms
-- NEVER ask about allergies, medical conditions, behavior, breed, or special needs
+- NEVER mention specific prices (the system calculates them)
+- NEVER ask about allergies, medical conditions, behavior, or special needs
 - NEVER repeat the same question twice
+- For Boarding, ALWAYS redirect to WhatsApp instead of creating booking
+- For Grooming, ALWAYS ask about breed/size if not provided
 - If user is correcting dates/times, set fixDuplicate: true
 
-JSON OUTPUT:
+JSON OUTPUT FORMAT:
 {
   "reply": "Your natural, conversational response",
   "action": "none" | "create_booking",
   "lead": {
     "language": "${lang}",
-    "service": "Daycare",
+    "service": "Dog Walk",
     "dogName": "Max",
     "dogAge": "3 years",
+    "dogBreed": "Golden Retriever",
     "ownerName": "John Smith",
     "ownerPhone": "+44 7700 900000",
-    "startLocal": "2026-01-15 08:00",
-    "endLocal": "2026-01-15 17:00"
+    "startLocal": "2026-01-20 09:00",
+    "endLocal": "2026-01-20 11:00"
   },
   "booking": null or {
-    "service": "Daycare",
+    "service": "Dog Walk",
     "dogName": "Max",
     "dogAge": "3 years",
+    "dogBreed": "Golden Retriever",
     "ownerName": "John Smith",
     "ownerPhone": "+44 7700 900000",
-    "startLocal": "2026-01-15 08:00",
-    "endLocal": "2026-01-15 17:00",
-    "notes": "Drop-off: 08:00, Pick-up: 17:00",
+    "startLocal": "2026-01-20 09:00",
+    "endLocal": "2026-01-20 11:00",
+    "notes": "2-hour walk",
     "fixDuplicate": false
   }
 }`;
@@ -504,6 +487,7 @@ JSON OUTPUT:
     if (booking && !booking.ownerName && mergedLead.ownerName) booking.ownerName = mergedLead.ownerName;
     if (booking && !booking.ownerPhone && mergedLead.ownerPhone) booking.ownerPhone = mergedLead.ownerPhone;
     if (booking && !booking.dogAge && mergedLead.dogAge) booking.dogAge = mergedLead.dogAge;
+    if (booking && !booking.dogBreed && mergedLead.dogBreed) booking.dogBreed = mergedLead.dogBreed;
 
     if (booking) {
       if (!booking.startLocal && mergedLead.startLocal) booking.startLocal = mergedLead.startLocal;
@@ -517,6 +501,7 @@ JSON OUTPUT:
 
     const service = String(mergedLead.service || booking?.service || "").trim();
     const dogName = String(mergedLead.dogName || booking?.dogName || "").trim();
+    const dogBreed = String(mergedLead.dogBreed || booking?.dogBreed || "").trim();
     const ownerName = String(mergedLead.ownerName || booking?.ownerName || "").trim();
     const ownerPhone = String(mergedLead.ownerPhone || booking?.ownerPhone || "").trim();
     const startISO = booking?.startISO ? String(booking.startISO) : "";
@@ -538,8 +523,8 @@ JSON OUTPUT:
     if (new Date(endISO) <= new Date(startISO)) {
       console.log(`⚠️ [${traceId}] Invalid date range: end <= start`);
       const msg = lang === "es"
-        ? "Veo que la hora de recogida debe ser después de la entrega. ¿Puedes confirmarme los horarios de nuevo?"
-        : "I see the pick-up time needs to be after drop-off. Can you confirm the times again?";
+        ? "Veo que la hora de fin debe ser después de la hora de inicio. ¿Puedes confirmarme los horarios de nuevo?"
+        : "I see the end time needs to be after the start time. Can you confirm the times again?";
       return res.status(200).json({
         ok: true,
         traceId,
@@ -551,26 +536,24 @@ JSON OUTPUT:
       });
     }
 
-    const price = computePriceGBP(service, startISO, endISO);
-    const priceLine = price.total > 0 ? `£${price.total} (${price.detail})` : "TBD";
-
     if (!userConfirmed && dogName && ownerName && ownerPhone) {
       console.log(`📋 [${traceId}] Sending confirmation request`);
       const reply = buildConfirmation(lang, {
         service,
         dogName,
         dogAge: mergedLead.dogAge || booking?.dogAge,
+        dogBreed: dogBreed || undefined,
         ownerName,
         ownerPhone,
         startISO,
         endISO,
-        priceLine,
       });
 
       mergedLead.service = service;
       mergedLead.dogName = dogName;
       mergedLead.ownerName = ownerName;
       mergedLead.ownerPhone = ownerPhone;
+      if (dogBreed) mergedLead.dogBreed = dogBreed;
 
       return res.status(200).json({
         ok: true,
@@ -585,32 +568,34 @@ JSON OUTPUT:
           dogName,
           ownerName,
           ownerPhone,
+          dogBreed: dogBreed || undefined,
           startISO,
           endISO,
-          totalPrice: priceLine,
           fixDuplicate: Boolean(booking?.fixDuplicate) || /cambiar|modificar|corrige|change|modify|correct/i.test(lastUserText),
         },
       });
     }
 
     if (userConfirmed && dogName && ownerName && ownerPhone) {
-      console.log(`✅ [${traceId}] User confirmed, requesting payment`);
+      console.log(`✅ [${traceId}] User confirmed, creating booking for price calculation`);
+      
       const finalBooking = {
         ...booking,
         service,
         dogName,
         ownerName,
         ownerPhone,
+        dogBreed: dogBreed || undefined,
         startISO,
         endISO,
-        totalPrice: priceLine,
-        notes: booking?.notes || `Drop-off: ${booking?.startLocal || startISO}, Pick-up: ${booking?.endLocal || endISO}`,
+        notes: booking?.notes || `${service}: ${booking?.startLocal || startISO} to ${booking?.endLocal || endISO}`,
         fixDuplicate: Boolean(booking?.fixDuplicate) || /cambiar|modificar|corrige|change|modify|correct/i.test(lastUserText),
+        language: lang,
       };
 
       const finalReply = lang === "es"
-        ? `¡Perfecto! Para confirmar tu reserva de ${priceLine}, necesito que completes el pago. Te voy a generar un link seguro.`
-        : `Perfect! To confirm your booking of ${priceLine}, I need you to complete the payment. I'll generate a secure payment link for you.`;
+        ? `¡Perfecto! Voy a calcular el precio exacto para tu reserva.`
+        : `Perfect! I'll calculate the exact price for your booking.`;
 
       return res.status(200).json({
         ok: true,

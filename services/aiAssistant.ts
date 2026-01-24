@@ -1,3 +1,5 @@
+import { calculatePrice, getDogSizeFromBreed, type DogSize } from "../lib/pricing";
+
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
 export type Lead = {
@@ -28,6 +30,7 @@ export type Booking = {
   dogNames?: string;
   dogAge?: string;
   dogBreed?: string;
+  dogSize?: "small" | "medium" | "large" | "xlarge";
   dogAllergies?: string;
   dogBehavior?: string;
   specialNeeds?: string;
@@ -36,9 +39,12 @@ export type Booking = {
   contact?: string;
   notes?: string;
   totalPrice?: string;
+  priceBreakdown?: string;
+  duration?: number;
   startLocal?: string;
   endLocal?: string;
   fixDuplicate?: boolean;
+  language?: "es" | "en";
   [k: string]: any;
 };
 
@@ -165,6 +171,108 @@ export async function askAssistant(messages: ChatMessage[], lead: Lead) {
 
   console.log("💬 AI Reply:", data.reply);
   console.log("🎬 Action:", data.action);
+  
+  // Si hay un booking y necesita cálculo de precio
+  if (data.action === "create_booking" && data.booking) {
+    const booking = data.booking;
+    console.log("💰 Calculating price for booking:", booking);
+
+    // Servicio de Boarding requiere cotización personalizada
+    if (booking.service === "Boarding" || booking.service === "Vacation Care") {
+      console.log("📞 Boarding requires custom quote - redirecting to WhatsApp");
+      return {
+        ok: true,
+        traceId: data.traceId,
+        version: data.version,
+        reply: lead.language === "es"
+          ? "El servicio de Boarding (Vacation Care) requiere una cotización personalizada según las necesidades de tu perro. Por favor, contáctanos por WhatsApp para más detalles y te daremos un precio exacto. 📱"
+          : "Boarding (Vacation Care) requires a custom quote based on your dog's needs. Please contact us via WhatsApp for more details and we'll give you an exact price. 📱",
+        action: "none",
+        lead: data.lead || {},
+        booking: null,
+      };
+    }
+
+    // Calcular duración
+    let duration = 1;
+    if (booking.startISO && booking.endISO) {
+      const start = new Date(booking.startISO);
+      const end = new Date(booking.endISO);
+      const diffMs = end.getTime() - start.getTime();
+      
+      if (booking.service === "Home Sitting") {
+        // Noches
+        duration = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        console.log(`🌙 Home Sitting duration: ${duration} nights`);
+      } else if (booking.service === "Dog Walk") {
+        // Horas
+        duration = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
+        console.log(`🚶 Dog Walk duration: ${duration} hours`);
+      } else if (booking.service === "Pop-in Visits") {
+        // Visitas (asumimos 1 por defecto)
+        duration = 1;
+        console.log(`🏠 Pop-in Visits: ${duration} visit`);
+      } else if (booking.service === "Grooming") {
+        // Grooming es por servicio
+        duration = 1;
+        console.log(`✂️ Grooming: ${duration} service`);
+      }
+    }
+
+    // Determinar tamaño del perro para Grooming
+    let dogSize: DogSize | undefined;
+    if (booking.service === "Grooming") {
+      if (booking.dogBreed) {
+        dogSize = getDogSizeFromBreed(booking.dogBreed);
+        console.log(`🐕 Dog size detected from breed "${booking.dogBreed}": ${dogSize}`);
+      } else {
+        // Si no hay raza, usar medium por defecto
+        dogSize = "medium";
+        console.log(`🐕 Dog size defaulted to: ${dogSize}`);
+      }
+    }
+
+    // Calcular precio con la tabla fija
+    const priceResult = calculatePrice(booking.service, duration, dogSize);
+
+    if (!priceResult) {
+      console.error("❌ Failed to calculate price");
+      throw new Error("Unable to calculate price for this service");
+    }
+
+    if (priceResult.price === 0) {
+      // Servicio custom (no debería llegar aquí porque Boarding ya fue manejado arriba)
+      console.log("⚠️ Service requires custom quote");
+      return {
+        ok: true,
+        traceId: data.traceId,
+        version: data.version,
+        reply: lead.language === "es"
+          ? "Este servicio requiere una cotización personalizada. Por favor, contacta con nosotros por WhatsApp."
+          : "This service requires a custom quote. Please contact us via WhatsApp.",
+        action: "none",
+        lead: data.lead || {},
+        booking: null,
+      };
+    }
+
+    // Actualizar booking con precio calculado
+    data.booking = {
+      ...booking,
+      totalPrice: `£${priceResult.price}`,
+      priceBreakdown: priceResult.breakdown,
+      duration: duration,
+      language: lead.language || "en",
+    };
+
+    if (dogSize) {
+      data.booking.dogSize = dogSize;
+    }
+
+    console.log("✅ Price calculated:", data.booking.totalPrice);
+    console.log("📊 Breakdown:", data.booking.priceBreakdown);
+  }
+
   if (data.booking) {
     console.log("📅 Booking data:", data.booking);
   }

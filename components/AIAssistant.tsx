@@ -30,11 +30,14 @@ function renderMessageContent(content: string) {
   ));
 }
 
+function isMobileDevice() {
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
 async function createPaymentSession(booking: Booking) {
   console.log("💳 Creating payment session...");
   console.log("📦 Booking data:", booking);
   
-  // Validar que booking tenga los datos necesarios
   if (!booking.service || !booking.totalPrice) {
     throw new Error("Missing required booking information");
   }
@@ -270,13 +273,21 @@ export default function AIAssistant() {
     setTimeout(() => inputRef.current?.focus(), 80);
   }
 
+  function handleExternalLink(url: string) {
+    if (isMobileDevice()) {
+      window.location.href = url;
+    } else {
+      window.open(url, "_blank");
+    }
+  }
+
   const inputPlaceholder = lead.service ? "Type your message here..." : "Choose a service above to start…";
 
   return (
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-50 h-16 w-16 rounded-full shadow-2xl bg-teal-700 text-white flex items-center justify-center hover:scale-110 transition-transform text-2xl"
+        className="fixed bottom-6 right-6 z-50 h-16 w-16 rounded-full shadow-2xl bg-teal-700 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-transform text-2xl touch-manipulation"
       >
         🐾
       </button>
@@ -294,7 +305,7 @@ export default function AIAssistant() {
                   <div className="text-xs opacity-80">Bristol, UK • English & Español</div>
                 </div>
               </div>
-              <button onClick={() => setOpen(false)} className="text-xl p-2 hover:bg-white/10 rounded-full transition-colors">
+              <button onClick={() => setOpen(false)} className="text-xl p-2 hover:bg-white/10 active:bg-white/20 rounded-full transition-colors touch-manipulation">
                 ✕
               </button>
             </div>
@@ -302,14 +313,14 @@ export default function AIAssistant() {
             <div className="px-4 py-3 border-b bg-gray-50 shrink-0">
               <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
                 <button
-                  onClick={() => window.open(waLink("Hi Maria! I'm interested in your services."), "_blank")}
-                  className="flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-full bg-[#25D366] text-white text-sm font-bold shadow-sm hover:bg-[#20ba5a] transition-colors"
+                  onClick={() => handleExternalLink(waLink("Hi Maria! I'm interested in your services."))}
+                  className="flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-full bg-[#25D366] text-white text-sm font-bold shadow-sm active:bg-[#20ba5a] transition-colors touch-manipulation"
                 >
                   <span className="text-lg">WhatsApp</span>
                 </button>
                 <button
-                  onClick={() => window.open(waLink("Hi Maria! I'd like to order some snacks for my dog 🍖"), "_blank")}
-                  className="whitespace-nowrap px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50"
+                  onClick={() => handleExternalLink(waLink("Hi Maria! I'd like to order some snacks for my dog 🍖"))}
+                  className="whitespace-nowrap px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 text-sm font-medium active:bg-gray-50 touch-manipulation"
                 >
                   🛍️ Shop Snacks
                 </button>
@@ -320,7 +331,7 @@ export default function AIAssistant() {
                   <button
                     key={s.key}
                     onClick={() => selectService(s)}
-                    className={`min-w-[100px] text-center rounded-lg py-2 px-1 border ${s.color} transition-all active:scale-95 shadow-sm`}
+                    className={`min-w-[100px] text-center rounded-lg py-2 px-1 border ${s.color} transition-all active:scale-95 shadow-sm touch-manipulation`}
                   >
                     <div className="font-bold text-[11px] uppercase tracking-wider">{s.title}</div>
                   </button>
@@ -355,8 +366,8 @@ export default function AIAssistant() {
               {paymentSession && (
                 <div className="flex justify-center">
                   <button
-                    onClick={() => window.open(paymentSession.checkoutUrl, "_blank")}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center gap-3"
+                    onClick={() => handleExternalLink(paymentSession.checkoutUrl)}
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl active:scale-95 transition-all flex items-center gap-3 touch-manipulation"
                   >
                     <span className="text-2xl">💳</span>
                     <div className="text-left">
@@ -404,7 +415,7 @@ export default function AIAssistant() {
               <button
                 type="submit"
                 disabled={busy || !draft.trim()}
-                className="h-12 w-12 rounded-xl bg-teal-700 text-white flex items-center justify-center shadow-lg disabled:bg-gray-300 transition-all hover:bg-teal-800"
+                className="h-12 w-12 rounded-xl bg-teal-700 text-white flex items-center justify-center shadow-lg disabled:bg-gray-300 transition-all hover:bg-teal-800 active:scale-95 touch-manipulation"
               >
                 ➔
               </button>

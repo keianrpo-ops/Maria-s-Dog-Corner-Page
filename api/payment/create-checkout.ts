@@ -6,7 +6,7 @@ const STRIPE_KEY = (process.env.STRIPE_SECRET_KEY || "").trim();
 
 console.log("🔑 STRIPE_SECRET_KEY raw:", JSON.stringify(STRIPE_KEY));
 console.log("🔑 length:", STRIPE_KEY.length);
-console.log("Stripe mode:", STRIPE_KEY?.startsWith("sk_live_") ? "LIVE" : "LIVE");
+console.log("Stripe mode:", STRIPE_KEY?.startsWith("sk_live_") ? "LIVE" : "TEST");
 console.log("Stripe key prefix:", STRIPE_KEY?.slice(0, 12));
 
 console.log("🔑 Checking Stripe configuration...");
