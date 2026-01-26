@@ -151,13 +151,13 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
             </div>
           </div>
 
-{false && (
-  /* 5. TRAINING - £40 */
+{true && (
+  /* 5. BOARDING - £40 */
   <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(59,130,246,0.25)] transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col h-full">
     <div className="h-64 p-4">
       <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
         <img
-          src="/images/services/training.jpg"
+          src="/images/services/boarding.jpg"
           onError={(e) => {
             e.currentTarget.src =
               "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80";
@@ -170,14 +170,14 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
 
     <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-2xl font-bold font-display text-gray-900">Training</h3>
+        <h3 className="text-2xl font-bold font-display text-gray-900">Boarding</h3>
         <div className="flex items-baseline gap-1">
           <span className="text-xs font-bold text-gray-400 uppercase">/ hr</span>
           <span className="text-2xl font-extrabold text-blue-600">£40</span>
         </div>
       </div>
       <p className="text-gray-500 text-sm mb-4 leading-relaxed">
-        Positive reinforcement techniques to help your pup learn fast.
+        Safe, loving overnight care so your dog feels at home while you’re away.
       </p>
       <button
         onClick={() =>
