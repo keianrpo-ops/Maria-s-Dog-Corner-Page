@@ -173,7 +173,7 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
         <h3 className="text-2xl font-bold font-display text-gray-900">Boarding</h3>
         <div className="flex items-baseline gap-1">
           <span className="text-xs font-bold text-gray-400 uppercase">/ hr</span>
-          <span className="text-2xl font-extrabold text-blue-600">£40</span>
+          <span className="text-2xl font-extrabold text-blue-600">£35</span>
         </div>
       </div>
       <p className="text-gray-500 text-sm mb-4 leading-relaxed">
@@ -183,11 +183,11 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
         onClick={() =>
           handleBookService({
             id: "svc-train",
-            name: "Training",
-            price: 40,
+            name: "Boarding",
+            price: 35,
             category: "snack",
-            image: "/images/services/training.jpg",
-            description: "Training",
+            image: "/images/services/boarding.jpg",
+            description: "Boarding",
           })
         }
         className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-blue-600 text-white font-bold transition-all flex items-center justify-center gap-2"
