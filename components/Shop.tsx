@@ -111,6 +111,8 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
       image: '/images/shop/s1-salmon.jpg',
       description: '100% Natural Salmon (70%) with veggies.', tag: 'Best Seller'
     },
+
+  
     {
       id: 's2', name: 'Liver Luxury', category: 'snack', price: 5.00,
       image: '/images/shop/s2-liver.jpg',
@@ -135,8 +137,15 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
       id: 's6', name: 'Garden Veggies', category: 'snack', price: 4.50,
       image: '/images/shop/s6-veggie.jpg',
       description: '100% Plant-based goodness.', tag: 'Vegan'
+ 
     },
     
+  {
+      id: 's7', name: 'Salmon Delight', category: 'snack', price: 6.00,
+      image: '/images/shop/ice-port.jpg',
+      description: '100% Natural Salmon (70%) with veggies.', tag: 'Best Seller'
+    },
+
     /* SECCIÓN DE TOYS COMENTADA TEMPORALMENTE
     {
       id: 't1', name: 'Tire Chew', category: 'toy', price: 12.99,

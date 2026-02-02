@@ -7,9 +7,15 @@ interface NavbarProps {
   currentView: PageView;
   setView: (view: PageView) => void;
   cartCount?: number;
+  onCartClick?: () => void;  // ← NUEVO PROP
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount = 0 }) => {
+export const Navbar: React.FC<NavbarProps> = ({ 
+  currentView, 
+  setView, 
+  cartCount = 0,
+  onCartClick  // ← NUEVO PROP
+}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -36,7 +42,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
   };
 
   const handleRoverClick = () => {
-    // Efecto de Confeti de celebración
     confetti({
       particleCount: 150,
       spread: 70,
@@ -47,6 +52,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
     setTimeout(() => {
       window.open('https://www.rover.com/members/maria-g-guaranteed-safety-and-happiness-for-your-pups/', '_blank');
     }, 500);
+  };
+
+  // ← NUEVA FUNCIÓN PARA MANEJAR CLICK DEL CARRITO
+  const handleCartClick = () => {
+    if (onCartClick) {
+      onCartClick();
+    } else {
+      handleNavClick(PageView.SHOP);
+    }
   };
 
   return (
@@ -116,13 +130,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
                 </button>
               </div>
 
+              {/* ← BOTÓN DEL CARRITO ACTUALIZADO */}
               <button 
-                onClick={() => handleNavClick(PageView.SHOP)}
-                className="relative text-gray-600 hover:text-brand-teal transition-colors p-2"
+                onClick={handleCartClick}
+                className="relative text-gray-600 hover:text-brand-teal transition-colors p-2 hover:scale-110 active:scale-95"
+                title="Open Cart"
               >
                 <ShoppingBag size={isScrolled ? 20 : 24} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-brand-pink text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
+                  <span className="absolute -top-1 -right-1 bg-brand-pink text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white animate-pulse">
                     {cartCount}
                   </span>
                 )}
@@ -139,6 +155,20 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount 
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-2">
+            {/* ← BOTÓN DEL CARRITO MÓVIL */}
+            <button 
+              onClick={handleCartClick}
+              className="relative text-gray-600 hover:text-brand-teal transition-colors p-2"
+              title="Open Cart"
+            >
+              <ShoppingBag size={22} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-brand-pink text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+            
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-brand-dark p-2">
               {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
             </button>

@@ -152,42 +152,50 @@ export const Services: React.FC<ServicesProps> = ({ addToCart }) => {
           </div>
 
 {true && (
-  /* 5. BOARDING - £40 */
+  /* 5. BOARDING - £35 */
   <div className="group bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(59,130,246,0.25)] transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col h-full">
-    <div className="h-64 p-4">
-      <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
+
+    {/* IMAGE CONTAINER */}
+    <div className="p-4">
+      <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 shadow-inner">
         <img
           src="/images/services/boarding.jpg"
           onError={(e) => {
             e.currentTarget.src =
               "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80";
           }}
-          alt="Training"
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          alt="Boarding service for dogs"
+          className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
         />
       </div>
     </div>
 
+    {/* CONTENT */}
     <div className="px-8 pb-8 pt-4 flex flex-col flex-grow">
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="text-2xl font-bold font-display text-gray-900">Boarding</h3>
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="text-2xl font-bold font-display text-gray-900">
+          Boarding
+        </h3>
+
         <div className="flex items-baseline gap-1">
           <span className="text-xs font-bold text-gray-400 uppercase">/ hr</span>
           <span className="text-2xl font-extrabold text-blue-600">£35</span>
         </div>
       </div>
+
       <p className="text-gray-500 text-sm mb-4 leading-relaxed">
         Safe, loving overnight care so your dog feels at home while you’re away.
       </p>
+
       <button
         onClick={() =>
           handleBookService({
-            id: "svc-train",
+            id: "svc-boarding",
             name: "Boarding",
             price: 35,
-            category: "snack",
+            category: "service",
             image: "/images/services/boarding.jpg",
-            description: "Boarding",
+            description: "Overnight dog boarding service",
           })
         }
         className="mt-auto w-full py-3.5 rounded-xl bg-gray-900 hover:bg-blue-600 text-white font-bold transition-all flex items-center justify-center gap-2"

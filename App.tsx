@@ -293,6 +293,7 @@ function App() {
           currentView={currentView}
           setView={setCurrentView}
           cartCount={totalItems}
+           onCartClick={() => setIsCartOpen(true)}  // ← AGREGAR ESTA LÍNEA
         />
       </div>
 
