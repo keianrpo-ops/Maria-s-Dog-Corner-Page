@@ -1,26 +1,48 @@
 import React, { useState } from 'react';
-import { ShoppingCart, Heart, Dog, Tag } from 'lucide-react';
+import { ShoppingCart, Heart, Dog, Tag, X } from 'lucide-react';
 import { Product } from '../types';
 
 interface ShopProps {
   addToCart: (product: Product) => void;
 }
 
-// Sub-component to handle individual product logic and image errors cleanly
+// Sub-componente para manejar la lógica de cada producto e imágenes
 const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void }> = ({ product, addToCart }) => {
   const [imgError, setImgError] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <div className="group flex flex-col h-full">
-      {/* CARD CONTAINER with Soft Shadow */}
+      {/* MODAL PARA AGRANDAR LA IMAGEN AL HACER CLICK */}
+      {isExpanded && !imgError && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 cursor-zoom-out animate-in fade-in duration-300"
+          onClick={() => setIsExpanded(false)}
+        >
+          <div className="relative max-w-5xl w-full flex justify-center">
+            <button 
+              className="absolute -top-16 right-0 text-white/70 hover:text-white transition-colors p-2"
+              onClick={() => setIsExpanded(false)}
+            >
+              <X size={40} />
+            </button>
+            <img 
+              src={product.image} 
+              alt={product.name} 
+              className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl animate-in zoom-in-95 duration-300"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* CARD CONTAINER con Soft Shadow */}
       <div className="relative flex flex-col bg-white rounded-[2rem] overflow-hidden transition-all duration-500 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_50px_-12px_rgba(0,194,203,0.25)] hover:-translate-y-2 border border-gray-100 h-full">
         
-        {/* IMAGE AREA - NOW FRAMED (Padded) - p-5 */}
+        {/* ÁREA DE IMAGEN */}
         <div className="p-5 bg-gray-50/50">
-            {/* CHANGED TO ASPECT-SQUARE for better fit of mixed orientation images */}
             <div className="relative aspect-square overflow-hidden rounded-2xl shadow-sm group-hover:shadow-md transition-all duration-500 bg-white border border-black/5 flex items-center justify-center">
                 
-                {/* Top Tags */}
+                {/* Etiquetas superiores */}
                 <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 items-start">
                     {product.tag && (
                     <span className={`text-white text-[10px] md:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-lg backdrop-blur-md ${
@@ -31,18 +53,19 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
                     )}
                 </div>
                 
-                {/* Wishlist Button */}
+                {/* Botón de deseos */}
                 <button className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/60 hover:bg-white backdrop-blur-md flex items-center justify-center text-gray-500 hover:text-brand-pink transition-all shadow-sm">
                     <Heart size={16} />
                 </button>
 
-                {/* Image - object-contain ensures full product visibility */}
+                {/* Imagen con función de click para expandir */}
                 {!imgError ? (
                 <img 
                     src={product.image} 
                     alt={product.name} 
                     onError={() => setImgError(true)}
-                    className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105 p-2"
+                    onClick={() => setIsExpanded(true)}
+                    className="relative z-10 w-full h-full object-contain transform transition-transform duration-700 hover:scale-105 p-2 cursor-zoom-in"
                 />
                 ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 text-gray-400">
@@ -51,7 +74,7 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
                 </div>
                 )}
                 
-                {/* INTEGRATED PRICE BADGE (Bottom Right of Image) */}
+                {/* PRECIO INTEGRADO */}
                 <div className="absolute bottom-3 right-3 z-20">
                     <div className="bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] flex items-center gap-1 border border-white/50 transform group-hover:scale-105 transition-transform">
                         <span className="text-xs font-bold text-gray-400 mr-1">£</span>
@@ -64,9 +87,8 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
             </div>
         </div>
 
-        {/* CONTENT AREA */}
+        {/* ÁREA DE CONTENIDO */}
         <div className="px-6 pb-6 pt-2 flex flex-col flex-grow relative bg-white">
-             {/* Title & Cat */}
              <div className="mb-4">
                  <p className="text-xs font-bold text-brand-teal uppercase tracking-wider mb-1 flex items-center gap-1">
                     {product.category === 'snack' ? 'Natural Treat' : 'Durability Toy'}
@@ -79,7 +101,6 @@ const ProductCard: React.FC<{ product: Product; addToCart: (p: Product) => void 
                  </p>
              </div>
 
-             {/* Action Button */}
              <div className="mt-auto pt-2">
                 <button 
                     onClick={() => addToCart(product)} 
@@ -105,14 +126,12 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
   };
 
   const products: Product[] = [
-    // --- SNACKS (Precios actualizados) ---
+    // --- SNACKS ---
     {
       id: 's1', name: 'Salmon Delight', category: 'snack', price: 6.00,
       image: '/images/shop/s1-salmon.jpg',
       description: '100% Natural Salmon (70%) with veggies.', tag: 'Best Seller'
     },
-
-  
     {
       id: 's2', name: 'Liver Luxury', category: 'snack', price: 5.00,
       image: '/images/shop/s2-liver.jpg',
@@ -137,16 +156,14 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
       id: 's6', name: 'Garden Veggies', category: 'snack', price: 4.50,
       image: '/images/shop/s6-veggie.jpg',
       description: '100% Plant-based goodness.', tag: 'Vegan'
- 
     },
-    
-  {
+    {
       id: 's7', name: 'Salmon Delight', category: 'snack', price: 6.00,
       image: '/images/shop/ice-port.jpg',
       description: '100% Natural Salmon (70%) with veggies.', tag: 'Best Seller'
     },
 
-    /* SECCIÓN DE TOYS COMENTADA TEMPORALMENTE
+    /* SECCIÓN DE TOYS COMENTADA TOTALMENTE */
     {
       id: 't1', name: 'Tire Chew', category: 'toy', price: 12.99,
       image: '/images/shop/t1-tire.jpg', 
@@ -227,17 +244,18 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
       image: '/images/shop/t16-launcher.jpg',
       description: 'Launches tennis balls automatically.', tag: 'Tech'
     }
-    FIN COMENTARIO TOYS */
+    /* FIN COMENTARIO TOYS */
   ];
 
+  // FILTRO: Solo mostramos snacks incluso en 'all' para que no se vean los toys.
   const filteredProducts = activeCategory === 'all' 
-    ? products 
+    ? products.filter(p => p.category === 'snack') 
     : products.filter(p => p.category === activeCategory);
 
   return (
     <div className="bg-gray-50 min-h-screen">
       
-      {/* DYNAMIC SHOP HEADER */}
+      {/* HEADER DINÁMICO */}
       <div className="relative h-[35vh] md:h-[50vh] bg-brand-teal flex items-center justify-center overflow-hidden transition-all duration-700">
          <div className="absolute inset-0 mix-blend-multiply opacity-40 transition-opacity duration-500">
             <img 
@@ -285,7 +303,7 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
 
       <div className="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8 py-12 md:py-20">
         
-        {/* Filter Tabs */}
+        {/* Pestañas de Filtro */}
         <div className="flex justify-center mb-12 md:mb-20">
           <div className="inline-flex bg-white p-1.5 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.05)] scale-90 md:scale-100 origin-center border border-gray-100">
             {[
@@ -308,7 +326,7 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
           </div>
         </div>
         
-        {/* Product Grid */}
+        {/* Cuadrícula de Productos */}
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-8 md:gap-x-8 md:gap-y-12">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} addToCart={addToCart} />
