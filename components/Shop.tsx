@@ -158,9 +158,9 @@ export const Shop: React.FC<ShopProps> = ({ addToCart }) => {
       description: '100% Plant-based goodness.', tag: 'Vegan'
     },
     {
-      id: 's7', name: 'Salmon Delight', category: 'snack', price: 6.00,
+      id: 's7', name: 'Cool Paws', category: 'snack', price: 6.00,
       image: '/images/shop/ice-port.jpg',
-      description: '100% Natural Salmon (70%) with veggies.', tag: 'Best Seller'
+      description: 'Special Snack Holder for you Dogs Treats. ', tag: 'Best Seller'
     },
 
     /* SECCIÓN DE TOYS COMENTADA TOTALMENTE */

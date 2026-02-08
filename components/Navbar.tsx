@@ -19,6 +19,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  // ✅ NUEVO: URL del portal (visible y estable)
+  const PORTAL_URL = 'https://portal.mariasdogcorner.co.uk/#/login';
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -61,6 +64,11 @@ export const Navbar: React.FC<NavbarProps> = ({
     } else {
       handleNavClick(PageView.SHOP);
     }
+  };
+
+  // ✅ NUEVO: abrir portal (sin afectar tu navegación)
+  const handlePortalClick = () => {
+    window.open(PORTAL_URL, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -130,6 +138,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
               </div>
 
+              {/* ✅ NUEVO: BOTÓN VISIBLE LOGIN / PORTAL (DESKTOP) */}
+              <button
+                onClick={handlePortalClick}
+                className="bg-brand-pink text-white px-4 py-2 rounded-full font-bold shadow-md hover:brightness-110 transition-all text-sm"
+                title="Login / Portal"
+              >
+                Login / Portal
+              </button>
+
               {/* ← BOTÓN DEL CARRITO ACTUALIZADO */}
               <button 
                 onClick={handleCartClick}
@@ -191,12 +208,23 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {link.name}
               </button>
             ))}
+
+            {/* ✅ NUEVO: BOTÓN VISIBLE LOGIN / PORTAL (MOBILE PANEL) */}
+            <button
+              onClick={() => {
+                setIsMenuOpen(false);
+                handlePortalClick();
+              }}
+              className="w-full bg-brand-pink text-white py-4 rounded-xl font-bold text-lg shadow-md hover:brightness-110 transition-all"
+            >
+              Login / Portal
+            </button>
             
             <div className="pt-6 mt-4 border-t border-gray-100 space-y-8 text-center">
               <div className="flex justify-center gap-8">
-                <a href="https://www.tiktok.com/@mariasdogcorner" target="_blank" className="text-black scale-150"><Music2 /></a>
-                <a href="https://www.instagram.com/mariadogcorner/?igshid=MzMyNGUyNmU2YQ%3D%3D" target="_blank" className="text-[#E4405F] scale-150"><Instagram /></a>
-                <a href="https://web.facebook.com/people/Marias-Dog-C%C3%B3rner/61573167980967/" target="_blank" className="text-[#1877F2] scale-150"><Facebook /></a>
+                <a href="https://www.tiktok.com/@mariasdogcorner" target="_blank" className="text-black scale-150" rel="noreferrer"><Music2 /></a>
+                <a href="https://www.instagram.com/mariadogcorner/?igshid=MzMyNGUyNmU2YQ%3D%3D" target="_blank" className="text-[#E4405F] scale-150" rel="noreferrer"><Instagram /></a>
+                <a href="https://web.facebook.com/people/Marias-Dog-C%C3%B3rner/61573167980967/" target="_blank" className="text-[#1877F2] scale-150" rel="noreferrer"><Facebook /></a>
                 <button onClick={handleRoverClick} className="bg-[#00af87] text-white rounded px-3 py-1 font-black">R</button>
               </div>
               <button onClick={() => handleNavClick(PageView.CONTACT)} className="w-full bg-brand-dark text-white py-4 rounded-xl font-bold text-lg">
